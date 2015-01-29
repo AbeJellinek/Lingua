@@ -8,4 +8,5 @@ x[0]
 s = "xyz"
 s.test = "123"
 s + s.test
-"xyz" + "xyz".test
+"xyz" + "xyz".test // a test comment
+"abc"

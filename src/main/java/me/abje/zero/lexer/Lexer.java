@@ -45,7 +45,17 @@ public class Lexer implements Phase<Void, Token> {
                 case '*':
                     return make(TIMES);
                 case '/':
-                    return make(DIVIDE);
+                    if (isNext('/')) {
+                        try {
+                            do {
+                                read = read();
+                            } while (read != '\n' && read != '\r');
+                        } catch (EOSException ignored) {
+                        }
+                        return make(LINE);
+                    } else {
+                        return make(DIVIDE);
+                    }
                 case '^':
                     return make(POW);
                 case '~':
