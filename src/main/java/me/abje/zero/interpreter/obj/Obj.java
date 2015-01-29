@@ -17,4 +17,8 @@ public class Obj {
     public Obj getAtIndex(Obj index) {
         throw new InterpreterException("object not indexable");
     }
+
+    public void setAtIndex(Obj index, Obj value) {
+        throw new InterpreterException("object not indexable");
+    }
 }

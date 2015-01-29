@@ -23,10 +23,26 @@ public class ListObj extends Obj {
         }
     }
 
+    public void set(int i, Obj value) {
+        if (i >= 0 && i < items.size()) {
+            items.set(i, value);
+        } else {
+            throw new InterpreterException("list index out of bounds: " + i);
+        }
+    }
+
     @Override
     public Obj getAtIndex(Obj index) {
         if (index instanceof NumberObj)
             return get((int) ((NumberObj) index).getValue());
+        else
+            throw new InterpreterException("list index not a number");
+    }
+
+    @Override
+    public void setAtIndex(Obj index, Obj value) {
+        if (index instanceof NumberObj)
+            set((int) ((NumberObj) index).getValue(), value);
         else
             throw new InterpreterException("list index not a number");
     }
