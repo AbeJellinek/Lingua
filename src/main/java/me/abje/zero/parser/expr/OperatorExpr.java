@@ -44,7 +44,7 @@ public class OperatorExpr implements Expr {
                 Obj rightObj = interpreter.next(right);
                 if (leftObj instanceof NumberObj && rightObj instanceof NumberObj) {
                     return new NumberObj(((NumberObj) leftObj).getValue() + ((NumberObj) rightObj).getValue());
-                } else if (leftObj instanceof StringObj || rightObj instanceof StringObj) {
+                } else {
                     return new StringObj(leftObj.toString() + rightObj.toString());
                 }
             case MINUS:

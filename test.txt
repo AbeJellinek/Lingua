@@ -5,4 +5,7 @@ x[0] + x[1]
 y[0][0] = 2
 x[0]
 
-123 + "zyx"
+s = "xyz"
+s.test = "123"
+s + s.test
+"xyz" + "xyz".test

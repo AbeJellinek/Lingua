@@ -47,6 +47,7 @@ public class Parser implements Phase<Token, Expr> {
         register(OPEN_PAREN, new CallParselet());
         register(EQ, new AssignmentParselet());
         register(OPEN_BRACKET, new IndexParselet());
+        register(DOT, new MemberAccessParselet());
         postfix(BANG);
     }
 

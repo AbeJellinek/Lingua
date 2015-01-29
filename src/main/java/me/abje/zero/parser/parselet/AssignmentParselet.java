@@ -33,6 +33,10 @@ public class AssignmentParselet implements InfixParselet {
             IndexExpr index = (IndexExpr) left;
             Expr value = parser.next(Precedence.ASSIGNMENT - 1);
             return new IndexSetExpr(index.getTarget(), index.getIndex(), value);
+        } else if (left instanceof MemberAccessExpr) {
+            MemberAccessExpr member = (MemberAccessExpr) left;
+            Expr value = parser.next(Precedence.ASSIGNMENT - 1);
+            return new MemberSetExpr(member.getLeft(), member.getName(), value);
         } else if (left instanceof NameExpr) {
             Expr value = parser.next(Precedence.ASSIGNMENT);
             return new AssignmentExpr(((NameExpr) left).getValue(), value);
