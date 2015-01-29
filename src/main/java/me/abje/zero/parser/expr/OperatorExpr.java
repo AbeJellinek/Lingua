@@ -5,6 +5,7 @@ import me.abje.zero.interpreter.InterpreterException;
 import me.abje.zero.interpreter.obj.BooleanObj;
 import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
+import me.abje.zero.interpreter.obj.StringObj;
 import me.abje.zero.lexer.Token;
 
 public class OperatorExpr implements Expr {
@@ -39,8 +40,13 @@ public class OperatorExpr implements Expr {
     public Obj evaluate(Interpreter interpreter) {
         switch (token) {
             case PLUS:
-                return new NumberObj(as(left, NumberObj.class, interpreter).getValue() +
-                        as(right, NumberObj.class, interpreter).getValue());
+                Obj leftObj = interpreter.next(left);
+                Obj rightObj = interpreter.next(right);
+                if (leftObj instanceof NumberObj && rightObj instanceof NumberObj) {
+                    return new NumberObj(((NumberObj) leftObj).getValue() + ((NumberObj) rightObj).getValue());
+                } else if (leftObj instanceof StringObj || rightObj instanceof StringObj) {
+                    return new StringObj(leftObj.toString() + rightObj.toString());
+                }
             case MINUS:
                 return new NumberObj(as(left, NumberObj.class, interpreter).getValue() -
                         as(right, NumberObj.class, interpreter).getValue());
