@@ -13,9 +13,21 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+/**
+ * The phase which produces objects from expressions. Usually the last phase in the pipeline.
+ */
 public class Interpreter implements Phase<Expr, Obj> {
+    /**
+     * The environment used for interpretation.
+     */
     private Environment env = new Environment();
 
+    /**
+     * Interprets the given expression.
+     *
+     * @param expr The expression to interpret.
+     * @return The result of interpreting the expression.
+     */
     public Obj next(Expr expr) {
         return expr.evaluate(this);
     }
@@ -31,6 +43,10 @@ public class Interpreter implements Phase<Expr, Obj> {
         }
     }
 
+    /**
+     * Interprets each expression in the given input.
+     * @param reader The input.
+     */
     public void interpret(Reader reader) {
         Parser parser = new Parser(new Morpher(new Lexer(reader)));
         Expr expr;
@@ -39,6 +55,9 @@ public class Interpreter implements Phase<Expr, Obj> {
         }
     }
 
+    /**
+     * Returns the environment used for interpretation.
+     */
     public Environment getEnv() {
         return env;
     }

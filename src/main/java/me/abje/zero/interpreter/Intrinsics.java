@@ -13,14 +13,31 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+/**
+ * Registers intrinsic (built-in) functions with the interpreter.
+ */
 public class Intrinsics {
+    /**
+     * The environment to register in.
+     */
     private Environment.Frame env;
+
+    /**
+     * The map of names to intrinsic (synthetic) classes to register.
+     */
     private static Map<String, ClassObj> classes = new HashMap<>();
 
+    /**
+     * Creates a new Intrinsics.
+     * @param env The environment to register in.
+     */
     public Intrinsics(Environment.Frame env) {
         this.env = env;
     }
 
+    /**
+     * Register the intrinsics.
+     */
     public void register() {
         classes.forEach(env::define);
 
@@ -52,6 +69,11 @@ public class Intrinsics {
         });
     }
 
+    /**
+     * Registers a function.
+     * @param name The function's name.
+     * @param func The function's body.
+     */
     private void addFunction(String name, BiFunction<Interpreter, List<Obj>, Obj> func) {
         env.define(name, new Obj(FunctionObj.SYNTHETIC) {
             @Override
@@ -61,6 +83,10 @@ public class Intrinsics {
         });
     }
 
+    /**
+     * Registers a class.
+     * @param clazz The class.
+     */
     public static void registerClass(ClassObj clazz) {
         classes.put(clazz.getName(), clazz);
     }

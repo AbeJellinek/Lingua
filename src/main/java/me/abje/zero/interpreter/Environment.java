@@ -1,6 +1,5 @@
 package me.abje.zero.interpreter;
 
-import me.abje.zero.interpreter.obj.ClassObj;
 import me.abje.zero.interpreter.obj.Obj;
 
 import java.util.ArrayDeque;
@@ -8,22 +7,58 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A stack of {@link me.abje.zero.interpreter.Environment.Frame Frames} that store a map of variable names to values.
+ */
 public class Environment {
+    /**
+     * This Environment's global frame. Holds variables accessible from anywhere.
+     * If you pollute the global scope, you're a bad person.
+     */
     private Frame globals = new Frame();
+
+    /**
+     * The stack that holds this Environment's frames.
+     */
     private Deque<Frame> stack = new ArrayDeque<>();
 
+    /**
+     * Creates a new, empty Environment.
+     */
     public Environment() {
         stack.push(globals);
     }
 
+    /**
+     * Defines a new variable in the top frame.
+     *
+     * @param name  The variable's name.
+     * @param value The variable's value.
+     * @return The variable's value.
+     * @throws me.abje.zero.interpreter.InterpreterException If a variable with that name already exists in the top frame.
+     */
     public Obj define(String name, Obj value) {
         return stack.peek().define(name, value);
     }
 
+    /**
+     * Updates a variable in the top frame.
+     *
+     * @param name  The variable's name.
+     * @param value The variable's new value.
+     * @return The variable's new value.
+     * @throws me.abje.zero.interpreter.InterpreterException If a variable with that name doesn't exist in the top frame.
+     */
     public Obj update(String name, Obj value) {
         return stack.peek().update(name, value);
     }
 
+    /**
+     * Returns whether a variable with the given name exists in the stack.
+     *
+     * @param name The variable's name.
+     * @return Whether such a variable exists.
+     */
     public boolean has(String name) {
         for (Frame frame : stack) {
             if (frame.has(name)) {
@@ -34,6 +69,14 @@ public class Environment {
         return false;
     }
 
+    /**
+     * Gets the value of the variable with the given name in the stack.
+     * Searches top-down -- narrower scopes are searched first.
+     *
+     * @param name The variable's name.
+     * @return The variable's value.
+     * @throws me.abje.zero.interpreter.InterpreterException If a variable with that name doesn't exist in the stack.
+     */
     public Obj get(String name) {
         for (Frame frame : stack) {
             if (frame.has(name)) {
@@ -44,6 +87,16 @@ public class Environment {
         throw new InterpreterException("variable '" + name + "' is not defined in this context");
     }
 
+    /**
+     * Updates or creates a variable with the given name, and sets its value to the given value.
+     * <p>
+     * First searches the stack for a variable with the given name, top-down -- narrower scopes are searched first.
+     * If a variable is found, updates its value.
+     * If a variable is not found, creates a new variable in the narrowest scope with the given name and value.
+     *
+     * @param name  The variable's name.
+     * @param value The variable's value.
+     */
     public void put(String name, Obj value) {
         for (Frame frame : stack) {
             if (frame.has(name)) {
@@ -55,27 +108,45 @@ public class Environment {
         stack.peek().define(name, value);
     }
 
+    /**
+     * Pushes a new frame onto the top of the stack.
+     */
     public void pushFrame() {
         stack.push(new Frame());
     }
 
+    /**
+     * Pops the topmost frame from the stack.
+     */
     public void popFrame() {
         if (stack.size() > 1) {
             stack.pop();
         }
     }
 
-    public ClassObj getClass(String name) {
-        return (ClassObj) globals.get(name);
-    }
-
+    /**
+     * Returns this Environment's global frame.
+     */
     public Frame getGlobals() {
         return globals;
     }
 
+    /**
+     * A stack frame. Holds local variables in a map.
+     */
     public static class Frame {
+        /**
+         * This Frame's local variables.
+         */
         private Map<String, Obj> locals = new HashMap<>();
 
+        /**
+         * Defines a new variable in this Frame.
+         * @param name The new variable's name.
+         * @param value The new variable's value.
+         * @return The new variable's value.
+         * @throws me.abje.zero.interpreter.InterpreterException If a variable with the given name already exists.
+         */
         public Obj define(String name, Obj value) {
             if (locals.containsKey(name)) {
                 throw new InterpreterException("variable '" + name + "' is already defined in this context");
@@ -85,6 +156,13 @@ public class Environment {
             }
         }
 
+        /**
+         * Updates the value of a variable in this Frame.
+         * @param name The variable's name.
+         * @param value The variable's new value.
+         * @return The variable's new value.
+         * @throws me.abje.zero.interpreter.InterpreterException If a variable with the given name does not exist.
+         */
         public Obj update(String name, Obj value) {
             if (!locals.containsKey(name)) {
                 throw new InterpreterException("variable '" + name + "' is not defined in this context");
@@ -94,10 +172,20 @@ public class Environment {
             }
         }
 
+        /**
+         * Returns whether a variable with the given name exists in this Frame.
+         * @param name The name to find.
+         */
         public boolean has(String name) {
             return locals.containsKey(name);
         }
 
+        /**
+         * Returns the value of the variable with the given name in this Frame.
+         * @param name The variable's name.
+         * @return The variable's value.
+         * @throws me.abje.zero.interpreter.InterpreterException If a variable with the given name does not exist.
+         */
         public Obj get(String name) {
             if (!locals.containsKey(name)) {
                 throw new InterpreterException("variable '" + name + "' is not defined in this context");
