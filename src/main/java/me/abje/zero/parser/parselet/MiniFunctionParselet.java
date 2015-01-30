@@ -32,6 +32,9 @@ import me.abje.zero.parser.expr.NameExpr;
 
 import java.util.Arrays;
 
+/**
+ * Parses an anonymous function expression, such as <code>a -> b</code>.
+ */
 public class MiniFunctionParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {

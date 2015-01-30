@@ -26,6 +26,16 @@ import me.abje.zero.lexer.Token;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.Parser;
 
+/**
+ * Interface for parselets which do not operate on already-parsed expressions.
+ */
 public interface PrefixParselet {
+    /**
+     * Parses an expression.
+     *
+     * @param parser The parser.
+     * @param token  The token that triggered this parselet.
+     * @return The parsed expression.
+     */
     public Expr parse(Parser parser, Token token);
 }

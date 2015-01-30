@@ -32,12 +32,35 @@ import java.util.Map;
 
 import static me.abje.zero.lexer.Token.Type.*;
 
+/**
+ * A phase which produces expressions from tokens. Usually the second phase in the pipeline.
+ */
 public class Parser implements Phase<Token, Expr> {
+    /**
+     * The map of token types to prefix parselets.
+     */
     private Map<Token.Type, PrefixParselet> prefixParselets = new HashMap<>();
+
+    /**
+     * The map of token types to infix parselets.
+     */
     private Map<Token.Type, InfixParselet> infixParselets = new HashMap<>();
+
+    /**
+     * The lexer that provides input to the parser.
+     */
     private Phase<Void, Token> lexer;
+
+    /**
+     * The token that was previously peeked, if any.
+     */
     private Token peeked;
 
+    /**
+     * Creates a new Parser and registers the default parselets.
+     *
+     * @param lexer The lexer to use as input.
+     */
     public Parser(Phase<Void, Token> lexer) {
         this.lexer = lexer;
 
@@ -76,6 +99,13 @@ public class Parser implements Phase<Token, Expr> {
         postfix(BANG);
     }
 
+    /**
+     * Parses one expression from the input and returns it.
+     *
+     * @param token      The token input to parse.
+     * @param precedence The starting precedence.
+     * @return An expression, or null if the end of the stream is reached.
+     */
     public Expr next(Token token, int precedence) {
         while (token != null && token.is(LINE)) {
             token = read();
@@ -104,19 +134,39 @@ public class Parser implements Phase<Token, Expr> {
         return left;
     }
 
+    /**
+     * Parses one expression from the input and returns it.
+     *
+     * @param token The token input to parse.
+     * @return An expression, or null if the end of the stream is reached.
+     */
     @Override
     public Expr next(Token token) {
         return next(token, 0);
     }
 
+    /**
+     * Parses one expression from the input and returns it.
+     *
+     * @param precedence The starting precedence.
+     * @return An expression, or null if the end of the stream is reached.
+     */
     public Expr next(int precedence) {
         return next(read(), precedence);
     }
 
+    /**
+     * Parses one expression from the input and returns it.
+     *
+     * @return An expression, or null if the end of the stream is reached.
+     */
     public Expr next() {
         return next(read());
     }
 
+    /**
+     * Returns the precedence of the current token.
+     */
     private int getPrecedence() {
         Token peeked = peek();
         if (peeked == null)
@@ -128,44 +178,90 @@ public class Parser implements Phase<Token, Expr> {
         return 0;
     }
 
+    /**
+     * Peeks at the next token in the stream and returns it. Does not consume any tokens.
+     */
     public Token peek() {
         if (peeked != null)
             return peeked;
         return peeked = read();
     }
 
+    /**
+     * Registers a prefix parselet for a token type.
+     *
+     * @param token    The token type.
+     * @param parselet The parselet.
+     */
     public void register(Token.Type token, PrefixParselet parselet) {
         prefixParselets.put(token, parselet);
     }
 
+    /**
+     * Registers a prefix operator parselet for a token type.
+     *
+     * @param token The token type.
+     */
     public void prefix(Token.Type token) {
         register(token, new PrefixOperatorParselet());
     }
 
+    /**
+     * Registers a prefix operator parselet for some token types.
+     *
+     * @param tokens The token types.
+     */
     public void prefix(Token.Type... tokens) {
         for (Token.Type token : tokens) {
             prefix(token);
         }
     }
 
+    /**
+     * Registers an infix parselet for a token type.
+     *
+     * @param token    The token type.
+     * @param parselet The parselet.
+     */
     public void register(Token.Type token, InfixParselet parselet) {
         infixParselets.put(token, parselet);
     }
 
+    /**
+     * Registers an infix operator parselet for a token type.
+     *
+     * @param token      The token type.
+     * @param precedence The precedence of the operator.
+     */
     public void infix(Token.Type token, int precedence) {
         register(token, new BinaryOperatorParselet(precedence));
     }
 
+    /**
+     * Registers a postfix operator parselet for a token type.
+     *
+     * @param token The token type.
+     */
     public void postfix(Token.Type token) {
         register(token, new PostfixOperatorParselet());
     }
 
+    /**
+     * Registers a postfix operator parselet for some token types.
+     *
+     * @param tokens The token types.
+     */
     public void postfix(Token.Type... tokens) {
         for (Token.Type token : tokens) {
             postfix(token);
         }
     }
 
+    /**
+     * Reads a single token from the input (or, if a token was peeked, that token) and returns it.
+     *
+     * @return The read token, or null if the end of the input has been reached.
+     */
     public Token read() {
         if (peeked != null) {
             Token peeked = this.peeked;
@@ -176,18 +272,34 @@ public class Parser implements Phase<Token, Expr> {
         }
     }
 
+    /**
+     * Reads a single token. If its type is not equal to the given type, throws an exception.
+     *
+     * @param type The type to compare.
+     * @throws me.abje.zero.parser.ParseException If the type of the read token is different from the given type.
+     */
     public void expect(Token.Type type) {
         if (peek() == null || !read().is(type)) {
             throw new ParseException("expected " + type);
         }
     }
 
+    /**
+     * Skips over as many {@link me.abje.zero.lexer.Token.Type#LINE} tokens as possible.
+     */
     public void eatLines() {
         while (peek().is(LINE)) {
             read();
         }
     }
 
+    /**
+     * Peeks a single token. If its type is equal to the given type, consumes it and returns true.
+     * Otherwise, returns false.
+     *
+     * @param type The type to compare.
+     * @return True if the peeked token has type <code>type</code>.
+     */
     public boolean match(Token.Type type) {
         return peek() != null && read().is(type);
     }

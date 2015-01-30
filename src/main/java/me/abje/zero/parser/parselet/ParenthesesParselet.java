@@ -26,6 +26,9 @@ import me.abje.zero.lexer.Token;
 import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 
+/**
+ * Parses an expression in parentheses, such as <code>(x + y)</code>.
+ */
 public class ParenthesesParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

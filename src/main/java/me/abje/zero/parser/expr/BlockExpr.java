@@ -27,9 +27,19 @@ import me.abje.zero.interpreter.obj.Obj;
 
 import java.util.List;
 
+/**
+ * An expression of a block of code.
+ */
 public class BlockExpr extends Expr {
+    /**
+     * The list of expressions within this block.
+     */
     private List<Expr> exprs;
 
+    /**
+     * Creates a new block expression.
+     * @param exprs The list of expressions within the block.
+     */
     public BlockExpr(List<Expr> exprs) {
         this.exprs = exprs;
     }
@@ -45,6 +55,9 @@ public class BlockExpr extends Expr {
         return result;
     }
 
+    /**
+     * Returns the list of expressions within this block.
+     */
     public List<Expr> getExprs() {
         return exprs;
     }

@@ -28,6 +28,9 @@ import me.abje.zero.parser.Precedence;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.PrefixExpr;
 
+/**
+ * Parses a prefix operator, such as <code>++a</code>.
+ */
 public class PrefixOperatorParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
         Expr operand = parser.next(Precedence.PREFIX);

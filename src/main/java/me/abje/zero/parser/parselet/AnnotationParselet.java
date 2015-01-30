@@ -26,6 +26,9 @@ import me.abje.zero.lexer.Token;
 import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 
+/**
+ * Parses an annotated expression.
+ */
 public class AnnotationParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

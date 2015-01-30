@@ -30,6 +30,9 @@ import me.abje.zero.parser.expr.Expr;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a block expression.
+ */
 public class BlockParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

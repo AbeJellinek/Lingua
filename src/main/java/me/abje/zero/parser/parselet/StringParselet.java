@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.StringExpr;
 
+/**
+ * Parses a string literal, such as <code>"abc"</code>.
+ */
 public class StringParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

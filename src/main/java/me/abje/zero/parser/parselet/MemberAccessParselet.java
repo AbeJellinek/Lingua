@@ -29,6 +29,9 @@ import me.abje.zero.parser.Precedence;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.MemberAccessExpr;
 
+/**
+ * Parses a member access expression, such as <code>a.b</code>.
+ */
 public class MemberAccessParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {

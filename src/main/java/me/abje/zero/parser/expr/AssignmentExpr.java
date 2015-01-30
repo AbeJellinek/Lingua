@@ -25,10 +25,25 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * A variable assignment expression.
+ */
 public class AssignmentExpr extends Expr {
+    /**
+     * The name of the variable.
+     */
     private String name;
+
+    /**
+     * The expression of the value to be assigned to this variable.
+     */
     private Expr value;
 
+    /**
+     * Creates a new assignment expression.
+     * @param name The name of the variable.
+     * @param value The expression of the value to be assigned.
+     */
     public AssignmentExpr(String name, Expr value) {
         this.name = name;
         this.value = value;
@@ -45,10 +60,16 @@ public class AssignmentExpr extends Expr {
         return valueObj;
     }
 
+    /**
+     * Returns the name of the variable.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the expression of the value to be assigned.
+     */
     public Expr getValue() {
         return value;
     }

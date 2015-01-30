@@ -31,9 +31,25 @@ import me.abje.zero.parser.expr.WhileExpr;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a while loop expression, such as <code>while (x) { y }</code>
+ */
 public class WhileParselet implements PrefixParselet {
+    /**
+     * If true, this loop is a do-while loop of the format:
+     * <pre>
+     *     do {
+     *         xyz()
+     *     } while (abc)
+     * </pre>
+     */
     private boolean doWhile;
 
+    /**
+     * Creates a new while loop expression parselet.
+     *
+     * @param doWhile Whether this loop is a do-while loop.
+     */
     public WhileParselet(boolean doWhile) {
         this.doWhile = doWhile;
     }

@@ -31,6 +31,9 @@ import me.abje.zero.parser.expr.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses an assignment, index assignment, or method definition expression.
+ */
 public class AssignmentParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
@@ -63,7 +66,7 @@ public class AssignmentParselet implements InfixParselet {
             Expr value = parser.next(Precedence.ASSIGNMENT);
             return new AssignmentExpr(((NameExpr) left).getValue(), value);
         } else {
-            throw new ParseException("assignments must have a function call or name as a target");
+            throw new ParseException("assignments must have a function call, index expression, or variable as a target");
         }
     }
 

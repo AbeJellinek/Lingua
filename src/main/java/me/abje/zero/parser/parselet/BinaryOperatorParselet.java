@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.OperatorExpr;
 
+/**
+ * Parses a binary operator expression, such as <code>x + y</code>.
+ */
 public class BinaryOperatorParselet implements InfixParselet {
     private int precedence;
 

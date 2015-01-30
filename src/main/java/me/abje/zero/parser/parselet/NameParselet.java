@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.NameExpr;
 
+/**
+ * Parses a name expression, such as <code>xyz</code>.
+ */
 public class NameParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
         return new NameExpr(token.getValue());

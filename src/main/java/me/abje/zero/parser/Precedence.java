@@ -22,6 +22,9 @@
 
 package me.abje.zero.parser;
 
+/**
+ * A container class for precedence constants.
+ */
 public class Precedence {
     public static final int CALL = 10;
     public static final int PREFIX = 9;  // ! -

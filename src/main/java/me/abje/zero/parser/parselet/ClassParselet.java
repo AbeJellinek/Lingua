@@ -31,6 +31,9 @@ import me.abje.zero.parser.expr.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a class definition expression.
+ */
 public class ClassParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

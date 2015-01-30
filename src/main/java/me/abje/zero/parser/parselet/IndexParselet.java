@@ -28,6 +28,9 @@ import me.abje.zero.parser.Precedence;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.IndexExpr;
 
+/**
+ * Parses an index expression, such as x[y].
+ */
 public class IndexParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {

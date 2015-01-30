@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.IfExpr;
 
+/**
+ * Parses an if-else expression.
+ */
 public class IfParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

@@ -22,6 +22,18 @@
 
 package me.abje.zero;
 
+/**
+ * A compiler phase.
+ *
+ * @param <T> The phase's input type.
+ * @param <U> The phase's output type.
+ */
 public interface Phase<T, U> {
+    /**
+     * Runs the phase on an input value.
+     *
+     * @param input The input value.
+     * @return The result.
+     */
     public U next(T input);
 }

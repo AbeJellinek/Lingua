@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.BooleanExpr;
 import me.abje.zero.parser.expr.Expr;
 
+/**
+ * Parses a boolean literal expression.
+ */
 public class BooleanParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

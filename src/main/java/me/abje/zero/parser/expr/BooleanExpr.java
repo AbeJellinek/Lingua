@@ -26,9 +26,19 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.BooleanObj;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * A boolean literal expression.
+ */
 public class BooleanExpr extends Expr {
+    /**
+     * This boolean's value.
+     */
     private boolean value;
 
+    /**
+     * Creates a new boolean literal.
+     * @param value The boolean's value.
+     */
     public BooleanExpr(boolean value) {
         this.value = value;
     }
@@ -38,6 +48,9 @@ public class BooleanExpr extends Expr {
         return new BooleanObj(value);
     }
 
+    /**
+     * Returns this boolean's value.
+     */
     public boolean getValue() {
         return value;
     }

@@ -27,6 +27,9 @@ import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.NumberExpr;
 
+/**
+ * Parses a number literal, such as <code>100</code> or <code>5.25</code>.
+ */
 public class NumberParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
         return new NumberExpr(token.getValue());

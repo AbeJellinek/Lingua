@@ -28,6 +28,9 @@ import me.abje.zero.parser.Precedence;
 import me.abje.zero.parser.expr.Expr;
 import me.abje.zero.parser.expr.PostfixExpr;
 
+/**
+ * Parses a postfix operator, such as <code>a++</code>.
+ */
 public class PostfixOperatorParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
         return new PostfixExpr(left, token.getType());

@@ -31,6 +31,9 @@ import me.abje.zero.parser.expr.Expr;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a function call expression.
+ */
 public class CallParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {

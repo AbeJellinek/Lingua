@@ -30,6 +30,9 @@ import me.abje.zero.parser.expr.ListExpr;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a list of values expression, such as <code>[a, b, c]</code>.
+ */
 public class ListParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {

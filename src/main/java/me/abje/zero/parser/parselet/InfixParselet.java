@@ -26,8 +26,23 @@ import me.abje.zero.lexer.Token;
 import me.abje.zero.parser.Parser;
 import me.abje.zero.parser.expr.Expr;
 
+/**
+ * Interface for parselets which operate on already-parsed expressions.
+ */
 public interface InfixParselet {
+    /**
+     * Parses an expression.
+     *
+     * @param parser The parser.
+     * @param left   The expression that this parselet is building upon.
+     * @param token  The token that triggered this parselet.
+     * @return The parsed expression.
+     */
     public Expr parse(Parser parser, Expr left, Token token);
 
+    /**
+     * Returns this parser's precedence.
+     * Precedence constants can be found in the {@link me.abje.zero.parser.Precedence} class.
+     */
     public int getPrecedence();
 }

@@ -22,6 +22,9 @@
 
 package me.abje.zero.parser;
 
+/**
+ * An exception thrown while lexing or parsing.
+ */
 public class ParseException extends RuntimeException {
     public ParseException(String message) {
         super(message);
