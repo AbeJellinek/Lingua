@@ -30,25 +30,55 @@ import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.StringObj;
 import me.abje.zero.lexer.Token;
 
+/**
+ * A binary operator expression, in the form of <code>left + right</code>.
+ */
 public class OperatorExpr extends Expr {
+    /**
+     * The left expression.
+     */
     private final Expr left;
+
+    /**
+     * The operator token type.
+     */
     private final Token.Type token;
+
+    /**
+     * The right expression.
+     */
     private final Expr right;
 
+    /**
+     * Creates a new operator expression.
+     *
+     * @param left  The left expression.
+     * @param token The operator token type.
+     * @param right The right expression.
+     */
     public OperatorExpr(Expr left, Token.Type token, Expr right) {
         this.left = left;
         this.token = token;
         this.right = right;
     }
 
+    /**
+     * Returns the left expression.
+     */
     public Expr getLeft() {
         return left;
     }
 
+    /**
+     * Returns the operator token type.
+     */
     public Token.Type getToken() {
         return token;
     }
 
+    /**
+     * Returns the right expression.
+     */
     public Expr getRight() {
         return right;
     }

@@ -27,9 +27,20 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.parser.ParseException;
 
+/**
+ * A number literal expression.
+ */
 public class NumberExpr extends Expr {
+    /**
+     * The float value of this number.
+     */
     private float value;
 
+    /**
+     * Creates a new number literal expression.
+     *
+     * @param value The string value of the number.
+     */
     public NumberExpr(String value) {
         try {
             this.value = Float.parseFloat(value);
@@ -38,6 +49,9 @@ public class NumberExpr extends Expr {
         }
     }
 
+    /**
+     * Returns the float value of this number.
+     */
     public float getValue() {
         return value;
     }

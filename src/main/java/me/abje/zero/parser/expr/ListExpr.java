@@ -29,13 +29,27 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A list expression, in the form of <code>[item1, item2, item3, ..., itemN]</code>.
+ */
 public class ListExpr extends Expr {
+    /**
+     * This list's items.
+     */
     private List<Expr> items;
 
+    /**
+     * Creates a new list expression.
+     *
+     * @param items The list's items.
+     */
     public ListExpr(List<Expr> items) {
         this.items = items;
     }
 
+    /**
+     * Returns this list's items.
+     */
     public List<Expr> getItems() {
         return items;
     }

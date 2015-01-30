@@ -26,13 +26,27 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.StringObj;
 
+/**
+ * A string literal expression.
+ */
 public class StringExpr extends Expr {
+    /**
+     * The internal value of this string.
+     */
     private String value;
 
+    /**
+     * Creates a new string literal expression.
+     *
+     * @param value The expression's value.
+     */
     public StringExpr(String value) {
         this.value = value;
     }
 
+    /**
+     * The expression's value.
+     */
     public String getValue() {
         return value;
     }

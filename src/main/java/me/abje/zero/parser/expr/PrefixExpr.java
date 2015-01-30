@@ -29,19 +29,41 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.lexer.Token;
 
+/**
+ * A prefix operator expression, in the form of <code>++operand</code>.
+ */
 public class PrefixExpr extends Expr {
+    /**
+     * The type of the operator.
+     */
     private Token.Type type;
+
+    /**
+     * The right-side expression operated on by this operator.
+     */
     private Expr operand;
 
+    /**
+     * Creates a new prefix operator expression.
+     *
+     * @param type    The type of the operator.
+     * @param operand The right-side expression.
+     */
     public PrefixExpr(Token.Type type, Expr operand) {
         this.type = type;
         this.operand = operand;
     }
 
+    /**
+     * Returns the type of the operator.
+     */
     public Token.Type getType() {
         return type;
     }
 
+    /**
+     * Returns the right-side expression.
+     */
     public Expr getOperand() {
         return operand;
     }
@@ -68,7 +90,7 @@ public class PrefixExpr extends Expr {
                     throw new InterpreterException("operand is not a number");
                 }
             case BANG:
-                    return new BooleanObj(obj.isTruthy());
+                return new BooleanObj(obj.isTruthy());
             default:
                 throw new InterpreterException("invalid prefix operator");
         }

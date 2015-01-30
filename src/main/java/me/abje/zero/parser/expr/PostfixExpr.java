@@ -28,19 +28,41 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.lexer.Token;
 
+/**
+ * A postfix operator expression, in the form of <code>expr++</code>.
+ */
 public class PostfixExpr extends Expr {
+    /**
+     * The left-side expression operated on by this operator.
+     */
     private final Expr expr;
+
+    /**
+     * The type of the operator.
+     */
     private final Token.Type type;
 
+    /**
+     * Creates a new postfix expression.
+     *
+     * @param expr The left-side expression operated on by the operator.
+     * @param type The type of the operator.
+     */
     public PostfixExpr(Expr expr, Token.Type type) {
         this.expr = expr;
         this.type = type;
     }
 
+    /**
+     * Returns the left-side expression.
+     */
     public Expr getExpr() {
         return expr;
     }
 
+    /**
+     * Returns the type of the operator.
+     */
     public Token.Type getType() {
         return type;
     }
@@ -59,11 +81,9 @@ public class PostfixExpr extends Expr {
                 int result = 1;
                 if (current == 0) {
                     return new NumberObj(1);
-                } else {
-                    while (current > 0) {
-                        result *= current;
-                        current -= 1;
-                    }
+                } else while (current > 0) {
+                    result *= current;
+                    current -= 1;
                 }
                 return new NumberObj(result);
             default:

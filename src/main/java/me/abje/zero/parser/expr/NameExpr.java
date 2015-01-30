@@ -25,13 +25,27 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * A name expression, in the form of <code>xyz</code>.
+ */
 public class NameExpr extends Expr {
+    /**
+     * The string value of this name.
+     */
     private String value;
 
+    /**
+     * Creates a new name expression.
+     *
+     * @param value The string value of the name.
+     */
     public NameExpr(String value) {
         this.value = value;
     }
 
+    /**
+     * Returns the string value of this name.
+     */
     public String getValue() {
         return value;
     }

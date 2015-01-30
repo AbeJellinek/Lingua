@@ -26,10 +26,25 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.NullObj;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * A while loop expression.
+ */
 public class WhileExpr extends Expr {
+    /**
+     * The loop condition.
+     */
     private Expr condition;
+
+    /**
+     * The loop body.
+     */
     private Expr body;
 
+    /**
+     * Creates a new while loop expression.
+     * @param condition The loop condition.
+     * @param body The loop body.
+     */
     public WhileExpr(Expr condition, Expr body) {
         this.condition = condition;
         this.body = body;
@@ -43,10 +58,16 @@ public class WhileExpr extends Expr {
         return NullObj.get();
     }
 
+    /**
+     * Returns the loop condition.
+     */
     public Expr getCondition() {
         return condition;
     }
 
+    /**
+     * Returns the loop body.
+     */
     public Expr getBody() {
         return body;
     }

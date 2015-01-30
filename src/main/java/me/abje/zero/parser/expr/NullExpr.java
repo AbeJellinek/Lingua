@@ -26,6 +26,9 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.NullObj;
 
+/**
+ * A null literal expression.
+ */
 public class NullExpr extends Expr {
     @Override
     public Obj evaluate(Interpreter interpreter) {

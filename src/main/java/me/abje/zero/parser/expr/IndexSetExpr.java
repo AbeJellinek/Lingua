@@ -25,11 +25,32 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * An index set expression, in the form of <code>target[index] = value</code>.
+ */
 public class IndexSetExpr extends Expr {
+    /**
+     * This expression's target.
+     */
     private Expr target;
+
+    /**
+     * This expression's index.
+     */
     private Expr index;
+
+    /**
+     * This expression's value.
+     */
     private Expr value;
 
+    /**
+     * Creates a new index set expression.
+     *
+     * @param target The expression's target.
+     * @param index  The expression's index.
+     * @param value  The expression's value.
+     */
     public IndexSetExpr(Expr target, Expr index, Expr value) {
         this.target = target;
         this.index = index;
@@ -45,14 +66,23 @@ public class IndexSetExpr extends Expr {
         return valueObj;
     }
 
+    /**
+     * Returns this expression's target.
+     */
     public Expr getTarget() {
         return target;
     }
 
+    /**
+     * Returns this expression's index.
+     */
     public Expr getIndex() {
         return index;
     }
 
+    /**
+     * Returns this expression's value.
+     */
     public Expr getValue() {
         return value;
     }

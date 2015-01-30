@@ -25,11 +25,32 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * A member set expression, in the form of <code>left.name = value</code>.
+ */
 public class MemberSetExpr extends Expr {
+    /**
+     * The left side of the expression -- the object which contains the member to be set.
+     */
     private final Expr left;
+
+    /**
+     * The name of the member to be set.
+     */
     private final String name;
+
+    /**
+     * The value to set the member to.
+     */
     private final Expr value;
 
+    /**
+     * Creates a new member set expression.
+     *
+     * @param left  The left side of the expression.
+     * @param name  The name of the member to be set.
+     * @param value The value to set it to.
+     */
     public MemberSetExpr(Expr left, String name, Expr value) {
         this.left = left;
         this.name = name;
@@ -44,14 +65,23 @@ public class MemberSetExpr extends Expr {
         return valueObj;
     }
 
+    /**
+     * Returns the left side of the expression.
+     */
     public Expr getLeft() {
         return left;
     }
 
+    /**
+     * Returns the name of the member to be set.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the value to set the member to.
+     */
     public Expr getValue() {
         return value;
     }

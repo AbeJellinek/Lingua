@@ -25,10 +25,26 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * An object member access expression, in the form of <code>left.name</code>.
+ */
 public class MemberAccessExpr extends Expr {
+    /**
+     * The left side of the expression -- the object which contains the member to be accessed.
+     */
     private Expr left;
+
+    /**
+     * The name of the member.
+     */
     private String name;
 
+    /**
+     * Creates a new member access expression.
+     *
+     * @param left The left side of the expression.
+     * @param name The name of the member.
+     */
     public MemberAccessExpr(Expr left, String name) {
         this.left = left;
         this.name = name;
@@ -39,10 +55,16 @@ public class MemberAccessExpr extends Expr {
         return interpreter.next(left).getMember(name);
     }
 
+    /**
+     * Returns the left side of the expression.
+     */
     public Expr getLeft() {
         return left;
     }
 
+    /**
+     * Returns the name of the member.
+     */
     public String getName() {
         return name;
     }

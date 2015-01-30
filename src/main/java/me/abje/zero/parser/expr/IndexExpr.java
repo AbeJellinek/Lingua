@@ -25,10 +25,26 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * An index expression, in the form of <code>target[index]</code>.
+ */
 public class IndexExpr extends Expr {
+    /**
+     * This expression's target.
+     */
     private Expr target;
+
+    /**
+     * This expression's index.
+     */
     private Expr index;
 
+    /**
+     * Creates a new index expression.
+     *
+     * @param target The expression's target.
+     * @param index The expression's index.
+     */
     public IndexExpr(Expr target, Expr index) {
         this.target = target;
         this.index = index;
@@ -39,10 +55,16 @@ public class IndexExpr extends Expr {
         return interpreter.next(target).getAtIndex(interpreter.next(index));
     }
 
+    /**
+     * Returns this expression's target.
+     */
     public Expr getTarget() {
         return target;
     }
 
+    /**
+     * Returns this expression's index.
+     */
     public Expr getIndex() {
         return index;
     }
