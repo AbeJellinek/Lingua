@@ -11,6 +11,7 @@ public class BooleanObj extends Obj {
 
     /**
      * Creates a new boolean object with the given value.
+     *
      * @param value The value.
      */
     public BooleanObj(boolean value) {
@@ -45,6 +46,11 @@ public class BooleanObj extends Obj {
         return (value ? 1 : 0);
     }
 
+    /**
+     * Booleans are truthy depending on their value.
+     *
+     * @return Whether this boolean is `true`.
+     */
     @Override
     public boolean isTruthy() {
         return value;

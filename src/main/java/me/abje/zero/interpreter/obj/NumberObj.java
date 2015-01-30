@@ -5,14 +5,28 @@ import me.abje.zero.interpreter.InterpreterException;
 
 import java.util.List;
 
+/**
+ * A Zero number. Represented by a Java float.
+ */
 public class NumberObj extends Obj {
+    /**
+     * This Number's value.
+     */
     private float value;
 
+    /**
+     * Creates a new Number with the given value.
+     *
+     * @param value The value.
+     */
     public NumberObj(float value) {
         super(SYNTHETIC);
         this.value = value;
     }
 
+    /**
+     * Returns this Number's value.
+     */
     public float getValue() {
         return value;
     }
@@ -47,6 +61,11 @@ public class NumberObj extends Obj {
         return (value != +0.0f ? Float.floatToIntBits(value) : 0);
     }
 
+    /**
+     * Numbers are truthy depending on their values.
+     *
+     * @return Whether this Number is not 0.0.
+     */
     @Override
     public boolean isTruthy() {
         return value != 0;

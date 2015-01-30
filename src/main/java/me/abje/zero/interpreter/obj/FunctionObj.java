@@ -7,16 +7,49 @@ import me.abje.zero.parser.expr.Expr;
 
 import java.util.List;
 
+/**
+ * A Zero function. Functions can be called, have a body and take arguments.
+ */
 public class FunctionObj extends Obj {
+    /**
+     * This function's name.
+     */
     private String name;
+
+    /**
+     * This function's formal argument list.
+     */
     private List<String> argNames;
+
+    /**
+     * This function's body expression.
+     */
     private Expr body;
+
+    /**
+     * The "self" implicit argument passed to this function.
+     */
     private Obj self;
 
+    /**
+     * Creates a new function.
+     *
+     * @param name     The function's name.
+     * @param argNames The function's formal argument list.
+     * @param body     The function's body expression.
+     */
     public FunctionObj(String name, List<String> argNames, Expr body) {
         this(name, argNames, body, null);
     }
 
+    /**
+     * Creates a new function.
+     *
+     * @param name     The function's name.
+     * @param argNames The function's formal argument list.
+     * @param body     The function's body expression.
+     * @param self     The function's "self" implicit argument.
+     */
     public FunctionObj(String name, List<String> argNames, Expr body, Obj self) {
         super(SYNTHETIC);
         this.name = name;
@@ -25,14 +58,23 @@ public class FunctionObj extends Obj {
         this.self = self;
     }
 
+    /**
+     * Returns this function's name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns this function's argument names.
+     */
     public List<String> getArgNames() {
         return argNames;
     }
 
+    /**
+     * Returns this function's body.
+     */
     public Expr getBody() {
         return body;
     }
@@ -77,14 +119,25 @@ public class FunctionObj extends Obj {
         return result;
     }
 
+    /**
+     * Sets this function's "self" implicit argument.
+     * @param self The new value.
+     */
     public void setSelf(Obj self) {
         this.self = self;
     }
 
+    /**
+     * Returns this function's "self" implicit argument.
+     */
     public Obj getSelf() {
         return self;
     }
 
+    /**
+     * Returns a copy of this function with an updated {@link #self}.
+     * @param self The new value of <code>self</code>.
+     */
     public FunctionObj withSelf(Obj self) {
         return new FunctionObj(name, argNames, body, self);
     }
