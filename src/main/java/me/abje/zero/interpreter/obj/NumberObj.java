@@ -2,7 +2,6 @@ package me.abje.zero.interpreter.obj;
 
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
-import me.abje.zero.interpreter.Intrinsics;
 
 import java.util.List;
 
@@ -64,8 +63,4 @@ public class NumberObj extends Obj {
                 }
             }).
             build();
-
-    static {
-        Intrinsics.registerClass(SYNTHETIC);
-    }
 }

@@ -1,7 +1,5 @@
 package me.abje.zero.interpreter.obj;
 
-import me.abje.zero.interpreter.Intrinsics;
-
 import java.util.stream.Collectors;
 
 public class StringObj extends Obj {
@@ -40,8 +38,4 @@ public class StringObj extends Obj {
             withFunction("init", (interpreter, args) ->
                     new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
             build();
-
-    static {
-        Intrinsics.registerClass(SYNTHETIC);
-    }
 }

@@ -3,7 +3,6 @@ package me.abje.zero.interpreter.obj;
 import me.abje.zero.interpreter.Environment;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
-import me.abje.zero.interpreter.Intrinsics;
 import me.abje.zero.parser.expr.Expr;
 
 import java.util.List;
@@ -91,8 +90,4 @@ public class FunctionObj extends Obj {
     }
 
     public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
-
-    static {
-        Intrinsics.registerClass(SYNTHETIC);
-    }
 }
