@@ -2,12 +2,12 @@ package me.abje.zero.interpreter.obj;
 
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
+import me.abje.zero.util.TriFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -92,11 +92,11 @@ public class ClassObj extends Obj {
             });
         }
 
-        public Builder withFunction(String name, BiFunction<Interpreter, List<Obj>, Obj> body) {
-            this.functions.put(name, new Obj(FunctionObj.SYNTHETIC) {
+        public Builder withFunction(String name, TriFunction<Interpreter, Obj, List<Obj>, Obj> body) {
+            this.functions.put(name, new SyntheticFunctionObj() {
                 @Override
                 public Obj call(Interpreter interpreter, List<Obj> args) {
-                    return body.apply(interpreter, args);
+                    return body.apply(interpreter, getSelf(), args);
                 }
             });
             return this;

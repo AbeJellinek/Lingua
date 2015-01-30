@@ -35,7 +35,7 @@ public class StringObj extends Obj {
     }
 
     public static final ClassObj SYNTHETIC = ClassObj.builder("String").
-            withFunction("init", (interpreter, args) ->
+            withFunction("init", (interpreter, self, args) ->
                     new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
             build();
 }

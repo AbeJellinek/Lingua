@@ -36,6 +36,9 @@ public class Obj {
             Obj function = type.getFunctionMap().get(name);
             if (function instanceof FunctionObj) {
                 return ((FunctionObj) function).withSelf(this);
+            } else if (function instanceof SyntheticFunctionObj) {
+                ((SyntheticFunctionObj) function).setSelf(this);
+                return function;
             } else {
                 return function;
             }

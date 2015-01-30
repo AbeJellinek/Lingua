@@ -1,8 +1,13 @@
 package me.abje.zero.interpreter.obj;
 
+import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListObj extends Obj {
     private List<Obj> items;
@@ -48,6 +53,29 @@ public class ListObj extends Obj {
             throw new InterpreterException("list index not a number");
     }
 
+    public ListObj map(Interpreter interpreter, Obj function) {
+        List<Obj> newList = items.stream().map(obj -> function.call(interpreter, Arrays.asList(obj))).
+                collect(Collectors.toList());
+        return new ListObj(newList);
+    }
+
+    public ListObj filter(Interpreter interpreter, Obj predicate) {
+        List<Obj> newList = items.stream().filter(obj -> predicate.call(interpreter, Arrays.asList(obj)).isTruthy()).
+                collect(Collectors.toList());
+        return new ListObj(newList);
+    }
+
+    public ListObj reverse() {
+        List<Obj> newList = new ArrayList<>(items);
+        Collections.reverse(newList);
+        return new ListObj(newList);
+    }
+
+    public ListObj add(Obj obj) {
+        items.add(obj);
+        return this;
+    }
+
     @Override
     public boolean isTruthy() {
         return !items.isEmpty();
@@ -73,5 +101,25 @@ public class ListObj extends Obj {
         return items.hashCode();
     }
 
-    public static final ClassObj SYNTHETIC = ClassObj.builder("List").build();
+    public static final ClassObj SYNTHETIC = ClassObj.builder("List").
+            withFunction("map", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for map");
+                return ((ListObj) self).map(interpreter, args.get(0));
+            }).
+            withFunction("filter", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for filter");
+                return ((ListObj) self).filter(interpreter, args.get(0));
+            }).
+            withFunction("reverse", (interpreter, self, args) -> {
+                if (args.size() != 0)
+                    throw new InterpreterException("too many arguments for reverse");
+                return ((ListObj) self).reverse();
+            }).
+            withFunction("add", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for reverse");
+                return ((ListObj) self).add(args.get(0));
+            }).build();
 }

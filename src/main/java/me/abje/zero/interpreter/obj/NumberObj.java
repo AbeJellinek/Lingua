@@ -53,7 +53,7 @@ public class NumberObj extends Obj {
     }
 
     public static final ClassObj SYNTHETIC = ClassObj.builder("Number").
-            withFunction("init", (interpreter, args) -> {
+            withFunction("init", (interpreter, self, args) -> {
                 if (args.size() != 1)
                     throw new InterpreterException("wrong number of arguments for Number constructor");
                 try {
