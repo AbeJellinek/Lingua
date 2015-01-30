@@ -1,13 +1,26 @@
 package me.abje.zero.interpreter.obj;
 
+/**
+ * An object with two possible values: true and false.
+ */
 public class BooleanObj extends Obj {
+    /**
+     * The value of this object.
+     */
     private boolean value;
 
+    /**
+     * Creates a new boolean object with the given value.
+     * @param value The value.
+     */
     public BooleanObj(boolean value) {
         super(SYNTHETIC);
         this.value = value;
     }
 
+    /**
+     * Returns this boolean's value.
+     */
     public boolean getValue() {
         return value;
     }

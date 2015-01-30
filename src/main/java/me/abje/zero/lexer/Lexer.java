@@ -9,18 +9,61 @@ import java.io.Reader;
 
 import static me.abje.zero.lexer.Token.Type.*;
 
+/**
+ * The phase which produces tokens from text. Usually the first phase in the pipeline.
+ */
 public class Lexer implements Phase<Void, Token> {
+    /**
+     * The reader that code is read from.
+     */
     private PushbackReader reader;
+
+    /**
+     * The temporary buffer that holds characters as they are read.
+     */
     private StringBuilder builder;
-    private int line = 1, column = 1;
-    private int realLine = 1, realColumn = 1;
+
+    /**
+     * The current line, as of the start of the current token.
+     */
+    private int line = 1;
+
+    /**
+     * The current column, as of the start of the current token.
+     */
+    private int column = 1;
+
+    /**
+     * The current line.
+     */
+    private int realLine = 1;
+
+    /**
+     * The current column.
+     */
+    private int realColumn = 1;
+
+    /**
+     * The column before the last read operation.
+     */
     private int oldColumn;
 
+    /**
+     * Creates a new Lexer with the given input Reader.
+     *
+     * @param reader The Reader.
+     */
     public Lexer(Reader reader) {
         this.reader = new PushbackReader(reader, 1);
         this.builder = new StringBuilder();
     }
 
+    /**
+     * Reads a token from the input and returns it.
+     *
+     * @param unused Null.
+     * @return The token that was read, or null if the end of the input was reached.
+     */
     public Token next(Void unused) {
         realLine = line;
         realColumn = column;
@@ -165,6 +208,11 @@ public class Lexer implements Phase<Void, Token> {
         }
     }
 
+    /**
+     * Reads a quote-delimited string from the input.
+     *
+     * @return The Token that was read.
+     */
     private Token readString() {
         StringBuilder stringBuilder = new StringBuilder();
         boolean escape = false;
@@ -189,6 +237,14 @@ public class Lexer implements Phase<Void, Token> {
         return make(STRING);
     }
 
+    /**
+     * Reads one character.
+     * If it is the given character, returns true.
+     * Otherwise, unreads it and returns false.
+     *
+     * @param c The character.
+     * @return True if the next input character equals <code>c</code>, false otherwise.
+     */
     private boolean isNext(char c) {
         try {
             char read = read();
@@ -203,6 +259,13 @@ public class Lexer implements Phase<Void, Token> {
         }
     }
 
+    /**
+     * Creates a token from the current buffer.
+     * If the buffer is a reserved keyword, makes that keyword's token.
+     * Otherwise, makes a {@link me.abje.zero.lexer.Token.Type#NAME} token.
+     *
+     * @return The Token.
+     */
     private Token makeName() {
         switch (builder.toString()) {
             case "true":
@@ -226,6 +289,11 @@ public class Lexer implements Phase<Void, Token> {
         }
     }
 
+    /**
+     * Reads a single character from the input, appends it to the buffer, and returns it.
+     *
+     * @return The character.
+     */
     private char read() {
         try {
             int read = reader.read();
@@ -246,6 +314,11 @@ public class Lexer implements Phase<Void, Token> {
         }
     }
 
+    /**
+     * Removes a single character from the end of the buffer and adds it to the end of the input.
+     *
+     * @param read The character to unread.
+     */
     private void unread(char read) {
         try {
             if (read == '\n' || read == '\r') {
@@ -262,6 +335,12 @@ public class Lexer implements Phase<Void, Token> {
         }
     }
 
+    /**
+     * Creates a Token with the given type, and with the current buffer as its value.
+     *
+     * @param type The Token's type.
+     * @return The new Token.
+     */
     private Token make(Token.Type type) {
         Token token = new Token(type, builder.toString(), realLine, realColumn);
         builder.setLength(0);

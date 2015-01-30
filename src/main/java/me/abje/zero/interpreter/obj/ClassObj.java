@@ -11,13 +11,45 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * A Zero class. Classes have names, functions, and fields.
+ */
 public class ClassObj extends Obj {
+    /**
+     * This class's name.
+     */
     private final String name;
+
+    /**
+     * A map of the functions provided by this class.
+     * The keys are the names of the functions, and the values the functions themselves.
+     */
     private final Map<String, Obj> functionMap;
+
+    /**
+     * The fields provided by this class.
+     */
     private final List<Field> fields;
+
+    /**
+     * The fields provided by this class, in map form.
+     * The keys are the names of the fields, and the values the fields themselves.
+     */
     private final Map<String, Field> fieldMap = new HashMap<>();
+
+    /**
+     * Indicates whether this class is synthetic.
+     * A synthetic class is a class defined in the JVM, not Zero.
+     */
     private boolean synthetic = false;
 
+    /**
+     * Creates a new class.
+     *
+     * @param name      The class's name.
+     * @param functions The functions provided by the class in map form.
+     * @param fields    The class's fields.
+     */
     public ClassObj(String name, Map<String, Obj> functions, List<Field> fields) {
         super(null);
         this.name = name;
@@ -29,10 +61,20 @@ public class ClassObj extends Obj {
         }
     }
 
+    /**
+     * Creates a new class.
+     *
+     * @param name      The class's name.
+     * @param functions The functions provided by the class.
+     * @param fields    The class's fields.
+     */
     public ClassObj(String name, List<FunctionObj> functions, List<Field> fields) {
         this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())), fields);
     }
 
+    /**
+     * Returns this class's name.
+     */
     public String getName() {
         return name;
     }
@@ -56,14 +98,16 @@ public class ClassObj extends Obj {
         }
     }
 
+    /**
+     * Returns this class's fields.
+     */
     public Map<String, Field> getFieldMap() {
         return fieldMap;
     }
 
-    public List<Field> getFields() {
-        return fields;
-    }
-
+    /**
+     * Returns this class's functions.
+     */
     public Map<String, Obj> getFunctionMap() {
         return functionMap;
     }
@@ -73,15 +117,38 @@ public class ClassObj extends Obj {
         return "class " + name;
     }
 
+    /**
+     * Creates a new class builder.
+     * @param name The new class's name.
+     * @return The Builder.
+     */
     public static Builder builder(String name) {
         return new Builder(name);
     }
 
+    /**
+     * Builds a synthetic class.
+     */
     public static class Builder {
+        /**
+         * The class's name.
+         */
         private String name;
+
+        /**
+         * The class's functions.
+         */
         private Map<String, Obj> functions = new HashMap<>();
+
+        /**
+         * The class's fields.
+         */
         private List<Field> fields = new ArrayList<>();
 
+        /**
+         * Creates a new builder for a class with the given name.
+         * @param name The name.
+         */
         public Builder(String name) {
             this.name = name;
             this.functions.put("init", new Obj(FunctionObj.SYNTHETIC) {
@@ -92,6 +159,12 @@ public class ClassObj extends Obj {
             });
         }
 
+        /**
+         * Defines a new function.
+         * @param name The function's name.
+         * @param body The function's body.
+         * @return This builder, for chaining.
+         */
         public Builder withFunction(String name, TriFunction<Interpreter, Obj, List<Obj>, Obj> body) {
             this.functions.put(name, new SyntheticFunctionObj() {
                 @Override
@@ -102,11 +175,20 @@ public class ClassObj extends Obj {
             return this;
         }
 
+        /**
+         * Adds fields to the class.
+         * @param fields The fields to add.
+         * @return This builder, for chaining.
+         */
         public Builder withFields(List<Field> fields) {
             this.fields.addAll(fields);
             return this;
         }
 
+        /**
+         * Creates the class represented by this builder.
+         * @return The new class.
+         */
         public ClassObj build() {
             ClassObj clazz = new ClassObj(name, functions, fields);
             clazz.synthetic = true;
