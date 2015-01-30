@@ -1,6 +1,7 @@
 package me.abje.zero.interpreter.obj;
 
 import me.abje.zero.interpreter.InterpreterException;
+import me.abje.zero.interpreter.Intrinsics;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class ListObj extends Obj {
     private List<Obj> items;
 
     public ListObj(List<Obj> items) {
+        super(SYNTHETIC);
         this.items = items;
     }
 
@@ -70,5 +72,10 @@ public class ListObj extends Obj {
     @Override
     public int hashCode() {
         return items.hashCode();
+    }
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("List").build();
+    static {
+        Intrinsics.registerClass(SYNTHETIC);
     }
 }

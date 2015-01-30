@@ -1,5 +1,6 @@
 package me.abje.zero.interpreter;
 
+import me.abje.zero.interpreter.obj.ClassObj;
 import me.abje.zero.interpreter.obj.Obj;
 
 import java.util.ArrayDeque;
@@ -12,7 +13,6 @@ public class Environment {
     private Deque<Frame> stack = new ArrayDeque<>();
 
     public Environment() {
-        new Intrinsics(globals).register();
         stack.push(globals);
     }
 
@@ -63,6 +63,14 @@ public class Environment {
         if (stack.size() > 1) {
             stack.pop();
         }
+    }
+
+    public ClassObj getClass(String name) {
+        return (ClassObj) globals.get(name);
+    }
+
+    public Frame getGlobals() {
+        return globals;
     }
 
     public static class Frame {

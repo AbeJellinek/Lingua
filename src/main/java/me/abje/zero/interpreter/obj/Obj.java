@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Obj {
+    private ClassObj type;
     private Map<String, Obj> members = new HashMap<>();
+
+    public Obj(ClassObj type) {
+        this.type = type;
+    }
 
     public Obj call(Interpreter interpreter, List<Obj> args) {
         throw new InterpreterException("object not callable");
@@ -27,10 +32,33 @@ public class Obj {
     }
 
     public Obj getMember(String name) {
-        return members.getOrDefault(name, NullObj.get());
+        if (type != null && type.getFunctionMap().containsKey(name)) {
+            Obj function = type.getFunctionMap().get(name);
+            if (function instanceof FunctionObj) {
+                return ((FunctionObj) function).withSelf(this);
+            } else {
+                return function;
+            }
+        } else if (type != null && type.getFieldMap().containsKey(name)) {
+            return members.getOrDefault(name, NullObj.get());
+        } else {
+            throw new InterpreterException("unknown field: " + name);
+        }
     }
 
     public void setMember(String name, Obj value) {
-        members.put(name, value);
+        if (type != null && type.getFieldMap().containsKey(name)) {
+            members.put(name, value);
+        } else {
+            throw new InterpreterException("unknown field: " + name);
+        }
+    }
+
+    public ClassObj getType() {
+        return type;
+    }
+
+    protected void setType(ClassObj type) {
+        this.type = type;
     }
 }

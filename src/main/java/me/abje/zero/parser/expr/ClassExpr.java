@@ -2,6 +2,7 @@ package me.abje.zero.parser.expr;
 
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.ClassObj;
+import me.abje.zero.interpreter.obj.Field;
 import me.abje.zero.interpreter.obj.FunctionObj;
 import me.abje.zero.interpreter.obj.Obj;
 
@@ -11,9 +12,9 @@ import java.util.stream.Collectors;
 public class ClassExpr implements Expr {
     private final String name;
     private final List<FunctionExpr> functions;
-    private final List<AssignmentExpr> fields;
+    private final List<Field> fields;
 
-    public ClassExpr(String name, List<FunctionExpr> functions, List<AssignmentExpr> fields) {
+    public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields) {
         this.name = name;
         this.functions = functions;
         this.fields = fields;
@@ -36,7 +37,7 @@ public class ClassExpr implements Expr {
         return functions;
     }
 
-    public List<AssignmentExpr> getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 }

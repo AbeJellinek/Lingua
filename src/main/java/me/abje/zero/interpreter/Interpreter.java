@@ -10,6 +10,8 @@ import me.abje.zero.parser.expr.Expr;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 public class Interpreter implements Phase<Expr, Obj> {
     private Environment env = new Environment();
@@ -20,14 +22,20 @@ public class Interpreter implements Phase<Expr, Obj> {
 
     public static void main(String[] args) throws FileNotFoundException {
         try {
-            Parser parser = new Parser(new Morpher(new Lexer(new FileReader("test.txt"))));
             Interpreter interpreter = new Interpreter();
-            Expr expr;
-            while ((expr = parser.next()) != null) {
-                interpreter.next(expr);
-            }
+            new Intrinsics(interpreter.env.getGlobals()).register();
+            interpreter.interpret(new InputStreamReader(Interpreter.class.getResourceAsStream("/core.zero")));
+            interpreter.interpret(new FileReader("test.txt"));
         } catch (ParseException | InterpreterException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void interpret(Reader reader) {
+        Parser parser = new Parser(new Morpher(new Lexer(reader)));
+        Expr expr;
+        while ((expr = parser.next()) != null) {
+            next(expr);
         }
     }
 

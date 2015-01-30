@@ -2,6 +2,7 @@ package me.abje.zero.interpreter.obj;
 
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
+import me.abje.zero.interpreter.Intrinsics;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class NumberObj extends Obj {
     private float value;
 
     public NumberObj(float value) {
+        super(SYNTHETIC);
         this.value = value;
     }
 
@@ -49,5 +51,11 @@ public class NumberObj extends Obj {
     @Override
     public boolean isTruthy() {
         return value != 0;
+    }
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Number").build();
+
+    static {
+        Intrinsics.registerClass(SYNTHETIC);
     }
 }

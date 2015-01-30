@@ -3,6 +3,7 @@ package me.abje.zero.interpreter.obj;
 import me.abje.zero.interpreter.Environment;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.InterpreterException;
+import me.abje.zero.interpreter.Intrinsics;
 import me.abje.zero.parser.expr.Expr;
 
 import java.util.List;
@@ -11,13 +12,14 @@ public class FunctionObj extends Obj {
     private String name;
     private List<String> argNames;
     private Expr body;
-    private UserObj self;
+    private Obj self;
 
     public FunctionObj(String name, List<String> argNames, Expr body) {
         this(name, argNames, body, null);
     }
 
-    public FunctionObj(String name, List<String> argNames, Expr body, UserObj self) {
+    public FunctionObj(String name, List<String> argNames, Expr body, Obj self) {
+        super(SYNTHETIC);
         this.name = name;
         this.argNames = argNames;
         this.body = body;
@@ -77,15 +79,20 @@ public class FunctionObj extends Obj {
         return result;
     }
 
-    public void setSelf(UserObj self) {
+    public void setSelf(Obj self) {
         this.self = self;
     }
 
-    public UserObj getSelf() {
+    public Obj getSelf() {
         return self;
     }
 
-    public FunctionObj withSelf(UserObj self) {
+    public FunctionObj withSelf(Obj self) {
         return new FunctionObj(name, argNames, body, self);
+    }
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
+    static {
+        Intrinsics.registerClass(SYNTHETIC);
     }
 }

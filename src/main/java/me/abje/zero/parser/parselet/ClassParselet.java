@@ -1,5 +1,6 @@
 package me.abje.zero.parser.parselet;
 
+import me.abje.zero.interpreter.obj.Field;
 import me.abje.zero.lexer.Token;
 import me.abje.zero.parser.ParseException;
 import me.abje.zero.parser.Parser;
@@ -16,16 +17,16 @@ public class ClassParselet implements PrefixParselet {
             throw new ParseException("invalid class name");
         parser.eatLines();
         parser.expect(Token.Type.OPEN_BRACE);
-        List<AssignmentExpr> fields = new ArrayList<>();
+        List<Field> fields = new ArrayList<>();
         List<FunctionExpr> functions = new ArrayList<>();
         while (!parser.peek().is(Token.Type.CLOSE_BRACE)) {
             Expr expr = parser.next();
             if (expr instanceof FunctionExpr) {
                 functions.add((FunctionExpr) expr);
             } else if (expr instanceof AssignmentExpr) {
-                fields.add((AssignmentExpr) expr);
+                fields.add(new Field((AssignmentExpr) expr));
             } else if (expr instanceof NameExpr) {
-                fields.add(new AssignmentExpr(((NameExpr) expr).getValue(), new NullExpr()));
+                fields.add(new Field(null, ((NameExpr) expr).getValue(), new NullExpr()));
             } else {
                 throw new ParseException("invalid class member");
             }

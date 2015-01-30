@@ -4,6 +4,7 @@ public class BooleanObj extends Obj {
     private boolean value;
 
     public BooleanObj(boolean value) {
+        super(SYNTHETIC);
         this.value = value;
     }
 
@@ -24,7 +25,6 @@ public class BooleanObj extends Obj {
         BooleanObj that = (BooleanObj) o;
 
         return value == that.value;
-
     }
 
     @Override
@@ -36,4 +36,6 @@ public class BooleanObj extends Obj {
     public boolean isTruthy() {
         return value;
     }
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Boolean").build();
 }

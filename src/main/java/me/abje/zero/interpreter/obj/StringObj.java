@@ -1,9 +1,14 @@
 package me.abje.zero.interpreter.obj;
 
+import me.abje.zero.interpreter.Intrinsics;
+
+import java.util.stream.Collectors;
+
 public class StringObj extends Obj {
     private String value;
 
     public StringObj(String value) {
+        super(SYNTHETIC);
         this.value = value;
     }
 
@@ -29,5 +34,14 @@ public class StringObj extends Obj {
     @Override
     public String toString() {
         return value;
+    }
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("String").
+            withFunction("init", (interpreter, args) ->
+                    new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
+            build();
+
+    static {
+        Intrinsics.registerClass(SYNTHETIC);
     }
 }
