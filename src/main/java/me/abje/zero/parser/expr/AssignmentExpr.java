@@ -3,7 +3,7 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class AssignmentExpr implements Expr {
+public class AssignmentExpr extends Expr {
     private String name;
     private Expr value;
 
@@ -15,7 +15,11 @@ public class AssignmentExpr implements Expr {
     @Override
     public Obj evaluate(Interpreter interpreter) {
         Obj valueObj = value.evaluate(interpreter);
-        interpreter.getEnv().put(name, valueObj);
+        if (getAnnotations().contains("var")) {
+            interpreter.getEnv().define(name, valueObj);
+        } else {
+            interpreter.getEnv().put(name, valueObj);
+        }
         return valueObj;
     }
 

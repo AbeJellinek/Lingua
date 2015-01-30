@@ -7,7 +7,7 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ListExpr implements Expr {
+public class ListExpr extends Expr {
     private List<Expr> items;
 
     public ListExpr(List<Expr> items) {

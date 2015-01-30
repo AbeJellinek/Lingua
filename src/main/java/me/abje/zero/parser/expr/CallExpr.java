@@ -6,7 +6,7 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CallExpr implements Expr {
+public class CallExpr extends Expr {
     private Expr func;
     private List<Expr> args;
 

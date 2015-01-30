@@ -5,7 +5,7 @@ import me.abje.zero.interpreter.obj.Obj;
 
 import java.util.List;
 
-public class BlockExpr implements Expr {
+public class BlockExpr extends Expr {
     private List<Expr> exprs;
 
     public BlockExpr(List<Expr> exprs) {

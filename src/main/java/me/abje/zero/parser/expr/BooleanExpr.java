@@ -4,7 +4,7 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.BooleanObj;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class BooleanExpr implements Expr {
+public class BooleanExpr extends Expr {
     private boolean value;
 
     public BooleanExpr(boolean value) {

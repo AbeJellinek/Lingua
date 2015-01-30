@@ -4,7 +4,7 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.NullObj;
 
-public class NullExpr implements Expr {
+public class NullExpr extends Expr {
     @Override
     public Obj evaluate(Interpreter interpreter) {
         return NullObj.get();

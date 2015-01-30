@@ -8,7 +8,7 @@ import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.StringObj;
 import me.abje.zero.lexer.Token;
 
-public class OperatorExpr implements Expr {
+public class OperatorExpr extends Expr {
     private final Expr left;
     private final Token.Type token;
     private final Expr right;

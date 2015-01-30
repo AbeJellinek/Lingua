@@ -5,7 +5,7 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.parser.ParseException;
 
-public class NumberExpr implements Expr {
+public class NumberExpr extends Expr {
     private float value;
 
     public NumberExpr(String value) {

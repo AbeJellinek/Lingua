@@ -4,7 +4,7 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.interpreter.obj.StringObj;
 
-public class StringExpr implements Expr {
+public class StringExpr extends Expr {
     private String value;
 
     public StringExpr(String value) {

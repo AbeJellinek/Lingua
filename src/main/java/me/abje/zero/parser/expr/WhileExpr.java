@@ -4,7 +4,7 @@ import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.NullObj;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class WhileExpr implements Expr {
+public class WhileExpr extends Expr {
     private Expr condition;
     private Expr body;
 

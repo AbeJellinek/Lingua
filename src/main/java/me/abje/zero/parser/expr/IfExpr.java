@@ -3,7 +3,7 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class IfExpr implements Expr {
+public class IfExpr extends Expr {
     private final Expr condition;
     private final Expr thenBranch;
     private final Expr elseBranch;

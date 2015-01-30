@@ -7,7 +7,7 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.lexer.Token;
 
-public class PrefixExpr implements Expr {
+public class PrefixExpr extends Expr {
     private Token.Type type;
     private Expr operand;
 

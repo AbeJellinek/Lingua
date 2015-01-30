@@ -7,7 +7,7 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FunctionExpr implements Expr {
+public class FunctionExpr extends Expr {
     private String name;
     private List<String> argNames;
     private Expr body;

@@ -3,7 +3,7 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class MemberAccessExpr implements Expr {
+public class MemberAccessExpr extends Expr {
     private Expr left;
     private String name;
 

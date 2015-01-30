@@ -9,3 +9,14 @@ class Test {
 }
 
 Test("George Washington").doStuff()
+
+
+@var hello = "Hello!"
+
+changeHello() = {
+    @var hello = "Goodbye!"
+}
+
+changeHello()
+
+print(hello)

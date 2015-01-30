@@ -6,7 +6,7 @@ import me.abje.zero.interpreter.obj.NumberObj;
 import me.abje.zero.interpreter.obj.Obj;
 import me.abje.zero.lexer.Token;
 
-public class PostfixExpr implements Expr {
+public class PostfixExpr extends Expr {
     private final Expr expr;
     private final Token.Type type;
 

@@ -1,6 +1,7 @@
 package me.abje.zero.lexer;
 
 import me.abje.zero.Phase;
+import me.abje.zero.parser.ParseException;
 
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -114,6 +115,14 @@ public class Lexer implements Phase<Void, Token> {
                     return make(OPEN_BRACKET);
                 case ']':
                     return make(CLOSE_BRACKET);
+                case '@':
+                    builder.setLength(0);
+                    Token token = next(null);
+                    if (token.is(NAME)) {
+                        return new Token(ANNOTATION, token.getValue(), token.getLine(), token.getColumn());
+                    } else {
+                        throw new ParseException("invalid annotation");
+                    }
                 default:
                     if (Character.isWhitespace(read)) {
                         return make(WHITESPACE);

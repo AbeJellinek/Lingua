@@ -3,7 +3,7 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class IndexSetExpr implements Expr {
+public class IndexSetExpr extends Expr {
     private Expr target;
     private Expr index;
     private Expr value;

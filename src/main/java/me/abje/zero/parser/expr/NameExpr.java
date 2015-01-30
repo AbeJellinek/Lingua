@@ -3,7 +3,7 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
-public class NameExpr implements Expr {
+public class NameExpr extends Expr {
     private String value;
 
     public NameExpr(String value) {

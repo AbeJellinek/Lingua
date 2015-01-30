@@ -9,7 +9,7 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClassExpr implements Expr {
+public class ClassExpr extends Expr {
     private final String name;
     private final List<FunctionExpr> functions;
     private final List<Field> fields;
