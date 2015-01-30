@@ -24,7 +24,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             Interpreter interpreter = new Interpreter();
             Expr expr;
             while ((expr = parser.next()) != null) {
-                System.out.println(interpreter.next(expr));
+                interpreter.next(expr);
             }
         } catch (ParseException | InterpreterException e) {
             System.err.println(e.getMessage());

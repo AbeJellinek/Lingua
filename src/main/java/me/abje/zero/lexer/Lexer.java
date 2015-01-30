@@ -202,6 +202,8 @@ public class Lexer implements Phase<Void, Token> {
                 return make(DO);
             case "null":
                 return make(NULL);
+            case "class":
+                return make(CLASS);
             default:
                 return make(NAME);
         }

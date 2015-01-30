@@ -12,6 +12,7 @@ public class Environment {
     private Deque<Frame> stack = new ArrayDeque<>();
 
     public Environment() {
+        new Intrinsics(globals).register();
         stack.push(globals);
     }
 
