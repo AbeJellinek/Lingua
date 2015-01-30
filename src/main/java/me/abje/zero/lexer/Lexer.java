@@ -157,7 +157,7 @@ public class Lexer implements Phase<Void, Token> {
                             unread(read);
                         return make(NUMBER);
                     } else {
-                        return null;
+                        throw new ParseException("unexpected character: " + read);
                     }
             }
         } catch (EOSException e) {
