@@ -31,4 +31,15 @@ public class FunctionExpr implements Expr {
                 ", " + body + ")";
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getArgNames() {
+        return argNames;
+    }
+
+    public Expr getBody() {
+        return body;
+    }
 }

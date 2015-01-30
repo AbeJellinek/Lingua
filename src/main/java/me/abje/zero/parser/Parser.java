@@ -30,6 +30,7 @@ public class Parser implements Phase<Token, Expr> {
         register(WHILE, new WhileParselet(false));
         register(NULL, new NullParselet());
         register(OPEN_BRACKET, new ListParselet());
+        register(CLASS, new ClassParselet());
         prefix(PLUS, MINUS, TILDE, BANG);
         infix(PLUS, Precedence.SUM);
         infix(MINUS, Precedence.SUM);

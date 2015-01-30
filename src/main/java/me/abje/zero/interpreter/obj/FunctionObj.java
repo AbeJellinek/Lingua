@@ -11,15 +11,17 @@ public class FunctionObj extends Obj {
     private String name;
     private List<String> argNames;
     private Expr body;
-
-    public FunctionObj(List<String> argNames, Expr body) {
-        this("<anon>", argNames, body);
-    }
+    private UserObj self;
 
     public FunctionObj(String name, List<String> argNames, Expr body) {
+        this(name, argNames, body, null);
+    }
+
+    public FunctionObj(String name, List<String> argNames, Expr body, UserObj self) {
         this.name = name;
         this.argNames = argNames;
         this.body = body;
+        this.self = self;
     }
 
     public String getName() {
@@ -41,6 +43,8 @@ public class FunctionObj extends Obj {
 
         Environment env = interpreter.getEnv();
         env.pushFrame();
+        if (self != null)
+            env.define("self", self);
         for (int i = 0; i < args.size(); i++) {
             env.define(argNames.get(i), args.get(i));
         }
@@ -71,5 +75,17 @@ public class FunctionObj extends Obj {
         result = 31 * result + argNames.hashCode();
         result = 31 * result + body.hashCode();
         return result;
+    }
+
+    public void setSelf(UserObj self) {
+        this.self = self;
+    }
+
+    public UserObj getSelf() {
+        return self;
+    }
+
+    public FunctionObj withSelf(UserObj self) {
+        return new FunctionObj(name, argNames, body, self);
     }
 }

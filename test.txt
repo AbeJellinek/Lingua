@@ -1,1 +1,11 @@
-print("abc")
+class Test {
+    name
+
+    init(name) =
+        self.name = name
+
+    doStuff() =
+        print("Hello, world! My name is " + self.name + ".")
+}
+
+Test("George Washington").doStuff()

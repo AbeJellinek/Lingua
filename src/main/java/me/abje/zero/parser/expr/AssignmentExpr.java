@@ -26,4 +26,9 @@ public class AssignmentExpr implements Expr {
     public Expr getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "ASSIGNMENT(" + name + ", " + value + ")";
+    }
 }
