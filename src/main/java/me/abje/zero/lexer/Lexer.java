@@ -53,6 +53,14 @@ public class Lexer implements Phase<Void, Token> {
                         } catch (EOSException ignored) {
                         }
                         return make(LINE);
+                    } else if (isNext('*')) {
+                        try {
+                            do {
+                                read = read();
+                            } while (read != '*' || read() != '/');
+                        } catch (EOSException ignored) {
+                        }
+                        return make(WHITESPACE);
                     } else {
                         return make(DIVIDE);
                     }

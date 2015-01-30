@@ -9,5 +9,3 @@ class Test {
 }
 
 Test("George Washington").doStuff()
-
-print(String("abc", 123))

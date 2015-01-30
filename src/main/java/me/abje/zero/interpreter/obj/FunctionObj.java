@@ -68,7 +68,6 @@ public class FunctionObj extends Obj {
         FunctionObj that = (FunctionObj) o;
 
         return argNames.equals(that.argNames) && body.equals(that.body) && name.equals(that.name);
-
     }
 
     @Override
