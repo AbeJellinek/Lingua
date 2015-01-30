@@ -29,11 +29,32 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A named function declaration expression.
+ */
 public class FunctionExpr extends Expr {
+    /**
+     * This function's name.
+     */
     private String name;
+
+    /**
+     * This function's formal argument list.
+     */
     private List<String> argNames;
+
+    /**
+     * This function's body.
+     */
     private Expr body;
 
+    /**
+     * Creates a new function declaration expression.
+     *
+     * @param name     The function's name.
+     * @param argNames The function's argument names.
+     * @param body     The function's body.
+     */
     public FunctionExpr(String name, List<String> argNames, Expr body) {
         this.name = name;
         this.argNames = argNames;
@@ -53,14 +74,23 @@ public class FunctionExpr extends Expr {
                 ", " + body + ")";
     }
 
+    /**
+     * Returns this function's name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns this function's argument names.
+     */
     public List<String> getArgNames() {
         return argNames;
     }
 
+    /**
+     * Returns this function's body.
+     */
     public Expr getBody() {
         return body;
     }

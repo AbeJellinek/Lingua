@@ -28,10 +28,26 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A function call expression.
+ */
 public class CallExpr extends Expr {
+    /**
+     * The left side of the expression (the function to be called).
+     */
     private Expr func;
+
+    /**
+     * The arguments provided to the function.
+     */
     private List<Expr> args;
 
+    /**
+     * Creates a new call expression.
+     *
+     * @param func The function to be called.
+     * @param args The arguments provided.
+     */
     public CallExpr(Expr func, List<Expr> args) {
         this.func = func;
         this.args = args;
@@ -43,10 +59,16 @@ public class CallExpr extends Expr {
         return func.evaluate(interpreter).call(interpreter, argObjs);
     }
 
+    /**
+     * Returns the function to be called.
+     */
     public Expr getFunc() {
         return func;
     }
 
+    /**
+     * Returns the arguments provided.
+     */
     public List<Expr> getArgs() {
         return args;
     }

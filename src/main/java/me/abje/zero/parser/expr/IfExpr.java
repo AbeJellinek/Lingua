@@ -25,25 +25,55 @@ package me.abje.zero.parser.expr;
 import me.abje.zero.interpreter.Interpreter;
 import me.abje.zero.interpreter.obj.Obj;
 
+/**
+ * An if[-else] expression.
+ */
 public class IfExpr extends Expr {
+    /**
+     * The condition expression.
+     */
     private final Expr condition;
+
+    /**
+     * The "then" branch expression.
+     */
     private final Expr thenBranch;
+
+    /**
+     * The "else" branch expression. Can be null.
+     */
     private final Expr elseBranch;
 
+    /**
+     * Creates a new if expression.
+     *
+     * @param condition  The condition expression.
+     * @param thenBranch The "then" branch expression.
+     * @param elseBranch The "else" branch expression.
+     */
     public IfExpr(Expr condition, Expr thenBranch, Expr elseBranch) {
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
     }
 
+    /**
+     * Returns this if's condition.
+     */
     public Expr getCondition() {
         return condition;
     }
 
+    /**
+     * Returns this if's "then" branch.
+     */
     public Expr getThenBranch() {
         return thenBranch;
     }
 
+    /**
+     * Returns this if's "else" branch. Can be null.
+     */
     public Expr getElseBranch() {
         return elseBranch;
     }

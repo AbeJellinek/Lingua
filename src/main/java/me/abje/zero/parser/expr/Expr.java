@@ -28,11 +28,26 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The base class for all expressions -- the middle-ground between tokens and objects.
+ */
 public abstract class Expr {
+    /**
+     * The annotations present on this expression.
+     */
     private List<String> annotations = new ArrayList<>();
 
+    /**
+     * Evaluates this expression.
+     *
+     * @param interpreter The interpreter to evaluate with.
+     * @return The result of evaluating this expression.
+     */
     public abstract Obj evaluate(Interpreter interpreter);
 
+    /**
+     * Returns the annotations present on this expression.
+     */
     public List<String> getAnnotations() {
         return annotations;
     }

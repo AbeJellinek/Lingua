@@ -31,11 +31,31 @@ import me.abje.zero.interpreter.obj.Obj;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A class declaration expression.
+ */
 public class ClassExpr extends Expr {
+    /**
+     * The class's name.
+     */
     private final String name;
+
+    /**
+     * The class's functions.
+     */
     private final List<FunctionExpr> functions;
+
+    /**
+     * The class's fields.
+     */
     private final List<Field> fields;
 
+    /**
+     * Creates a new class declaration expression.
+     * @param name The class's name.
+     * @param functions The class's functions.
+     * @param fields The class's fields.
+     */
     public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields) {
         this.name = name;
         this.functions = functions;
@@ -51,14 +71,23 @@ public class ClassExpr extends Expr {
         return clazz;
     }
 
+    /**
+     * Returns this class's name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns this class's functions.
+     */
     public List<FunctionExpr> getFunctions() {
         return functions;
     }
 
+    /**
+     * Returns this class's fields.
+     */
     public List<Field> getFields() {
         return fields;
     }
