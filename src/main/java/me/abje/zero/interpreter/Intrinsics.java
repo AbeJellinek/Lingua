@@ -1,7 +1,12 @@
 package me.abje.zero.interpreter;
 
 import me.abje.zero.interpreter.obj.*;
+import me.abje.zero.lexer.Lexer;
+import me.abje.zero.lexer.Morpher;
+import me.abje.zero.parser.Parser;
+import me.abje.zero.parser.expr.Expr;
 
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +34,20 @@ public class Intrinsics {
                 return args.get(0).getType();
             } else {
                 throw new InterpreterException("wrong number of arguments for classOf");
+            }
+        });
+
+        addFunction("eval", (interpreter, args) -> {
+            if (args.size() == 1) {
+                Parser parser = new Parser(new Morpher(new Lexer(new StringReader(args.get(0).toString()))));
+                Expr expr;
+                Obj result = NullObj.get();
+                while ((expr = parser.next()) != null) {
+                    result = interpreter.next(expr);
+                }
+                return result;
+            } else {
+                throw new InterpreterException("wrong number of arguments for eval");
             }
         });
     }

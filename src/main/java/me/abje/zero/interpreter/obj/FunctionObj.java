@@ -91,6 +91,7 @@ public class FunctionObj extends Obj {
     }
 
     public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
+
     static {
         Intrinsics.registerClass(SYNTHETIC);
     }

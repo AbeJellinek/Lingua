@@ -53,7 +53,17 @@ public class NumberObj extends Obj {
         return value != 0;
     }
 
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Number").build();
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Number").
+            withFunction("init", (interpreter, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("wrong number of arguments for Number constructor");
+                try {
+                    return new NumberObj(Float.parseFloat(args.get(0).toString()));
+                } catch (NumberFormatException e) {
+                    throw new InterpreterException("not a number: " + args.get(0));
+                }
+            }).
+            build();
 
     static {
         Intrinsics.registerClass(SYNTHETIC);
