@@ -138,8 +138,10 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(new StringExpr("abc def")));
 
-        input("while x y");
+        input("while x y; do y while x");
         e = parser.next();
-        assertThat(e, is(new WhileExpr(new NameExpr("x"), new NameExpr("y"))));
+        assertThat(e, is(new WhileExpr(new NameExpr("x"), new NameExpr("y"), false)));
+        e = parser.next();
+        assertThat(e, is(new WhileExpr(new NameExpr("x"), new BlockExpr(Arrays.asList(new NameExpr("y"))), true)));
     }
 }

@@ -70,6 +70,6 @@ public class WhileParselet implements PrefixParselet {
             condition = parser.next();
             body = parser.next();
         }
-        return new WhileExpr(condition, body);
+        return new WhileExpr(condition, body, doWhile);
     }
 }

@@ -33,28 +33,41 @@ public class WhileExpr extends Expr {
     /**
      * The loop condition.
      */
-    private Expr condition;
+    private final Expr condition;
 
     /**
      * The loop body.
      */
-    private Expr body;
+    private final Expr body;
+
+    /**
+     * Whether this loop is a do-while or while-do loop.
+     */
+    private final boolean doWhile;
 
     /**
      * Creates a new while loop expression.
      *
      * @param condition The loop condition.
      * @param body      The loop body.
+     * @param doWhile   Whether the loop is a do-while or while-do loop.
      */
-    public WhileExpr(Expr condition, Expr body) {
+    public WhileExpr(Expr condition, Expr body, boolean doWhile) {
         this.condition = condition;
         this.body = body;
+        this.doWhile = doWhile;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        while (interpreter.next(condition).isTruthy()) {
-            interpreter.next(body);
+        if (doWhile) {
+            do {
+                interpreter.next(body);
+            } while (interpreter.next(condition).isTruthy());
+        } else {
+            while (interpreter.next(condition).isTruthy()) {
+                interpreter.next(body);
+            }
         }
         return NullObj.get();
     }
@@ -73,6 +86,13 @@ public class WhileExpr extends Expr {
         return body;
     }
 
+    /**
+     * Returns whether this loop is a do-while or while-do loop.
+     */
+    public boolean isDoWhile() {
+        return doWhile;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,13 +100,19 @@ public class WhileExpr extends Expr {
 
         WhileExpr whileExpr = (WhileExpr) o;
 
-        return body.equals(whileExpr.body) && condition.equals(whileExpr.condition);
+        return doWhile == whileExpr.doWhile && body.equals(whileExpr.body) && condition.equals(whileExpr.condition);
     }
 
     @Override
     public int hashCode() {
         int result = condition.hashCode();
         result = 31 * result + body.hashCode();
+        result = 31 * result + (doWhile ? 1 : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "WHILE(" + condition + ", " + body + ", " + doWhile + ")";
     }
 }

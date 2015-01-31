@@ -73,6 +73,7 @@ public class Parser implements Phase<Token, Expr> {
         registerPrefix(STRING, new StringParselet());
         registerPrefix(IF, new IfParselet());
         registerPrefix(WHILE, new WhileParselet(false));
+        registerPrefix(DO, new WhileParselet(true));
         registerPrefix(NULL, new NullParselet());
         registerPrefix(OPEN_BRACKET, new ListParselet());
         registerPrefix(CLASS, new ClassParselet());

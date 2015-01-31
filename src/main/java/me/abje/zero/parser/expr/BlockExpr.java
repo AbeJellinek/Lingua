@@ -76,4 +76,9 @@ public class BlockExpr extends Expr {
     public int hashCode() {
         return exprs.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "BLOCK(" + exprs + ")";
+    }
 }
