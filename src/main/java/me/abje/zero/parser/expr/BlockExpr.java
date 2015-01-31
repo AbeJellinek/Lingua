@@ -61,4 +61,19 @@ public class BlockExpr extends Expr {
     public List<Expr> getExprs() {
         return exprs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BlockExpr blockExpr = (BlockExpr) o;
+
+        return exprs.equals(blockExpr.exprs);
+    }
+
+    @Override
+    public int hashCode() {
+        return exprs.hashCode();
+    }
 }

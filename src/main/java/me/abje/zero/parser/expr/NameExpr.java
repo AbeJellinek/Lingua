@@ -59,4 +59,19 @@ public class NameExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         return interpreter.getEnv().get(value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NameExpr nameExpr = (NameExpr) o;
+
+        return value.equals(nameExpr.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 }

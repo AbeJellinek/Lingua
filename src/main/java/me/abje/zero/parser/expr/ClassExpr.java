@@ -91,4 +91,27 @@ public class ClassExpr extends Expr {
     public List<Field> getFields() {
         return fields;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ClassExpr classExpr = (ClassExpr) o;
+
+        return fields.equals(classExpr.fields) && functions.equals(classExpr.functions) && name.equals(classExpr.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + functions.hashCode();
+        result = 31 * result + fields.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CLASS(" + name + ", " + functions + ", " + fields + ")";
+    }
 }

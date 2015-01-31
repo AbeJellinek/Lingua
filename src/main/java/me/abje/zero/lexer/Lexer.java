@@ -382,4 +382,8 @@ public class Lexer implements Phase<Void, Token> {
         builder.setLength(0);
         return token;
     }
+
+    public Token next() {
+        return next(null);
+    }
 }

@@ -90,4 +90,21 @@ public class PostfixExpr extends Expr {
                 throw new InterpreterException("invalid postfix operator");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PostfixExpr that = (PostfixExpr) o;
+
+        return expr.equals(that.expr) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = expr.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
+    }
 }

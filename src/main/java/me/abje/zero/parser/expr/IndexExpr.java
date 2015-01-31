@@ -43,7 +43,7 @@ public class IndexExpr extends Expr {
      * Creates a new index expression.
      *
      * @param target The expression's target.
-     * @param index The expression's index.
+     * @param index  The expression's index.
      */
     public IndexExpr(Expr target, Expr index) {
         this.target = target;
@@ -67,5 +67,22 @@ public class IndexExpr extends Expr {
      */
     public Expr getIndex() {
         return index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IndexExpr indexExpr = (IndexExpr) o;
+
+        return index.equals(indexExpr.index) && target.equals(indexExpr.target);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = target.hashCode();
+        result = 31 * result + index.hashCode();
+        return result;
     }
 }

@@ -55,4 +55,19 @@ public class StringExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         return new StringObj(value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StringExpr that = (StringExpr) o;
+
+        return value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 }

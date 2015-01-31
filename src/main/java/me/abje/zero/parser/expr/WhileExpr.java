@@ -42,8 +42,9 @@ public class WhileExpr extends Expr {
 
     /**
      * Creates a new while loop expression.
+     *
      * @param condition The loop condition.
-     * @param body The loop body.
+     * @param body      The loop body.
      */
     public WhileExpr(Expr condition, Expr body) {
         this.condition = condition;
@@ -70,5 +71,22 @@ public class WhileExpr extends Expr {
      */
     public Expr getBody() {
         return body;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WhileExpr whileExpr = (WhileExpr) o;
+
+        return body.equals(whileExpr.body) && condition.equals(whileExpr.condition);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = condition.hashCode();
+        result = 31 * result + body.hashCode();
+        return result;
     }
 }

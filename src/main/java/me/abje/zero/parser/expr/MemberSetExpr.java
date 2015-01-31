@@ -85,4 +85,22 @@ public class MemberSetExpr extends Expr {
     public Expr getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemberSetExpr that = (MemberSetExpr) o;
+
+        return left.equals(that.left) && name.equals(that.name) && value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = left.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

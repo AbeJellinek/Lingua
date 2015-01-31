@@ -78,4 +78,21 @@ public class AssignmentExpr extends Expr {
     public String toString() {
         return "ASSIGNMENT(" + name + ", " + value + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssignmentExpr that = (AssignmentExpr) o;
+
+        return name.equals(that.name) && value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

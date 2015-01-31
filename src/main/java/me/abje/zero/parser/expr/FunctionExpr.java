@@ -94,4 +94,22 @@ public class FunctionExpr extends Expr {
     public Expr getBody() {
         return body;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FunctionExpr that = (FunctionExpr) o;
+
+        return argNames.equals(that.argNames) && body.equals(that.body) && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + argNames.hashCode();
+        result = 31 * result + body.hashCode();
+        return result;
+    }
 }

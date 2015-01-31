@@ -145,4 +145,22 @@ public class OperatorExpr extends Expr {
             throw new InterpreterException("invalid type");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OperatorExpr that = (OperatorExpr) o;
+
+        return left.equals(that.left) && right.equals(that.right) && token == that.token;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = left.hashCode();
+        result = 31 * result + token.hashCode();
+        result = 31 * result + right.hashCode();
+        return result;
+    }
 }

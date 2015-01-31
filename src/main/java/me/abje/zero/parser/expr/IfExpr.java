@@ -91,4 +91,23 @@ public class IfExpr extends Expr {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IfExpr ifExpr = (IfExpr) o;
+
+        return condition.equals(ifExpr.condition) && !(elseBranch != null ? !elseBranch.equals(ifExpr.elseBranch) :
+                ifExpr.elseBranch != null) && thenBranch.equals(ifExpr.thenBranch);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = condition.hashCode();
+        result = 31 * result + thenBranch.hashCode();
+        result = 31 * result + (elseBranch != null ? elseBranch.hashCode() : 0);
+        return result;
+    }
 }

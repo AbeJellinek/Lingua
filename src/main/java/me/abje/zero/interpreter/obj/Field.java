@@ -86,4 +86,23 @@ public class Field {
     public Expr getDefaultValue() {
         return defaultValue;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Field field = (Field) o;
+
+        return defaultValue.equals(field.defaultValue) && name.equals(field.name) &&
+                !(type != null ? !type.equals(field.type) : field.type != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + defaultValue.hashCode();
+        return result;
+    }
 }

@@ -68,4 +68,21 @@ public class MemberAccessExpr extends Expr {
     public String getName() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MemberAccessExpr that = (MemberAccessExpr) o;
+
+        return left.equals(that.left) && name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = left.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

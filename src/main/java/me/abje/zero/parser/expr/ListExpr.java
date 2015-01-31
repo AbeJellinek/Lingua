@@ -59,4 +59,19 @@ public class ListExpr extends Expr {
         List<Obj> itemObjs = items.stream().map(interpreter::next).collect(Collectors.toList());
         return new ListObj(itemObjs);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListExpr listExpr = (ListExpr) o;
+
+        return items.equals(listExpr.items);
+    }
+
+    @Override
+    public int hashCode() {
+        return items.hashCode();
+    }
 }

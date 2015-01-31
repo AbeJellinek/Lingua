@@ -34,4 +34,13 @@ public class NullExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         return NullObj.get();
     }
+
+    public boolean equals(Object o) {
+        return o instanceof NullExpr;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 }

@@ -95,4 +95,21 @@ public class PrefixExpr extends Expr {
                 throw new InterpreterException("invalid prefix operator");
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PrefixExpr that = (PrefixExpr) o;
+
+        return operand.equals(that.operand) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + operand.hashCode();
+        return result;
+    }
 }

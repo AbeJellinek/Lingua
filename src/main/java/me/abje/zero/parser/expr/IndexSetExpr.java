@@ -86,4 +86,22 @@ public class IndexSetExpr extends Expr {
     public Expr getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IndexSetExpr that = (IndexSetExpr) o;
+
+        return index.equals(that.index) && target.equals(that.target) && value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = target.hashCode();
+        result = 31 * result + index.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

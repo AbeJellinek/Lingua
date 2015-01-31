@@ -72,4 +72,21 @@ public class CallExpr extends Expr {
     public List<Expr> getArgs() {
         return args;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CallExpr callExpr = (CallExpr) o;
+
+        return args.equals(callExpr.args) && func.equals(callExpr.func);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = func.hashCode();
+        result = 31 * result + args.hashCode();
+        return result;
+    }
 }
