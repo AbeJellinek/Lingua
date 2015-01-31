@@ -305,6 +305,11 @@ public class Parser implements Phase<Token, Expr> {
      * @return True if the peeked token has type <code>type</code>.
      */
     public boolean match(Token.Type type) {
-        return peek() != null && read().is(type);
+        if (peek() != null && peek().is(type)) {
+            read();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
