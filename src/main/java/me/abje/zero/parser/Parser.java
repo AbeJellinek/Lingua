@@ -292,7 +292,7 @@ public class Parser implements Phase<Token, Expr> {
      * Skips over as many {@link me.abje.zero.lexer.Token.Type#LINE} tokens as possible.
      */
     public void eatLines() {
-        while (peek().is(LINE)) {
+        while (peek() != null && peek().is(LINE)) {
             read();
         }
     }

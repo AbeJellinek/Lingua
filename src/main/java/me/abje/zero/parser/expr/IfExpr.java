@@ -23,6 +23,7 @@
 package me.abje.zero.parser.expr;
 
 import me.abje.zero.interpreter.Interpreter;
+import me.abje.zero.interpreter.obj.NullObj;
 import me.abje.zero.interpreter.obj.Obj;
 
 /**
@@ -83,7 +84,11 @@ public class IfExpr extends Expr {
         if (interpreter.next(condition).isTruthy()) {
             return interpreter.next(thenBranch);
         } else {
-            return interpreter.next(elseBranch);
+            if (elseBranch != null) {
+                return interpreter.next(elseBranch);
+            } else {
+                return NullObj.get();
+            }
         }
     }
 }

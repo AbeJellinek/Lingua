@@ -9,3 +9,6 @@ class Test {
 }
 
 Test("George Washington").doStuff()
+
+if (false)
+    print("wat")
