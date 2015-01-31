@@ -30,8 +30,8 @@ import me.abje.zero.parser.expr.*;
 import org.junit.Test;
 
 import java.io.StringReader;
-import java.util.Arrays;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,7 +51,7 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(instanceOf(NameExpr.class)));
         assertThat(((NameExpr) e).getValue(), is("test"));
-        assertThat(e.getAnnotations(), is(Arrays.asList("ann")));
+        assertThat(e.getAnnotations(), is(asList("ann")));
 
         input("x = y");
         e = parser.next();
@@ -67,7 +67,7 @@ public class ParserTest {
 
         input("{ xyz 123 }");
         e = parser.next();
-        assertThat(e, is(new BlockExpr(Arrays.asList(new NameExpr("xyz"), new NumberExpr(123)))));
+        assertThat(e, is(new BlockExpr(asList(new NameExpr("xyz"), new NumberExpr(123)))));
 
         input("true false");
         e = parser.next();
@@ -77,13 +77,13 @@ public class ParserTest {
 
         input("x(y, 123)");
         e = parser.next();
-        assertThat(e, is(new CallExpr(new NameExpr("x"), Arrays.asList(new NameExpr("y"), new NumberExpr(123)))));
+        assertThat(e, is(new CallExpr(new NameExpr("x"), asList(new NameExpr("y"), new NumberExpr(123)))));
 
         input("class Test {\n foo \n bar(x, y) = z \n}");
         e = parser.next();
-        assertThat(e, is(new ClassExpr("Test", Arrays.asList(
-                new FunctionExpr("bar", Arrays.asList("x", "y"), new NameExpr("z"))),
-                Arrays.asList(new Field(null, "foo", new NullExpr())))));
+        assertThat(e, is(new ClassExpr("Test", asList(
+                new FunctionExpr("bar", asList("x", "y"), new NameExpr("z"))),
+                asList(new Field(null, "foo", new NullExpr())))));
 
         input("if x y else z; if (x) y");
         e = parser.next();
@@ -97,7 +97,7 @@ public class ParserTest {
 
         input("[x, y z]");
         e = parser.next();
-        assertThat(e, is(new ListExpr(Arrays.asList(new NameExpr("x"), new NameExpr("y"), new NameExpr("z")))));
+        assertThat(e, is(new ListExpr(asList(new NameExpr("x"), new NameExpr("y"), new NameExpr("z")))));
 
         input("foo.bar.baz");
         e = parser.next();
@@ -105,7 +105,7 @@ public class ParserTest {
 
         input("x -> y + z");
         e = parser.next();
-        assertThat(e, is(new FunctionExpr("<anon>", Arrays.asList("x"),
+        assertThat(e, is(new FunctionExpr("<anon>", asList("x"),
                 new OperatorExpr(new NameExpr("y"), Token.Type.PLUS, new NameExpr("z")))));
 
         input("foobar");
@@ -142,6 +142,6 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(new WhileExpr(new NameExpr("x"), new NameExpr("y"), false)));
         e = parser.next();
-        assertThat(e, is(new WhileExpr(new NameExpr("x"), new BlockExpr(Arrays.asList(new NameExpr("y"))), true)));
+        assertThat(e, is(new WhileExpr(new NameExpr("x"), new BlockExpr(asList(new NameExpr("y"))), true)));
     }
 }
