@@ -34,6 +34,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
@@ -71,10 +73,12 @@ public class Interpreter implements Phase<Expr, Obj> {
      */
     public void interpret(Reader reader) {
         Parser parser = new Parser(new Morpher(new Lexer(reader)));
+        List<Expr> exprs = new ArrayList<>();
         Expr expr;
         while ((expr = parser.next()) != null) {
-            next(expr);
+            exprs.add(expr);
         }
+        exprs.forEach(this::next);
     }
 
     /**
