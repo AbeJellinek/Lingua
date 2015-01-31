@@ -64,19 +64,19 @@ public class Parser implements Phase<Token, Expr> {
     public Parser(Phase<Void, Token> lexer) {
         this.lexer = lexer;
 
-        register(NAME, new NameParselet());
-        register(NUMBER, new NumberParselet());
-        register(OPEN_PAREN, new ParenthesesParselet());
-        register(OPEN_BRACE, new BlockParselet());
-        register(TRUE, new BooleanParselet());
-        register(FALSE, new BooleanParselet());
-        register(STRING, new StringParselet());
-        register(IF, new IfParselet());
-        register(WHILE, new WhileParselet(false));
-        register(NULL, new NullParselet());
-        register(OPEN_BRACKET, new ListParselet());
-        register(CLASS, new ClassParselet());
-        register(ANNOTATION, new AnnotationParselet());
+        registerPrefix(NAME, new NameParselet());
+        registerPrefix(NUMBER, new NumberParselet());
+        registerPrefix(OPEN_PAREN, new ParenthesesParselet());
+        registerPrefix(OPEN_BRACE, new BlockParselet());
+        registerPrefix(TRUE, new BooleanParselet());
+        registerPrefix(FALSE, new BooleanParselet());
+        registerPrefix(STRING, new StringParselet());
+        registerPrefix(IF, new IfParselet());
+        registerPrefix(WHILE, new WhileParselet(false));
+        registerPrefix(NULL, new NullParselet());
+        registerPrefix(OPEN_BRACKET, new ListParselet());
+        registerPrefix(CLASS, new ClassParselet());
+        registerPrefix(ANNOTATION, new AnnotationParselet());
         prefix(PLUS, MINUS, TILDE, BANG);
         infix(PLUS, Precedence.SUM);
         infix(MINUS, Precedence.SUM);
@@ -91,11 +91,15 @@ public class Parser implements Phase<Token, Expr> {
         infix(GTE, Precedence.COMPARISON);
         infix(ANDAND, Precedence.LOGICAL);
         infix(OROR, Precedence.LOGICAL);
-        register(OPEN_PAREN, new CallParselet());
-        register(EQ, new AssignmentParselet());
-        register(OPEN_BRACKET, new IndexParselet());
-        register(DOT, new MemberAccessParselet());
-        register(ARROW, new MiniFunctionParselet());
+        registerInfix(OPEN_PAREN, new CallParselet());
+        registerInfix(EQ, new AssignmentParselet());
+        registerInfix(OPEN_BRACKET, new IndexParselet());
+        registerInfix(DOT, new MemberAccessParselet());
+        registerInfix(ARROW, new MiniFunctionParselet());
+        registerInfix(PLUS_EQ, new BinaryMutatorParselet(Token.Type.PLUS));
+        registerInfix(MINUS_EQ, new BinaryMutatorParselet(Token.Type.MINUS));
+        registerInfix(TIMES_EQ, new BinaryMutatorParselet(Token.Type.TIMES));
+        registerInfix(DIVIDE_EQ, new BinaryMutatorParselet(Token.Type.DIVIDE));
         postfix(BANG);
     }
 
@@ -193,7 +197,7 @@ public class Parser implements Phase<Token, Expr> {
      * @param token    The token type.
      * @param parselet The parselet.
      */
-    public void register(Token.Type token, PrefixParselet parselet) {
+    public void registerPrefix(Token.Type token, PrefixParselet parselet) {
         prefixParselets.put(token, parselet);
     }
 
@@ -203,7 +207,7 @@ public class Parser implements Phase<Token, Expr> {
      * @param token The token type.
      */
     public void prefix(Token.Type token) {
-        register(token, new PrefixOperatorParselet());
+        registerPrefix(token, new PrefixOperatorParselet());
     }
 
     /**
@@ -223,7 +227,7 @@ public class Parser implements Phase<Token, Expr> {
      * @param token    The token type.
      * @param parselet The parselet.
      */
-    public void register(Token.Type token, InfixParselet parselet) {
+    public void registerInfix(Token.Type token, InfixParselet parselet) {
         infixParselets.put(token, parselet);
     }
 
@@ -234,7 +238,7 @@ public class Parser implements Phase<Token, Expr> {
      * @param precedence The precedence of the operator.
      */
     public void infix(Token.Type token, int precedence) {
-        register(token, new BinaryOperatorParselet(precedence));
+        registerInfix(token, new BinaryOperatorParselet(precedence));
     }
 
     /**
@@ -243,7 +247,7 @@ public class Parser implements Phase<Token, Expr> {
      * @param token The token type.
      */
     public void postfix(Token.Type token) {
-        register(token, new PostfixOperatorParselet());
+        registerInfix(token, new PostfixOperatorParselet());
     }
 
     /**

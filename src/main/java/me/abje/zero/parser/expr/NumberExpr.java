@@ -50,6 +50,15 @@ public class NumberExpr extends Expr {
     }
 
     /**
+     * Creates a new number literal expression.
+     *
+     * @param value The value of the number.
+     */
+    public NumberExpr(float value) {
+        this.value = value;
+    }
+
+    /**
      * Returns the float value of this number.
      */
     public float getValue() {

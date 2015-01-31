@@ -102,14 +102,26 @@ public class Lexer implements Phase<Void, Token> {
                 case '.':
                     return make(DOT);
                 case '+':
-                    return make(PLUS);
+                    if (isNext('='))
+                        return make(PLUS_EQ);
+                    else if (isNext('+'))
+                        return make(PLUSPLUS);
+                    else
+                        return make(PLUS);
                 case '-':
                     if (isNext('>'))
                         return make(ARROW);
+                    else if (isNext('='))
+                        return make(MINUS_EQ);
+                    else if (isNext('-'))
+                        return make(MINUSMINUS);
                     else
                         return make(MINUS);
                 case '*':
-                    return make(TIMES);
+                    if (isNext('='))
+                        return make(TIMES_EQ);
+                    else
+                        return make(TIMES);
                 case '/':
                     if (isNext('/')) {
                         try {
@@ -127,6 +139,8 @@ public class Lexer implements Phase<Void, Token> {
                         } catch (EOSException ignored) {
                         }
                         return make(WHITESPACE);
+                    } else if (isNext('=')) {
+                        return make(DIVIDE_EQ);
                     } else {
                         return make(DIVIDE);
                     }
