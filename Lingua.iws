@@ -2,81 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8b507b4c-d0ca-4da8-9bef-698e9b409806" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Lingua.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Lingua.ipr" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Lingua.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\Phase.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/Phase.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\Environment.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/Environment.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\Interpreter.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/Interpreter.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\InterpreterException.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/InterpreterException.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\Intrinsics.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/Intrinsics.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\BooleanObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/BooleanObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\ClassObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/ClassObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\Field.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/Field.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\FunctionObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/FunctionObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\ListObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/ListObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\NullObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/NullObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\NumberObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/NumberObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\Obj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/Obj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\StringObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/StringObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\SyntheticFunctionObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/SyntheticFunctionObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\interpreter\obj\UserObj.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/UserObj.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\lexer\EOSException.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/lexer/EOSException.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\lexer\Lexer.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/lexer/Lexer.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\lexer\Morpher.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/lexer/Morpher.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\lexer\Token.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/lexer/Token.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\ParseException.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/ParseException.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\Parser.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/Parser.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\Precedence.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/Precedence.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\AssignmentExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/AssignmentExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\BlockExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/BlockExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\BooleanExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/BooleanExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\CallExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/CallExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\ClassExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/ClassExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\Expr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/Expr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\FunctionExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/FunctionExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\IfExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/IfExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\IndexExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/IndexExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\IndexSetExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/IndexSetExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\ListExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/ListExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\MemberAccessExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/MemberAccessExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\MemberSetExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/MemberSetExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\NameExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/NameExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\NullExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/NullExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\NumberExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/NumberExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\OperatorExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/OperatorExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\PostfixExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/PostfixExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\PrefixExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/PrefixExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\StringExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/StringExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\expr\WhileExpr.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/expr/WhileExpr.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\AnnotationParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/AnnotationParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\AssignmentParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/AssignmentParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\BinaryMutatorParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/BinaryMutatorParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\BinaryOperatorParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/BinaryOperatorParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\BlockParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/BlockParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\BooleanParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/BooleanParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\CallParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/CallParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\ClassParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/ClassParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\IfParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/IfParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\IndexParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/IndexParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\InfixParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/InfixParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\ListParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/ListParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\MemberAccessParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/MemberAccessParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\MiniFunctionParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/MiniFunctionParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\NameParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/NameParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\NullParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/NullParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\NumberParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/NumberParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\ParenthesesParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/ParenthesesParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\PostfixOperatorParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/PostfixOperatorParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\PrefixOperatorParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/PrefixOperatorParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\PrefixParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/PrefixParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\StringParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/StringParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\parser\parselet\WhileParselet.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/parser/parselet/WhileParselet.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\main\java\me\abje\zero\util\TriFunction.java" afterPath="$PROJECT_DIR$/src/main/java/me/abje/lingua/util/TriFunction.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\test\java\me\abje\zero\lexer\LexerTest.java" afterPath="$PROJECT_DIR$/src/test/java/me/abje/lingua/lexer/LexerTest.java" />
-      <change type="MOVED" beforePath="D:\Lingua\src\test\java\me\abje\zero\parser\ParserTest.java" afterPath="$PROJECT_DIR$/src/test/java/me/abje/lingua/parser/ParserTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Lingua.iws" afterPath="$PROJECT_DIR$/Lingua.iws" />
     </list>
     <ignored path="Zero.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -177,8 +103,8 @@
       <file leaf-file-name="StringObj.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/StringObj.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4714038" vertical-offset="0" max-vertical-offset="969">
-              <caret line="36" column="14" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.20623916" vertical-offset="0" max-vertical-offset="969">
+              <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -1185,7 +1111,7 @@
       <workItem from="1422722290247" duration="6714000" />
       <workItem from="1422762416299" duration="40000" />
       <workItem from="1422762473168" duration="10000" />
-      <workItem from="1422762513927" duration="87000" />
+      <workItem from="1422762513927" duration="335000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit, should have committed earlier... help">
       <created>1422548474437</created>
@@ -1361,11 +1287,17 @@
       <option name="project" value="LOCAL" />
       <updated>1422738325435</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Renamed to Lingua">
+      <created>1422762611681</created>
+      <option name="number" value="00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1422762611681</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="106672000" />
+    <option name="totallyTimeSpent" value="106920000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-5" y="-5" width="1930" height="1050" extended-state="6" />
@@ -1392,7 +1324,7 @@
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32850778" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24053451" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962137" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19722815" sideWeight="0.6760563" order="0" side_tool="false" content_ui="combo" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995737" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -1423,7 +1355,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Added comments&#10;" />
     <MESSAGE value="Added intrinsics" />
     <MESSAGE value="Added classes(!)" />
     <MESSAGE value="Added synthetics, strings can be instantiated at runtime" />
@@ -1448,7 +1379,8 @@
     <MESSAGE value="Oops, implemented do-while. Testing is good for you!" />
     <MESSAGE value="Bytecode sux, interpreter it is for now" />
     <MESSAGE value="Faster interpretation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Faster interpretation" />
+    <MESSAGE value="Renamed to Lingua" />
+    <option name="LAST_COMMIT_MESSAGE" value="Renamed to Lingua" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1826,8 +1758,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/me/abje/lingua/interpreter/obj/StringObj.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4714038" vertical-offset="0" max-vertical-offset="969">
-          <caret line="36" column="14" selection-start-line="36" selection-start-column="14" selection-end-line="36" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.20623916" vertical-offset="0" max-vertical-offset="969">
+          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
           <folding />
         </state>
       </provider>
