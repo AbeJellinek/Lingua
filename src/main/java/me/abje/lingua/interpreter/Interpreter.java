@@ -46,16 +46,6 @@ public class Interpreter implements Phase<Expr, Obj> {
      */
     private Environment env = new Environment();
 
-    /**
-     * Interprets the given expression.
-     *
-     * @param expr The expression to interpret.
-     * @return The result of interpreting the expression.
-     */
-    public Obj next(Expr expr) {
-        return expr.evaluate(this);
-    }
-
     public static void main(String[] args) throws FileNotFoundException {
         try {
             Interpreter interpreter = new Interpreter();
@@ -68,7 +58,18 @@ public class Interpreter implements Phase<Expr, Obj> {
     }
 
     /**
+     * Interprets the given expression.
+     *
+     * @param expr The expression to interpret.
+     * @return The result of interpreting the expression.
+     */
+    public Obj next(Expr expr) {
+        return expr.evaluate(this);
+    }
+
+    /**
      * Interprets each expression in the given input.
+     *
      * @param reader The input.
      */
     public void interpret(Reader reader) {

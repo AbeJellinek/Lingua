@@ -26,6 +26,7 @@ package me.abje.lingua.interpreter.obj;
  * The Lingua "null" singleton. Has no fields, cannot be invoked, and is generally quite useless.
  */
 public class NullObj extends Obj {
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Null").build();
     /**
      * The singleton instance.
      */
@@ -59,6 +60,4 @@ public class NullObj extends Obj {
     public boolean isTruthy() {
         return false;
     }
-
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Null").build();
 }

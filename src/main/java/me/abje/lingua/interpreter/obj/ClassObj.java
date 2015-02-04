@@ -95,6 +95,16 @@ public class ClassObj extends Obj {
     }
 
     /**
+     * Creates a new class builder.
+     *
+     * @param name The new class's name.
+     * @return The Builder.
+     */
+    public static Builder builder(String name) {
+        return new Builder(name);
+    }
+
+    /**
      * Returns this class's name.
      */
     public String getName() {
@@ -140,15 +150,6 @@ public class ClassObj extends Obj {
     }
 
     /**
-     * Creates a new class builder.
-     * @param name The new class's name.
-     * @return The Builder.
-     */
-    public static Builder builder(String name) {
-        return new Builder(name);
-    }
-
-    /**
      * Builds a synthetic class.
      */
     public static class Builder {
@@ -169,6 +170,7 @@ public class ClassObj extends Obj {
 
         /**
          * Creates a new builder for a class with the given name.
+         *
          * @param name The name.
          */
         public Builder(String name) {
@@ -183,6 +185,7 @@ public class ClassObj extends Obj {
 
         /**
          * Defines a new function.
+         *
          * @param name The function's name.
          * @param body The function's body.
          * @return This builder, for chaining.
@@ -199,6 +202,7 @@ public class ClassObj extends Obj {
 
         /**
          * Adds fields to the class.
+         *
          * @param fields The fields to add.
          * @return This builder, for chaining.
          */
@@ -209,6 +213,7 @@ public class ClassObj extends Obj {
 
         /**
          * Creates the class represented by this builder.
+         *
          * @return The new class.
          */
         public ClassObj build() {

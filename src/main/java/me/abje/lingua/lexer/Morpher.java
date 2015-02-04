@@ -37,6 +37,9 @@ import me.abje.lingua.Phase;
  */
 public class Morpher implements Phase<Void, Token> {
 
+    private final Lexer mTokens;
+    private boolean mEatLines;
+
     public Morpher(Lexer tokens) {
         mTokens = tokens;
 
@@ -89,7 +92,4 @@ public class Morpher implements Phase<Void, Token> {
             return token;
         }
     }
-
-    private final Lexer mTokens;
-    private boolean mEatLines;
 }

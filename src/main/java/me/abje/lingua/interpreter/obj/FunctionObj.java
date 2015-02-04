@@ -33,21 +33,19 @@ import java.util.List;
  * A Lingua function. Functions can be called, have a body and take arguments.
  */
 public class FunctionObj extends Obj {
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
     /**
      * This function's name.
      */
     private String name;
-
     /**
      * This function's formal argument list.
      */
     private List<String> argNames;
-
     /**
      * This function's body expression.
      */
     private Expr body;
-
     /**
      * The "self" implicit argument passed to this function.
      */
@@ -142,14 +140,6 @@ public class FunctionObj extends Obj {
     }
 
     /**
-     * Sets this function's "self" implicit argument.
-     * @param self The new value.
-     */
-    public void setSelf(Obj self) {
-        this.self = self;
-    }
-
-    /**
      * Returns this function's "self" implicit argument.
      */
     public Obj getSelf() {
@@ -157,12 +147,20 @@ public class FunctionObj extends Obj {
     }
 
     /**
+     * Sets this function's "self" implicit argument.
+     *
+     * @param self The new value.
+     */
+    public void setSelf(Obj self) {
+        this.self = self;
+    }
+
+    /**
      * Returns a copy of this function with an updated {@link #self}.
+     *
      * @param self The new value of <code>self</code>.
      */
     public FunctionObj withSelf(Obj self) {
         return new FunctionObj(name, argNames, body, self);
     }
-
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
 }

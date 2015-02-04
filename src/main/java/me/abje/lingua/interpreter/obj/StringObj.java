@@ -28,6 +28,10 @@ import java.util.stream.Collectors;
  * A Lingua character string.
  */
 public class StringObj extends Obj {
+    public static final ClassObj SYNTHETIC = ClassObj.builder("String").
+            withFunction("init", (interpreter, self, args) ->
+                    new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
+            build();
     /**
      * This String's internal value.
      */
@@ -69,9 +73,4 @@ public class StringObj extends Obj {
     public String toString() {
         return value;
     }
-
-    public static final ClassObj SYNTHETIC = ClassObj.builder("String").
-            withFunction("init", (interpreter, self, args) ->
-                    new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
-            build();
 }

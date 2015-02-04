@@ -40,21 +40,38 @@ import java.util.stream.Collectors;
  */
 public class Intrinsics {
     /**
+     * The map of names to intrinsic (synthetic) classes to register.
+     */
+    private static Map<String, ClassObj> classes = new HashMap<>();
+    /**
      * The environment to register in.
      */
     private Environment.Frame env;
 
     /**
-     * The map of names to intrinsic (synthetic) classes to register.
-     */
-    private static Map<String, ClassObj> classes = new HashMap<>();
-
-    /**
      * Creates a new Intrinsics.
+     *
      * @param env The environment to register in.
      */
     public Intrinsics(Environment.Frame env) {
         this.env = env;
+    }
+
+    /**
+     * Registers a class.
+     *
+     * @param clazz The class.
+     */
+    public static void registerClass(ClassObj clazz) {
+        classes.put(clazz.getName(), clazz);
+    }
+    static {
+        registerClass(BooleanObj.SYNTHETIC);
+        registerClass(FunctionObj.SYNTHETIC);
+        registerClass(ListObj.SYNTHETIC);
+        registerClass(NullObj.SYNTHETIC);
+        registerClass(NumberObj.SYNTHETIC);
+        registerClass(StringObj.SYNTHETIC);
     }
 
     /**
@@ -93,6 +110,7 @@ public class Intrinsics {
 
     /**
      * Registers a function.
+     *
      * @param name The function's name.
      * @param func The function's body.
      */
@@ -103,22 +121,5 @@ public class Intrinsics {
                 return func.apply(interpreter, args);
             }
         });
-    }
-
-    /**
-     * Registers a class.
-     * @param clazz The class.
-     */
-    public static void registerClass(ClassObj clazz) {
-        classes.put(clazz.getName(), clazz);
-    }
-
-    static {
-        registerClass(BooleanObj.SYNTHETIC);
-        registerClass(FunctionObj.SYNTHETIC);
-        registerClass(ListObj.SYNTHETIC);
-        registerClass(NullObj.SYNTHETIC);
-        registerClass(NumberObj.SYNTHETIC);
-        registerClass(StringObj.SYNTHETIC);
     }
 }

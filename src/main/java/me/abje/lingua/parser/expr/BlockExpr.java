@@ -38,6 +38,7 @@ public class BlockExpr extends Expr {
 
     /**
      * Creates a new block expression.
+     *
      * @param exprs The list of expressions within the block.
      */
     public BlockExpr(List<Expr> exprs) {

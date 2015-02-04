@@ -164,7 +164,8 @@ public class Environment {
 
         /**
          * Defines a new variable in this Frame.
-         * @param name The new variable's name.
+         *
+         * @param name  The new variable's name.
          * @param value The new variable's value.
          * @return The new variable's value.
          * @throws me.abje.lingua.interpreter.InterpreterException If a variable with the given name already exists.
@@ -180,7 +181,8 @@ public class Environment {
 
         /**
          * Updates the value of a variable in this Frame.
-         * @param name The variable's name.
+         *
+         * @param name  The variable's name.
          * @param value The variable's new value.
          * @return The variable's new value.
          * @throws me.abje.lingua.interpreter.InterpreterException If a variable with the given name does not exist.
@@ -196,6 +198,7 @@ public class Environment {
 
         /**
          * Returns whether a variable with the given name exists in this Frame.
+         *
          * @param name The name to find.
          */
         public boolean has(String name) {
@@ -204,6 +207,7 @@ public class Environment {
 
         /**
          * Returns the value of the variable with the given name in this Frame.
+         *
          * @param name The variable's name.
          * @return The variable's value.
          * @throws me.abje.lingua.interpreter.InterpreterException If a variable with the given name does not exist.

@@ -82,6 +82,7 @@ public class Token {
 
     /**
      * Returns whether this token's type equals the given type.
+     *
      * @param type The type to compare to
      * @return Whether this token's type equals the given type.
      */

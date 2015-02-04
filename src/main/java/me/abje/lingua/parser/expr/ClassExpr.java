@@ -52,9 +52,10 @@ public class ClassExpr extends Expr {
 
     /**
      * Creates a new class declaration expression.
-     * @param name The class's name.
+     *
+     * @param name      The class's name.
      * @param functions The class's functions.
-     * @param fields The class's fields.
+     * @param fields    The class's fields.
      */
     public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields) {
         this.name = name;

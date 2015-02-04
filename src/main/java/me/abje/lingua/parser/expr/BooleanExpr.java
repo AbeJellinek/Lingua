@@ -37,6 +37,7 @@ public class BooleanExpr extends Expr {
 
     /**
      * Creates a new boolean literal.
+     *
      * @param value The boolean's value.
      */
     public BooleanExpr(boolean value) {

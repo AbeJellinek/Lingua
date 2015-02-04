@@ -35,6 +35,27 @@ import java.util.stream.Collectors;
  * A Lingua list. Mutable, but designed with functional usage in mind.
  */
 public class ListObj extends Obj {
+    public static final ClassObj SYNTHETIC = ClassObj.builder("List").
+            withFunction("map", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for map");
+                return ((ListObj) self).map(interpreter, args.get(0));
+            }).
+            withFunction("filter", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for filter");
+                return ((ListObj) self).filter(interpreter, args.get(0));
+            }).
+            withFunction("reverse", (interpreter, self, args) -> {
+                if (args.size() != 0)
+                    throw new InterpreterException("too many arguments for reverse");
+                return ((ListObj) self).reverse();
+            }).
+            withFunction("add", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for reverse");
+                return ((ListObj) self).add(args.get(0));
+            }).build();
     /**
      * This list's items. Must be mutable for mutator methods to work.
      */
@@ -183,26 +204,4 @@ public class ListObj extends Obj {
     public int hashCode() {
         return items.hashCode();
     }
-
-    public static final ClassObj SYNTHETIC = ClassObj.builder("List").
-            withFunction("map", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for map");
-                return ((ListObj) self).map(interpreter, args.get(0));
-            }).
-            withFunction("filter", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for filter");
-                return ((ListObj) self).filter(interpreter, args.get(0));
-            }).
-            withFunction("reverse", (interpreter, self, args) -> {
-                if (args.size() != 0)
-                    throw new InterpreterException("too many arguments for reverse");
-                return ((ListObj) self).reverse();
-            }).
-            withFunction("add", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for reverse");
-                return ((ListObj) self).add(args.get(0));
-            }).build();
 }

@@ -26,6 +26,7 @@ package me.abje.lingua.interpreter.obj;
  * An object with two possible values: true and false.
  */
 public class BooleanObj extends Obj {
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Boolean").build();
     /**
      * The value of this object.
      */
@@ -77,6 +78,4 @@ public class BooleanObj extends Obj {
     public boolean isTruthy() {
         return value;
     }
-
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Boolean").build();
 }

@@ -23,8 +23,8 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
-import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.Parser;
+import me.abje.lingua.parser.expr.Expr;
 
 /**
  * Interface for parselets which do not operate on already-parsed expressions.

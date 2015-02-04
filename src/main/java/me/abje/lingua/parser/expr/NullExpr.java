@@ -23,8 +23,8 @@
 package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.NullObj;
+import me.abje.lingua.interpreter.obj.Obj;
 
 /**
  * A null literal expression.
