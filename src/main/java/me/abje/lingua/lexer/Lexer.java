@@ -256,7 +256,30 @@ public class Lexer implements Phase<Void, Token> {
         while (cont) {
             char c = read();
             if (escape) {
-                stringBuilder.append(c);
+                switch (c) {
+                    case '\'':
+                    case '"':
+                    case '\\':
+                        stringBuilder.append(c);
+                        break;
+                    case 'n':
+                        stringBuilder.append('\n');
+                        break;
+                    case 'r':
+                        stringBuilder.append('\r');
+                        break;
+                    case 'f':
+                        stringBuilder.append('\f');
+                        break;
+                    case 't':
+                        stringBuilder.append('\t');
+                        break;
+                    case '0':
+                        stringBuilder.append('\0');
+                        break;
+                    default:
+                        throw new ParseException("invalid escape code in literal");
+                }
                 escape = false;
             } else {
                 if (c == '\\') {
