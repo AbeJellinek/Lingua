@@ -55,7 +55,13 @@ public class ListObj extends Obj {
                 if (args.size() != 1)
                     throw new InterpreterException("invalid number of arguments for reverse");
                 return ((ListObj) self).add(args.get(0));
-            }).build();
+            }).
+            withFunction("size", (interpreter, self, args) -> {
+                if (args.size() != 0)
+                    throw new InterpreterException("invalid number of arguments for size");
+                return new NumberObj(((ListObj) self).items.size());
+            }).
+            build();
     /**
      * This list's items. Must be mutable for mutator methods to work.
      */

@@ -1,11 +1,29 @@
-class Test {
-    name
+class Triangle {
+    side1
+    side2
+    side3
 
-    init(name) =
-        self.name = name
+    init(side1, side2, side3) = {
+        self.side1 = side1
+        self.side2 = side2
+        self.side3 = side3
+    }
 
-    doStuff() =
-        print("Hello, world! My name is " + self.name + ".")
+    area() = {
+        @var p = perimeter() / 2
+        sqrt(p(p - self.side1)(p - self.side2)(p - self.side3))
+    }
+
+    perimeter() = self.side1 + self.side2 + self.side3
 }
 
-Test("George Washington").doStuff()
+lenString = read("Side lengths (comma-separated): ")
+lengths = lenString.split(",").map(x -> Number(x.trim()))
+
+if (lengths.size() != 3) {
+    print("Invalid number of sides.")
+} else {
+    tri = Triangle(lengths[0], lengths[1], lengths[2])
+    print("Area: " + tri.area())
+    print("Perimeter: " + tri.perimeter())
+}

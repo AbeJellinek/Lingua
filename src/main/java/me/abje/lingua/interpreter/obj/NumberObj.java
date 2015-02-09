@@ -66,7 +66,9 @@ public class NumberObj extends Obj {
 
     @Override
     public String toString() {
-        return String.format("%.0f", value);
+        if (value == (int) value)
+            return String.valueOf((int) value);
+        return String.valueOf(value);
     }
 
     @Override

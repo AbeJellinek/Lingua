@@ -22,6 +22,9 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.InterpreterException;
+
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +34,17 @@ public class StringObj extends Obj {
     public static final ClassObj SYNTHETIC = ClassObj.builder("String").
             withFunction("init", (interpreter, self, args) ->
                     new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
+            withFunction("split", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("invalid number of arguments for split");
+                return new ListObj(Arrays.asList((String[]) self.toString().split(args.get(0).toString())).
+                        stream().map(StringObj::new).collect(Collectors.toList()));
+            }).
+            withFunction("trim", (interpreter, self, args) -> {
+                if (args.size() != 0)
+                    throw new InterpreterException("invalid number of arguments for trim");
+                return new StringObj(self.toString().trim());
+            }).
             build();
     /**
      * This String's internal value.

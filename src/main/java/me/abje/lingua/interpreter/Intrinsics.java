@@ -32,6 +32,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,7 @@ public class Intrinsics {
     public static void registerClass(ClassObj clazz) {
         classes.put(clazz.getName(), clazz);
     }
+
     static {
         registerClass(BooleanObj.SYNTHETIC);
         registerClass(FunctionObj.SYNTHETIC);
@@ -104,6 +106,29 @@ public class Intrinsics {
                 return result;
             } else {
                 throw new InterpreterException("wrong number of arguments for eval");
+            }
+        });
+
+        addFunction("sqrt", (interpreter, args) -> {
+            if (args.size() == 1) {
+                if (args.get(0) instanceof NumberObj) {
+                    return new NumberObj((float) Math.sqrt(((NumberObj) args.get(0)).getValue()));
+                } else {
+                    throw new InterpreterException("wrong argument for sqrt");
+                }
+            } else {
+                throw new InterpreterException("wrong number of arguments for sqrt");
+            }
+        });
+
+        addFunction("read", (interpreter, args) -> {
+            if (args.size() == 0) {
+                return new StringObj(new Scanner(System.in).nextLine());
+            } else if (args.size() == 1) {
+                System.out.print(args.get(0));
+                return new StringObj(new Scanner(System.in).nextLine());
+            } else {
+                throw new InterpreterException("wrong number of arguments for read");
             }
         });
     }
