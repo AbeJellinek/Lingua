@@ -92,6 +92,7 @@ public class Parser implements Phase<Token, Expr> {
         infix(GTE, Precedence.COMPARISON);
         infix(ANDAND, Precedence.LOGICAL);
         infix(OROR, Precedence.LOGICAL);
+        infix(IS, Precedence.EQUALITY);
         registerInfix(OPEN_PAREN, new CallParselet());
         registerInfix(EQ, new AssignmentParselet());
         registerInfix(OPEN_BRACKET, new IndexParselet());

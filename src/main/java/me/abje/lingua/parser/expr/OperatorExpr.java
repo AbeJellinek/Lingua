@@ -30,6 +30,8 @@ import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.StringObj;
 import me.abje.lingua.lexer.Token;
 
+import java.util.Objects;
+
 /**
  * A binary operator expression, in the form of <code>left + right</code>.
  */
@@ -131,6 +133,8 @@ public class OperatorExpr extends Expr {
                 return new BooleanObj(interpreter.next(left).isTruthy() && interpreter.next(right).isTruthy());
             case OROR:
                 return new BooleanObj(interpreter.next(left).isTruthy() || interpreter.next(right).isTruthy());
+            case IS:
+                return new BooleanObj(Objects.equals(interpreter.next(left).getType(), interpreter.next(right)));
             default:
                 throw new InterpreterException("invalid operator");
         }
