@@ -88,7 +88,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 System.out.print("> ");
             } while (in.hasNextLine());
         } else {
-            System.err.println("Usage: lingua <script>");
+            System.err.println("Usage: lingua [script]");
         }
     }
 
