@@ -10,7 +10,7 @@ class Triangle {
     }
 
     area() = {
-        @var p = perimeter() / 2
+        p = perimeter() / 2
         sqrt(p(p - self.side1)(p - self.side2)(p - self.side3))
     }
 

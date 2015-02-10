@@ -30,10 +30,7 @@ import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,13 +44,32 @@ public class Interpreter implements Phase<Expr, Obj> {
     private Environment env = new Environment();
 
     public static void main(String[] args) throws FileNotFoundException {
+        if (args.length == 1) {
+            try {
+                Interpreter interpreter = new Interpreter();
+                new Intrinsics(interpreter.env.getGlobals()).register();
+                interpreter.addImport("core");
+                interpreter.addImport(args[0]);
+            } catch (ParseException | InterpreterException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("Usage: lingua <script>");
+        }
+    }
+
+    public void addImport(String fullName) {
         try {
-            Interpreter interpreter = new Interpreter();
-            new Intrinsics(interpreter.env.getGlobals()).register();
-            interpreter.interpret(new InputStreamReader(Interpreter.class.getResourceAsStream("/core.zero")));
-            interpreter.interpret(new FileReader("test.txt"));
-        } catch (ParseException | InterpreterException e) {
-            e.printStackTrace();
+            String name = fullName.replace('.', '/') + ".ling";
+            InputStream classpathStream = Interpreter.class.getResourceAsStream("/" + name);
+            if (classpathStream != null) {
+                interpret(new InputStreamReader(classpathStream));
+            } else {
+                File file = new File(name);
+                interpret(new FileReader(file));
+            }
+        } catch (FileNotFoundException e) {
+            throw new InterpreterException("not found: " + fullName);
         }
     }
 

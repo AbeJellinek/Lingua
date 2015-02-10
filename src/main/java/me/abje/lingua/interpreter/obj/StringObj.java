@@ -46,6 +46,7 @@ public class StringObj extends Obj {
                 return new StringObj(self.toString().trim());
             }).
             build();
+
     /**
      * This String's internal value.
      */
