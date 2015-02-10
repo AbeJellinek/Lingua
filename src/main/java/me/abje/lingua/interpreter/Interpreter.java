@@ -63,7 +63,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             System.out.print("> ");
 
             int num = 0;
-            do {
+            while (in.hasNextLine()) {
                 try {
                     Parser parser = new Parser(new Morpher(new Lexer(new StringReader(in.nextLine()))));
                     List<Expr> exprs = new ArrayList<>();
@@ -86,7 +86,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 }
 
                 System.out.print("> ");
-            } while (in.hasNextLine());
+            }
         } else {
             System.err.println("Usage: lingua [script]");
         }
