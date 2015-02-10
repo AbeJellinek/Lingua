@@ -33,6 +33,7 @@ import me.abje.lingua.parser.expr.Expr;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
@@ -53,6 +54,39 @@ public class Interpreter implements Phase<Expr, Obj> {
             } catch (ParseException | InterpreterException e) {
                 e.printStackTrace();
             }
+        } else if (args.length == 0) {
+            Scanner in = new Scanner(System.in);
+            Interpreter interpreter = new Interpreter();
+            new Intrinsics(interpreter.env.getGlobals()).register();
+            interpreter.addImport("core");
+
+            System.out.print("> ");
+
+            int num = 0;
+            do {
+                try {
+                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(in.nextLine()))));
+                    List<Expr> exprs = new ArrayList<>();
+                    Expr expr;
+                    while ((expr = parser.next()) != null) {
+                        exprs.add(expr);
+                    }
+
+                    for (Expr x : exprs) {
+                        Obj value = interpreter.next(x);
+                        do {
+                            num++;
+                        } while (interpreter.env.has("res" + num));
+                        String varName = "res" + num;
+                        interpreter.env.define(varName, value);
+                        System.out.println(varName + " = " + value);
+                    }
+                } catch (ParseException | InterpreterException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.print("> ");
+            } while (in.hasNextLine());
         } else {
             System.err.println("Usage: lingua <script>");
         }
