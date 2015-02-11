@@ -50,32 +50,16 @@ public class Lexer implements Phase<Void, Token> {
      */
     private int line = 1;
 
-    /**
-     * The current column, as of the start of the current token.
-     */
-    private int column = 1;
-
-    /**
-     * The current line.
-     */
-    private int realLine = 1;
-
-    /**
-     * The current column.
-     */
-    private int realColumn = 1;
-
-    /**
-     * The column before the last read operation.
-     */
-    private int oldColumn;
+    private final String fileName;
 
     /**
      * Creates a new Lexer with the given input Reader.
      *
-     * @param reader The Reader.
+     * @param reader   The Reader.
+     * @param fileName The name of the file to be read.
      */
-    public Lexer(Reader reader) {
+    public Lexer(Reader reader, String fileName) {
+        this.fileName = fileName;
         this.reader = new PushbackReader(reader, 1);
         this.builder = new StringBuilder();
     }
@@ -87,9 +71,6 @@ public class Lexer implements Phase<Void, Token> {
      * @return The token that was read, or null if the end of the input was reached.
      */
     public Token next(Void unused) {
-        realLine = line;
-        realColumn = column;
-
         try {
             char read = read();
             switch (read) {
@@ -200,7 +181,7 @@ public class Lexer implements Phase<Void, Token> {
                     builder.setLength(0);
                     Token token = next(null);
                     if (token.is(NAME)) {
-                        return new Token(ANNOTATION, token.getValue(), token.getLine(), token.getColumn());
+                        return new Token(ANNOTATION, token.getValue(), token.getLine(), "<none>");
                     } else {
                         throw new ParseException("invalid annotation");
                     }
@@ -217,7 +198,7 @@ public class Lexer implements Phase<Void, Token> {
                                 isEOS = true;
                                 break;
                             }
-                        } while (Character.isLetterOrDigit(read));
+                        } while (Character.isLetterOrDigit(read) || read == '_' || read == '$');
 
                         if (!isEOS)
                             unread(read);
@@ -365,12 +346,13 @@ public class Lexer implements Phase<Void, Token> {
             if (read == -1)
                 throw new EOSException();
             char readChar = (char) read;
-            oldColumn = column;
             if (readChar == '\n' || readChar == '\r') {
-                column = 1;
                 line++;
-            } else {
-                column++;
+                if (readChar == '\r') {
+                    char next = (char) reader.read();
+                    if (next != '\n')
+                        reader.unread(next);
+                }
             }
             builder.append(readChar);
             return readChar;
@@ -387,10 +369,7 @@ public class Lexer implements Phase<Void, Token> {
     private void unread(char read) {
         try {
             if (read == '\n' || read == '\r') {
-                column = oldColumn;
                 line--;
-            } else {
-                column--;
             }
 
             reader.unread(read);
@@ -407,7 +386,7 @@ public class Lexer implements Phase<Void, Token> {
      * @return The new Token.
      */
     private Token make(Token.Type type) {
-        Token token = new Token(type, builder.toString(), realLine, realColumn);
+        Token token = new Token(type, builder.toString(), line, fileName);
         builder.setLength(0);
         return token;
     }

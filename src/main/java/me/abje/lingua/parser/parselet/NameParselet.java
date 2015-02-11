@@ -32,6 +32,6 @@ import me.abje.lingua.parser.expr.NameExpr;
  */
 public class NameParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
-        return new NameExpr(token.getValue());
+        return new NameExpr(token, token.getValue());
     }
 }

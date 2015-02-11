@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A variable assignment expression.
@@ -45,14 +46,15 @@ public class AssignmentExpr extends Expr {
      * @param name  The name of the variable.
      * @param value The expression of the value to be assigned.
      */
-    public AssignmentExpr(String name, Expr value) {
+    public AssignmentExpr(Token token, String name, Expr value) {
+        super(token);
         this.name = name;
         this.value = value;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        Obj valueObj = value.evaluate(interpreter);
+        Obj valueObj = interpreter.next(value);
         if (getAnnotations().contains("var")) {
             interpreter.getEnv().define(name, valueObj);
         } else {

@@ -36,7 +36,7 @@ public class IndexParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
         Expr index = parser.next();
         parser.expect(Token.Type.CLOSE_BRACKET);
-        return new IndexExpr(left, index);
+        return new IndexExpr(token, left, index);
     }
 
     @Override

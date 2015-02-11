@@ -33,7 +33,7 @@ import me.abje.lingua.parser.expr.PostfixExpr;
  */
 public class PostfixOperatorParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
-        return new PostfixExpr(left, token.getType());
+        return new PostfixExpr(token, left, token.getType());
     }
 
     @Override

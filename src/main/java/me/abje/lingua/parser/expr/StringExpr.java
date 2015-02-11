@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.StringObj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A string literal expression.
@@ -40,7 +41,8 @@ public class StringExpr extends Expr {
      *
      * @param value The expression's value.
      */
-    public StringExpr(String value) {
+    public StringExpr(Token token, String value) {
+        super(token);
         this.value = value;
     }
 

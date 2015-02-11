@@ -39,7 +39,7 @@ public class BinaryOperatorParselet implements InfixParselet {
 
     public Expr parse(Parser parser, Expr left, Token token) {
         Expr right = parser.next(precedence);
-        return new OperatorExpr(left, token.getType(), right);
+        return new OperatorExpr(token, left, right);
     }
 
     @Override

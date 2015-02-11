@@ -32,6 +32,8 @@ import me.abje.lingua.parser.expr.NameExpr;
 
 import java.util.Arrays;
 
+import static java.util.Arrays.asList;
+
 /**
  * Parses an anonymous function expression, such as <code>a -> b</code>.
  */
@@ -39,7 +41,7 @@ public class MiniFunctionParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
         if (left instanceof NameExpr) {
-            return new FunctionExpr("<anon>", Arrays.asList(((NameExpr) left).getValue()), parser.next());
+            return new FunctionExpr(token, "<anon>", asList(((NameExpr) left).getValue()), parser.next());
         } else {
             throw new ParseException("left side of function must be an argument name");
         }

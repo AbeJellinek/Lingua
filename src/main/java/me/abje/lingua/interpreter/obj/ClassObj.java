@@ -206,7 +206,8 @@ public class ClassObj extends Obj {
             this.functions.put(name, new SyntheticFunctionObj() {
                 @Override
                 public Obj call(Interpreter interpreter, List<Obj> args) {
-                    interpreter.getEnv().pushFrame(Builder.this.name + "." + name + " (native)");
+                    interpreter.getEnv().pushFrame(Builder.this.name + "." + name);
+                    interpreter.getEnv().getStack().peek().setFileName("<native>");
                     Obj result = body.apply(interpreter, getSelf(), args);
                     interpreter.getEnv().popFrame();
                     return result;

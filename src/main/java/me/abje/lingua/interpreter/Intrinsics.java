@@ -103,7 +103,7 @@ public class Intrinsics {
 
         addFunction("eval", (interpreter, args) -> {
             if (args.size() == 1) {
-                Parser parser = new Parser(new Morpher(new Lexer(new StringReader(args.get(0).toString()))));
+                Parser parser = new Parser(new Morpher(new Lexer(new StringReader(args.get(0).toString()), "<eval>")));
                 Expr expr;
                 Obj result = NullObj.get();
                 while ((expr = parser.next()) != null) {
@@ -139,8 +139,13 @@ public class Intrinsics {
         });
 
         addFunction("dumpStack", (interpreter, args) ->
-                new ListObj(env.getOldStack().stream().map((frame) -> new StringObj(frame.getName())).
-                        collect(Collectors.toList())));
+                new ListObj(env.getOldStack().stream().map(frame -> {
+                    if (frame.getFileName().equals("<native>")) {
+                        return new StringObj(frame.getName() + "(native)");
+                    } else {
+                        return new StringObj(frame.getName() + "(" + frame.getFileName() + ":" + frame.getLine() + ")");
+                    }
+                }).collect(Collectors.toList())));
     }
 
     /**

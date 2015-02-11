@@ -65,11 +65,11 @@ public class WhileParselet implements PrefixParselet {
             }
             parser.expect(Token.Type.WHILE);
             condition = parser.next();
-            body = new BlockExpr(exprs);
+            body = new BlockExpr(token, exprs);
         } else {
             condition = parser.next();
             body = parser.next();
         }
-        return new WhileExpr(condition, body, doWhile);
+        return new WhileExpr(token, condition, body, doWhile);
     }
 }

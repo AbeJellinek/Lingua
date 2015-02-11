@@ -25,13 +25,13 @@ package me.abje.lingua.parser;
 import me.abje.lingua.interpreter.obj.Field;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
-import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.expr.*;
 import org.junit.Test;
 
 import java.io.StringReader;
 
 import static java.util.Arrays.asList;
+import static me.abje.lingua.lexer.Token.Type.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,7 +40,7 @@ public class ParserTest {
     private Parser parser;
 
     private void input(String input) {
-        parser = new Parser(new Morpher(new Lexer(new StringReader(input))));
+        parser = new Parser(new Morpher(new Lexer(new StringReader(input), "<test>")));
     }
 
     @Test
@@ -55,93 +55,91 @@ public class ParserTest {
 
         input("x = y");
         e = parser.next();
-        assertThat(e, is(new AssignmentExpr("x", new NameExpr("y"))));
+        assertThat(e, is(new AssignmentExpr(null, "x", new NameExpr(null, "y"))));
 
         input("x += y");
         e = parser.next();
-        assertThat(e, is(new AssignmentExpr("x", new OperatorExpr(new NameExpr("x"), Token.Type.PLUS, new NameExpr("y")))));
+        assertThat(e, is(new AssignmentExpr(null, "x", new OperatorExpr(PLUS, new NameExpr(null, "x"), new NameExpr(null, "y")))));
 
         input("x + y");
         e = parser.next();
-        assertThat(e, is(new OperatorExpr(new NameExpr("x"), Token.Type.PLUS, new NameExpr("y"))));
+        assertThat(e, is(new OperatorExpr(PLUS, new NameExpr(null, "x"), new NameExpr(null, "y"))));
 
         input("{ xyz 123 }");
         e = parser.next();
-        assertThat(e, is(new BlockExpr(asList(new NameExpr("xyz"), new NumberExpr(123)))));
+        assertThat(e, is(new BlockExpr(null, asList(new NameExpr(null, "xyz"), new NumberExpr(null, 123)))));
 
         input("true false");
         e = parser.next();
-        assertThat(e, is(new BooleanExpr(true)));
+        assertThat(e, is(new BooleanExpr(null, true)));
         e = parser.next();
-        assertThat(e, is(new BooleanExpr(false)));
+        assertThat(e, is(new BooleanExpr(null, false)));
 
         input("x(y, 123)");
         e = parser.next();
-        assertThat(e, is(new CallExpr(new NameExpr("x"), asList(new NameExpr("y"), new NumberExpr(123)))));
+        assertThat(e, is(new CallExpr(null, new NameExpr(null, "x"), asList(new NameExpr(null, "y"), new NumberExpr(null, 123)))));
 
         input("class Test {\n foo \n bar(x, y) = z \n}");
         e = parser.next();
-        assertThat(e, is(new ClassExpr("Test", asList(
-                new FunctionExpr("bar", asList("x", "y"), new NameExpr("z"))),
-                asList(new Field(null, "foo", new NullExpr())), "Obj")));
+        assertThat(e, is(new ClassExpr(null, "Test", asList(
+                new FunctionExpr(null, "bar", asList("x", "y"), new NameExpr(null, "z"))), asList(new Field(null, "foo", new NullExpr(null))), "Obj")));
 
         input("if x y else z; if (x) y");
         e = parser.next();
-        assertThat(e, is(new IfExpr(new NameExpr("x"), new NameExpr("y"), new NameExpr("z"))));
+        assertThat(e, is(new IfExpr(null, new NameExpr(null, "x"), new NameExpr(null, "y"), new NameExpr(null, "z"))));
         e = parser.next();
-        assertThat(e, is(new IfExpr(new NameExpr("x"), new NameExpr("y"), null)));
+        assertThat(e, is(new IfExpr(null, new NameExpr(null, "x"), new NameExpr(null, "y"), null)));
 
         input("x[y][z]");
         e = parser.next();
-        assertThat(e, is(new IndexExpr(new IndexExpr(new NameExpr("x"), new NameExpr("y")), new NameExpr("z"))));
+        assertThat(e, is(new IndexExpr(null, new IndexExpr(null, new NameExpr(null, "x"), new NameExpr(null, "y")), new NameExpr(null, "z"))));
 
         input("[x, y z]");
         e = parser.next();
-        assertThat(e, is(new ListExpr(asList(new NameExpr("x"), new NameExpr("y"), new NameExpr("z")))));
+        assertThat(e, is(new ListExpr(null, asList(new NameExpr(null, "x"), new NameExpr(null, "y"), new NameExpr(null, "z")))));
 
         input("foo.bar.baz");
         e = parser.next();
-        assertThat(e, is(new MemberAccessExpr(new MemberAccessExpr(new NameExpr("foo"), "bar"), "baz")));
+        assertThat(e, is(new MemberAccessExpr(null, new MemberAccessExpr(null, new NameExpr(null, "foo"), "bar"), "baz")));
 
         input("x -> y + z");
         e = parser.next();
-        assertThat(e, is(new FunctionExpr("<anon>", asList("x"),
-                new OperatorExpr(new NameExpr("y"), Token.Type.PLUS, new NameExpr("z")))));
+        assertThat(e, is(new FunctionExpr(null, "<anon>", asList("x"), new OperatorExpr(PLUS, new NameExpr(null, "y"), new NameExpr(null, "z")))));
 
         input("foobar");
         e = parser.next();
-        assertThat(e, is(new NameExpr("foobar")));
+        assertThat(e, is(new NameExpr(null, "foobar")));
 
         input("null");
         e = parser.next();
-        assertThat(e, is(new NullExpr()));
+        assertThat(e, is(new NullExpr(null)));
 
         input("192.168");
         e = parser.next();
-        assertThat(e, is(new NumberExpr(192.168f)));
+        assertThat(e, is(new NumberExpr(null, 192.168f)));
 
         input("(x + y) * z");
         e = parser.next();
-        assertThat(e, is(new OperatorExpr(new OperatorExpr(
-                new NameExpr("x"), Token.Type.PLUS, new NameExpr("y")), Token.Type.TIMES, new NameExpr("z"))));
+        assertThat(e, is(new OperatorExpr(TIMES, new OperatorExpr(PLUS,
+                new NameExpr(null, "x"), new NameExpr(null, "y")), new NameExpr(null, "z"))));
 
         input("10! + 2");
         e = parser.next();
-        assertThat(e, is(new OperatorExpr(new PostfixExpr(
-                new NumberExpr(10), Token.Type.BANG), Token.Type.PLUS, new NumberExpr(2))));
+        assertThat(e, is(new OperatorExpr(PLUS, new PostfixExpr(null,
+                new NumberExpr(null, 10), BANG), new NumberExpr(null, 2))));
 
         input("!true");
         e = parser.next();
-        assertThat(e, is(new PrefixExpr(Token.Type.BANG, new BooleanExpr(true))));
+        assertThat(e, is(new PrefixExpr(null, BANG, new BooleanExpr(null, true))));
 
         input("\"abc def\"");
         e = parser.next();
-        assertThat(e, is(new StringExpr("abc def")));
+        assertThat(e, is(new StringExpr(null, "abc def")));
 
         input("while x y; do y while x");
         e = parser.next();
-        assertThat(e, is(new WhileExpr(new NameExpr("x"), new NameExpr("y"), false)));
+        assertThat(e, is(new WhileExpr(null, new NameExpr(null, "x"), new NameExpr(null, "y"), false)));
         e = parser.next();
-        assertThat(e, is(new WhileExpr(new NameExpr("x"), new BlockExpr(asList(new NameExpr("y"))), true)));
+        assertThat(e, is(new WhileExpr(null, new NameExpr(null, "x"), new BlockExpr(null, asList(new NameExpr(null, "y"))), true)));
     }
 }

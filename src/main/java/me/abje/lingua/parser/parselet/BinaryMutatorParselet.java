@@ -51,14 +51,14 @@ public class BinaryMutatorParselet implements InfixParselet {
         if (left instanceof IndexExpr) {
             IndexExpr index = (IndexExpr) left;
             Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-            return new IndexSetExpr(index.getTarget(), index.getIndex(), new OperatorExpr(left, type, value));
+            return new IndexSetExpr(token, index.getTarget(), index.getIndex(), new OperatorExpr(token, left, value));
         } else if (left instanceof MemberAccessExpr) {
             MemberAccessExpr member = (MemberAccessExpr) left;
             Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-            return new MemberSetExpr(member.getLeft(), member.getName(), new OperatorExpr(left, type, value));
+            return new MemberSetExpr(token, member.getLeft(), member.getName(), new OperatorExpr(token, left, value));
         } else if (left instanceof NameExpr) {
             Expr value = parser.next(Precedence.ASSIGNMENT);
-            return new AssignmentExpr(((NameExpr) left).getValue(), new OperatorExpr(left, type, value));
+            return new AssignmentExpr(token, ((NameExpr) left).getValue(), new OperatorExpr(token, left, value));
         } else {
             throw new ParseException("assignments must have a function call, index expression, or variable as a target");
         }

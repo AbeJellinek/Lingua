@@ -21,7 +21,7 @@ lenString = read("Side lengths (comma-separated): ")
 lengths = lenString.split(",").map(x -> Number(x.trim()))
 
 if (lengths.size() != 3) {
-    print("Invalid number of sides.")
+    error("Invalid number of sides.")
 } else {
     tri = Triangle(lengths[0], lengths[1], lengths[2])
     print("Area: " + tri.area())

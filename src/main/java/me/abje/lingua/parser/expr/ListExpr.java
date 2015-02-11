@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.ListObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +44,8 @@ public class ListExpr extends Expr {
      *
      * @param items The list's items.
      */
-    public ListExpr(List<Expr> items) {
+    public ListExpr(Token token, List<Expr> items) {
+        super(token);
         this.items = items;
     }
 

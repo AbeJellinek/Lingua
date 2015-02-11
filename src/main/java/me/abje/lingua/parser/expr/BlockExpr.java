@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.List;
 
@@ -41,7 +42,8 @@ public class BlockExpr extends Expr {
      *
      * @param exprs The list of expressions within the block.
      */
-    public BlockExpr(List<Expr> exprs) {
+    public BlockExpr(Token token, List<Expr> exprs) {
+        super(token);
         this.exprs = exprs;
     }
 
@@ -50,7 +52,7 @@ public class BlockExpr extends Expr {
         interpreter.getEnv().pushFrame("<anon>");
         Obj result = null;
         for (Expr expr : exprs) {
-            result = expr.evaluate(interpreter);
+            result = interpreter.next(expr);
         }
         interpreter.getEnv().popFrame();
         return result;

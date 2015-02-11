@@ -25,11 +25,16 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A null literal expression.
  */
 public class NullExpr extends Expr {
+    public NullExpr(Token token) {
+        super(token);
+    }
+
     @Override
     public Obj evaluate(Interpreter interpreter) {
         return NullObj.get();

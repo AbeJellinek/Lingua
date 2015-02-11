@@ -45,7 +45,7 @@ public class CallParselet implements InfixParselet {
             }
         }
         parser.read();
-        return new CallExpr(left, args);
+        return new CallExpr(token, left, args);
     }
 
     @Override

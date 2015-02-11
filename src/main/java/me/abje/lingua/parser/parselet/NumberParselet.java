@@ -32,6 +32,6 @@ import me.abje.lingua.parser.expr.NumberExpr;
  */
 public class NumberParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
-        return new NumberExpr(token.getValue());
+        return new NumberExpr(token, token.getValue());
     }
 }

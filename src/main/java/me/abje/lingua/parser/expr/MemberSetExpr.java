@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A member set expression, in the form of <code>left.name = value</code>.
@@ -51,7 +52,8 @@ public class MemberSetExpr extends Expr {
      * @param name  The name of the member to be set.
      * @param value The value to set it to.
      */
-    public MemberSetExpr(Expr left, String name, Expr value) {
+    public MemberSetExpr(Token token, Expr left, String name, Expr value) {
+        super(token);
         this.left = left;
         this.name = name;
         this.value = value;

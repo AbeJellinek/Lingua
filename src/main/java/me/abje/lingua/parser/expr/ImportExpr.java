@@ -26,11 +26,13 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 public class ImportExpr extends Expr {
     private final Expr name;
 
-    public ImportExpr(Expr name) {
+    public ImportExpr(Token token, Expr name) {
+        super(token);
         this.name = name;
     }
 

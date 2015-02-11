@@ -33,6 +33,6 @@ import me.abje.lingua.parser.expr.StringExpr;
 public class StringParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
-        return new StringExpr(token.getValue());
+        return new StringExpr(token, token.getValue());
     }
 }

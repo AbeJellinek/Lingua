@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NumberObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.ParseException;
 
 /**
@@ -41,7 +42,8 @@ public class NumberExpr extends Expr {
      *
      * @param value The string value of the number.
      */
-    public NumberExpr(String value) {
+    public NumberExpr(Token token, String value) {
+        super(token);
         try {
             this.value = Float.parseFloat(value);
         } catch (NumberFormatException e) {
@@ -54,7 +56,8 @@ public class NumberExpr extends Expr {
      *
      * @param value The value of the number.
      */
-    public NumberExpr(float value) {
+    public NumberExpr(Token token, float value) {
+        super(token);
         this.value = value;
     }
 

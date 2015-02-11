@@ -30,6 +30,6 @@ import me.abje.lingua.parser.expr.ImportExpr;
 public class ImportParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
-        return new ImportExpr(parser.next());
+        return new ImportExpr(token, parser.next());
     }
 }

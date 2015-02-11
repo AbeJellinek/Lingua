@@ -48,7 +48,8 @@ public class PostfixExpr extends Expr {
      * @param expr The left-side expression operated on by the operator.
      * @param type The type of the operator.
      */
-    public PostfixExpr(Expr expr, Token.Type type) {
+    public PostfixExpr(Token token, Expr expr, Token.Type type) {
+        super(token);
         this.expr = expr;
         this.type = type;
     }

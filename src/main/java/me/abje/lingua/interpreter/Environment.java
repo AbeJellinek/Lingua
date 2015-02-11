@@ -184,6 +184,16 @@ public class Environment {
          */
         private Map<String, Obj> locals = new HashMap<>();
 
+        /**
+         * This Frame's current line.
+         */
+        private int line;
+
+        /**
+         * This Frame's current file name.
+         */
+        private String fileName;
+
         public Frame(String name) {
             this.name = name;
         }
@@ -248,6 +258,22 @@ public class Environment {
 
         public String getName() {
             return name;
+        }
+
+        public int getLine() {
+            return line;
+        }
+
+        public void setLine(int line) {
+            this.line = line;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
         }
     }
 }

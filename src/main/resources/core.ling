@@ -6,7 +6,7 @@ class Exception {
 
     printError() = {
         error(classOf(self) + ": " + self.message)
-        dumpStack().map(x -> " at " + x).forEach(error)
+        dumpStack().map(x -> "  at " + x).forEach(error)
     }
 }
 

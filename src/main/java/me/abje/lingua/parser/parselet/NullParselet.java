@@ -33,6 +33,6 @@ import me.abje.lingua.parser.expr.NullExpr;
 public class NullParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
-        return new NullExpr();
+        return new NullExpr(token);
     }
 }

@@ -39,6 +39,6 @@ public class IfParselet implements PrefixParselet {
         Expr elseBranch = null;
         if (parser.match(Token.Type.ELSE))
             elseBranch = parser.next();
-        return new IfExpr(condition, thenBranch, elseBranch);
+        return new IfExpr(token, condition, thenBranch, elseBranch);
     }
 }

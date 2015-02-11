@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.BooleanObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A boolean literal expression.
@@ -40,7 +41,8 @@ public class BooleanExpr extends Expr {
      *
      * @param value The boolean's value.
      */
-    public BooleanExpr(boolean value) {
+    public BooleanExpr(Token token, boolean value) {
+        super(token);
         this.value = value;
     }
 

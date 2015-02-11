@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A name expression, in the form of <code>xyz</code>.
@@ -39,7 +40,8 @@ public class NameExpr extends Expr {
      *
      * @param value The string value of the name.
      */
-    public NameExpr(String value) {
+    public NameExpr(Token token, String value) {
+        super(token);
         this.value = value;
     }
 

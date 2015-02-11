@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,12 @@ public abstract class Expr {
      * The annotations present on this expression.
      */
     private List<String> annotations = new ArrayList<>();
+
+    private Token token;
+
+    public Expr(Token token) {
+        this.token = token;
+    }
 
     /**
      * Evaluates this expression.
@@ -50,5 +57,9 @@ public abstract class Expr {
      */
     public List<String> getAnnotations() {
         return annotations;
+    }
+
+    public Token getToken() {
+        return token;
     }
 }

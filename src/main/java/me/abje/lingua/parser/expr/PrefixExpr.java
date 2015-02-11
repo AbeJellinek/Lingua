@@ -49,7 +49,8 @@ public class PrefixExpr extends Expr {
      * @param type    The type of the operator.
      * @param operand The right-side expression.
      */
-    public PrefixExpr(Token.Type type, Expr operand) {
+    public PrefixExpr(Token token, Token.Type type, Expr operand) {
+        super(token);
         this.type = type;
         this.operand = operand;
     }

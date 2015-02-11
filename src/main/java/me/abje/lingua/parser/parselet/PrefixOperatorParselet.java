@@ -34,6 +34,6 @@ import me.abje.lingua.parser.expr.PrefixExpr;
 public class PrefixOperatorParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
         Expr operand = parser.next(Precedence.PREFIX);
-        return new PrefixExpr(token.getType(), operand);
+        return new PrefixExpr(token, token.getType(), operand);
     }
 }

@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * An index expression, in the form of <code>target[index]</code>.
@@ -45,7 +46,8 @@ public class IndexExpr extends Expr {
      * @param target The expression's target.
      * @param index  The expression's index.
      */
-    public IndexExpr(Expr target, Expr index) {
+    public IndexExpr(Token token, Expr target, Expr index) {
+        super(token);
         this.target = target;
         this.index = index;
     }

@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * An index set expression, in the form of <code>target[index] = value</code>.
@@ -51,7 +52,8 @@ public class IndexSetExpr extends Expr {
      * @param index  The expression's index.
      * @param value  The expression's value.
      */
-    public IndexSetExpr(Expr target, Expr index, Expr value) {
+    public IndexSetExpr(Token token, Expr target, Expr index, Expr value) {
+        super(token);
         this.target = target;
         this.index = index;
         this.value = value;

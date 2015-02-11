@@ -50,21 +50,21 @@ public class AssignmentParselet implements InfixParselet {
 
             if (call.getFunc() instanceof NameExpr) {
                 Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-                return new FunctionExpr(((NameExpr) call.getFunc()).getValue(), argNames, value);
+                return new FunctionExpr(token, ((NameExpr) call.getFunc()).getValue(), argNames, value);
             } else {
                 throw new ParseException("function name must actually be a name");
             }
         } else if (left instanceof IndexExpr) {
             IndexExpr index = (IndexExpr) left;
             Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-            return new IndexSetExpr(index.getTarget(), index.getIndex(), value);
+            return new IndexSetExpr(token, index.getTarget(), index.getIndex(), value);
         } else if (left instanceof MemberAccessExpr) {
             MemberAccessExpr member = (MemberAccessExpr) left;
             Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-            return new MemberSetExpr(member.getLeft(), member.getName(), value);
+            return new MemberSetExpr(token, member.getLeft(), member.getName(), value);
         } else if (left instanceof NameExpr) {
             Expr value = parser.next(Precedence.ASSIGNMENT);
-            return new AssignmentExpr(((NameExpr) left).getValue(), value);
+            return new AssignmentExpr(token, ((NameExpr) left).getValue(), value);
         } else {
             throw new ParseException("assignments must have a function call, index expression, or variable as a target");
         }

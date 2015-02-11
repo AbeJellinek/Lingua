@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * An object member access expression, in the form of <code>left.name</code>.
@@ -46,7 +47,8 @@ public class MemberAccessExpr extends Expr {
      * @param left The left side of the expression.
      * @param name The name of the member.
      */
-    public MemberAccessExpr(Expr left, String name) {
+    public MemberAccessExpr(Token token, Expr left, String name) {
+        super(token);
         this.left = left;
         this.name = name;
     }

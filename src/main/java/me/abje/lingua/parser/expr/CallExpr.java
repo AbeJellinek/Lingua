@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,15 +49,16 @@ public class CallExpr extends Expr {
      * @param func The function to be called.
      * @param args The arguments provided.
      */
-    public CallExpr(Expr func, List<Expr> args) {
+    public CallExpr(Token token, Expr func, List<Expr> args) {
+        super(token);
         this.func = func;
         this.args = args;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        List<Obj> argObjs = args.stream().map(arg -> arg.evaluate(interpreter)).collect(Collectors.toList());
-        return func.evaluate(interpreter).call(interpreter, argObjs);
+        List<Obj> argObjs = args.stream().map(interpreter::next).collect(Collectors.toList());
+        return interpreter.next(func).call(interpreter, argObjs);
     }
 
     /**

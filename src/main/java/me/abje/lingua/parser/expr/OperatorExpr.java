@@ -42,11 +42,6 @@ public class OperatorExpr extends Expr {
     private final Expr left;
 
     /**
-     * The operator token type.
-     */
-    private final Token.Type token;
-
-    /**
      * The right expression.
      */
     private final Expr right;
@@ -58,9 +53,22 @@ public class OperatorExpr extends Expr {
      * @param token The operator token type.
      * @param right The right expression.
      */
-    public OperatorExpr(Expr left, Token.Type token, Expr right) {
+    public OperatorExpr(Token token, Expr left, Expr right) {
+        super(token);
         this.left = left;
-        this.token = token;
+        this.right = right;
+    }
+
+    /**
+     * Creates a new operator expression.
+     *
+     * @param left  The left expression.
+     * @param token The operator token type.
+     * @param right The right expression.
+     */
+    public OperatorExpr(Token.Type token, Expr left, Expr right) {
+        super(new Token(token, "", 0, "<none>"));
+        this.left = left;
         this.right = right;
     }
 
@@ -72,13 +80,6 @@ public class OperatorExpr extends Expr {
     }
 
     /**
-     * Returns the operator token type.
-     */
-    public Token.Type getToken() {
-        return token;
-    }
-
-    /**
      * Returns the right expression.
      */
     public Expr getRight() {
@@ -87,12 +88,12 @@ public class OperatorExpr extends Expr {
 
     @Override
     public String toString() {
-        return "OPERATOR(" + left + ", " + token + ", " + right + ")";
+        return "OPERATOR(" + left + ", " + getToken().getType() + ", " + right + ")";
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        switch (token) {
+        switch (getToken().getType()) {
             case PLUS:
                 Obj leftObj = interpreter.next(left);
                 Obj rightObj = interpreter.next(right);
@@ -157,13 +158,13 @@ public class OperatorExpr extends Expr {
 
         OperatorExpr that = (OperatorExpr) o;
 
-        return left.equals(that.left) && right.equals(that.right) && token == that.token;
+        return left.equals(that.left) && right.equals(that.right) && getToken() == that.getToken();
     }
 
     @Override
     public int hashCode() {
         int result = left.hashCode();
-        result = 31 * result + token.hashCode();
+        result = 31 * result + getToken().hashCode();
         result = 31 * result + right.hashCode();
         return result;
     }

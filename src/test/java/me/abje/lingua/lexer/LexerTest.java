@@ -33,7 +33,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class LexerTest {
     @Test
     public void testNext() throws Exception {
-        Lexer lexer = new Lexer(new StringReader("abc*+ xyz/*test comment*/@annotation true false ->>"));
+        Lexer lexer = new Lexer(new StringReader("abc*+ xyz/*test comment*/@annotation true false ->>"), "<test>");
 
         Token t = lexer.next();
         assertThat(t.getType(), is(NAME));

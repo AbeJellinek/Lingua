@@ -44,6 +44,6 @@ public class ListParselet implements PrefixParselet {
             }
         }
         parser.read();
-        return new ListExpr(items);
+        return new ListExpr(token, items);
     }
 }

@@ -66,7 +66,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             int num = 0;
             while (in.hasNextLine()) {
                 try {
-                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(in.nextLine()))));
+                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(in.nextLine()), "<user>")));
                     List<Expr> exprs = new ArrayList<>();
                     Expr expr;
                     while ((expr = parser.next()) != null) {
@@ -113,11 +113,12 @@ public class Interpreter implements Phase<Expr, Obj> {
         try {
             String name = fullName.replace('.', '/') + ".ling";
             InputStream classpathStream = Interpreter.class.getResourceAsStream("/" + name);
+            String[] parts = name.split("/");
             if (classpathStream != null) {
-                interpret(new InputStreamReader(classpathStream));
+                interpret(new InputStreamReader(classpathStream), parts[parts.length - 1]);
             } else {
                 File file = new File(name);
-                interpret(new FileReader(file));
+                interpret(new FileReader(file), parts[parts.length - 1]);
             }
         } catch (FileNotFoundException e) {
             throw new InterpreterException("UndefinedException", "not found: " + fullName, this);
@@ -131,16 +132,19 @@ public class Interpreter implements Phase<Expr, Obj> {
      * @return The result of interpreting the expression.
      */
     public Obj next(Expr expr) {
+        env.getStack().peek().setLine(expr.getToken().getLine());
+        env.getStack().peek().setFileName(expr.getToken().getFile());
         return expr.evaluate(this);
     }
 
     /**
      * Interprets each expression in the given input.
      *
-     * @param reader The input.
+     * @param reader   The input.
+     * @param fileName The file name of the input.
      */
-    public void interpret(Reader reader) {
-        Parser parser = new Parser(new Morpher(new Lexer(reader)));
+    public void interpret(Reader reader, String fileName) {
+        Parser parser = new Parser(new Morpher(new Lexer(reader, fileName)));
         List<Expr> exprs = new ArrayList<>();
         Expr expr;
         while ((expr = parser.next()) != null) {

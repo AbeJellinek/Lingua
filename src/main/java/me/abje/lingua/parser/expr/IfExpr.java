@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * An if[-else] expression.
@@ -52,7 +53,8 @@ public class IfExpr extends Expr {
      * @param thenBranch The "then" branch expression.
      * @param elseBranch The "else" branch expression.
      */
-    public IfExpr(Expr condition, Expr thenBranch, Expr elseBranch) {
+    public IfExpr(Token token, Expr condition, Expr thenBranch, Expr elseBranch) {
+        super(token);
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;

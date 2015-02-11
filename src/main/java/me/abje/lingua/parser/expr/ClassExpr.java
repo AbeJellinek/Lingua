@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.obj.ClassObj;
 import me.abje.lingua.interpreter.obj.Field;
 import me.abje.lingua.interpreter.obj.FunctionObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,7 +64,8 @@ public class ClassExpr extends Expr {
      * @param fields         The class's fields.
      * @param superClassName This class's superclass name.
      */
-    public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields, String superClassName) {
+    public ClassExpr(Token token, String name, List<FunctionExpr> functions, List<Field> fields, String superClassName) {
+        super(token);
         this.name = name;
         this.functions = functions;
         this.fields = fields;

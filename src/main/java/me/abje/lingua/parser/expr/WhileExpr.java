@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 /**
  * A while loop expression.
@@ -52,7 +53,8 @@ public class WhileExpr extends Expr {
      * @param body      The loop body.
      * @param doWhile   Whether the loop is a do-while or while-do loop.
      */
-    public WhileExpr(Expr condition, Expr body, boolean doWhile) {
+    public WhileExpr(Token token, Expr condition, Expr body, boolean doWhile) {
+        super(token);
         this.condition = condition;
         this.body = body;
         this.doWhile = doWhile;

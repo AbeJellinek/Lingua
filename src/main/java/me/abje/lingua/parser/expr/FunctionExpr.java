@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.FunctionObj;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.lexer.Token;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +56,8 @@ public class FunctionExpr extends Expr {
      * @param argNames The function's argument names.
      * @param body     The function's body.
      */
-    public FunctionExpr(String name, List<String> argNames, Expr body) {
+    public FunctionExpr(Token token, String name, List<String> argNames, Expr body) {
+        super(token);
         this.name = name;
         this.argNames = argNames;
         this.body = body;

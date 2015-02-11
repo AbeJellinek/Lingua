@@ -42,23 +42,23 @@ public class Token {
     private int line;
 
     /**
-     * This token's column number.
+     * This token's file name.
      */
-    private int column;
+    private String file;
 
     /**
      * Creates a new token with the given parameters.
      *
-     * @param type   The token's type.
-     * @param value  The token's value.
-     * @param line   The token's line number.
-     * @param column The token's column number.
+     * @param type  The token's type.
+     * @param value The token's value.
+     * @param line  The token's line number.
+     * @param file  The token's file name.
      */
-    public Token(Type type, String value, int line, int column) {
+    public Token(Type type, String value, int line, String file) {
         this.type = type;
         this.value = value;
         this.line = line;
-        this.column = column;
+        this.file = file;
     }
 
     /**
@@ -97,11 +97,8 @@ public class Token {
         return line;
     }
 
-    /**
-     * Returns this token's column number.
-     */
-    public int getColumn() {
-        return column;
+    public String getFile() {
+        return file;
     }
 
     /**

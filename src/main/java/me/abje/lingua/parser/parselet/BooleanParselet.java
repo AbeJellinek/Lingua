@@ -27,12 +27,15 @@ import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.BooleanExpr;
 import me.abje.lingua.parser.expr.Expr;
 
+import static me.abje.lingua.lexer.Token.Type;
+import static me.abje.lingua.lexer.Token.Type.TRUE;
+
 /**
  * Parses a boolean literal expression.
  */
 public class BooleanParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
-        return new BooleanExpr(token.is(Token.Type.TRUE));
+        return new BooleanExpr(token, token.is(TRUE));
     }
 }

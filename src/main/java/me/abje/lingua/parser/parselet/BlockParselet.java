@@ -42,6 +42,6 @@ public class BlockParselet implements PrefixParselet {
             parser.eatLines();
         }
         parser.read();
-        return new BlockExpr(exprs);
+        return new BlockExpr(token, exprs);
     }
 }

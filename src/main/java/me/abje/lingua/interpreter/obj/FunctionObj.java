@@ -127,7 +127,7 @@ public class FunctionObj extends Obj {
         for (int i = 0; i < args.size(); i++) {
             env.define(argNames.get(i), args.get(i));
         }
-        Obj obj = body.evaluate(interpreter);
+        Obj obj = interpreter.next(body);
         env.popFrame();
         return obj;
     }
