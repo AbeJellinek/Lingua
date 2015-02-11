@@ -29,6 +29,7 @@ import me.abje.lingua.parser.expr.*;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static me.abje.lingua.lexer.Token.Type.*;
@@ -51,7 +52,7 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(instanceOf(NameExpr.class)));
         assertThat(((NameExpr) e).getValue(), is("test"));
-        assertThat(e.getAnnotations(), is(asList("ann")));
+        assertThat(e.getAnnotations(), is(Collections.singletonList("ann")));
 
         input("x = y");
         e = parser.next();
@@ -81,8 +82,8 @@ public class ParserTest {
 
         input("class Test {\n foo \n bar(x, y) = z \n}");
         e = parser.next();
-        assertThat(e, is(new ClassExpr(null, "Test", asList(
-                new FunctionExpr(null, "bar", asList("x", "y"), new NameExpr(null, "z"))), asList(new Field(null, "foo", new NullExpr(null))), "Obj")));
+        assertThat(e, is(new ClassExpr(null, "Test", Collections.singletonList(
+                new FunctionExpr(null, "bar", asList("x", "y"), new NameExpr(null, "z"))), Collections.singletonList(new Field(null, "foo", new NullExpr(null))), "Obj")));
 
         input("if x y else z; if (x) y");
         e = parser.next();
@@ -104,7 +105,7 @@ public class ParserTest {
 
         input("x -> y + z");
         e = parser.next();
-        assertThat(e, is(new FunctionExpr(null, "<anon>", asList("x"), new OperatorExpr(PLUS, new NameExpr(null, "y"), new NameExpr(null, "z")))));
+        assertThat(e, is(new FunctionExpr(null, "<anon>", Collections.singletonList("x"), new OperatorExpr(PLUS, new NameExpr(null, "y"), new NameExpr(null, "z")))));
 
         input("foobar");
         e = parser.next();
@@ -140,6 +141,6 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(new WhileExpr(null, new NameExpr(null, "x"), new NameExpr(null, "y"), false)));
         e = parser.next();
-        assertThat(e, is(new WhileExpr(null, new NameExpr(null, "x"), new BlockExpr(null, asList(new NameExpr(null, "y"))), true)));
+        assertThat(e, is(new WhileExpr(null, new NameExpr(null, "x"), new BlockExpr(null, Collections.singletonList(new NameExpr(null, "y"))), true)));
     }
 }

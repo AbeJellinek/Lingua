@@ -26,7 +26,6 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -145,7 +144,7 @@ public class ListObj extends Obj {
      * @return The mapped list.
      */
     public ListObj map(Interpreter interpreter, Obj function) {
-        List<Obj> newList = items.stream().map(obj -> function.call(interpreter, Arrays.asList(obj))).
+        List<Obj> newList = items.stream().map(obj -> function.call(interpreter, Collections.singletonList(obj))).
                 collect(Collectors.toList());
         return new ListObj(newList);
     }
@@ -159,14 +158,14 @@ public class ListObj extends Obj {
      * @return The filtered list.
      */
     public ListObj filter(Interpreter interpreter, Obj predicate) {
-        List<Obj> newList = items.stream().filter(obj -> predicate.call(interpreter, Arrays.asList(obj)).isTruthy()).
+        List<Obj> newList = items.stream().filter(obj -> predicate.call(interpreter, Collections.singletonList(obj)).isTruthy()).
                 collect(Collectors.toList());
         return new ListObj(newList);
     }
 
     private Obj each(Interpreter interpreter, Obj function) {
         for (Obj obj : items) {
-            function.call(interpreter, Arrays.asList(obj));
+            function.call(interpreter, Collections.singletonList(obj))
         }
         return NullObj.get();
     }

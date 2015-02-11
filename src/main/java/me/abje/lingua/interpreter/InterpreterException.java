@@ -25,7 +25,7 @@ package me.abje.lingua.interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.StringObj;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * An exception thrown at runtime by the interpreter.
@@ -40,7 +40,7 @@ public class InterpreterException extends RuntimeException {
     }
 
     public InterpreterException(String exceptionClass, String message, Interpreter interpreter) {
-        this(interpreter.getEnv().get(exceptionClass).call(interpreter, Arrays.asList(new StringObj(message))));
+        this(interpreter.getEnv().get(exceptionClass).call(interpreter, Collections.singletonList(new StringObj(message))));
     }
 
     public InterpreterException(Obj exceptionObj) {

@@ -97,7 +97,7 @@ public class Interpreter implements Phase<Expr, Obj> {
 
     private static void handleInterpreterException(InterpreterException e, Interpreter interpreter) {
         if (e.getExceptionObj() instanceof StringObj) {
-            e.setExceptionObj(interpreter.getEnv().get("Exception").call(interpreter, Arrays.asList(e.getExceptionObj())));
+            e.setExceptionObj(interpreter.getEnv().get("Exception").call(interpreter, Collections.singletonList(e.getExceptionObj())));
         }
 
         Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
