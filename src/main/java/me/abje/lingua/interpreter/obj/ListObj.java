@@ -165,7 +165,7 @@ public class ListObj extends Obj {
 
     private Obj each(Interpreter interpreter, Obj function) {
         for (Obj obj : items) {
-            function.call(interpreter, Collections.singletonList(obj))
+            function.call(interpreter, Collections.singletonList(obj));
         }
         return NullObj.get();
     }
