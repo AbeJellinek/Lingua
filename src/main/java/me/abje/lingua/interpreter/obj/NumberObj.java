@@ -34,11 +34,11 @@ public class NumberObj extends Obj {
     public static final ClassObj SYNTHETIC = ClassObj.builder("Number").
             withFunction("init", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("wrong number of arguments for Number constructor");
+                    throw new InterpreterException("CallException", "wrong number of arguments for Number constructor", interpreter);
                 try {
                     return new NumberObj(Float.parseFloat(args.get(0).toString()));
                 } catch (NumberFormatException e) {
-                    throw new InterpreterException("not a number: " + args.get(0));
+                    throw new InterpreterException("ConversionException", "not a number: " + args.get(0), interpreter);
                 }
             }).
             build();
@@ -74,9 +74,9 @@ public class NumberObj extends Obj {
     @Override
     public Obj call(Interpreter interpreter, List<Obj> args) {
         if (args.size() != 1)
-            throw new InterpreterException("too many arguments for number application");
+            throw new InterpreterException("CallException", "too many arguments for number application", interpreter);
         if (!(args.get(0) instanceof NumberObj))
-            throw new InterpreterException("argument for number application must be a number");
+            throw new InterpreterException("CallException", "argument for number application must be a number", interpreter);
         return new NumberObj(value * ((NumberObj) args.get(0)).getValue());
     }
 

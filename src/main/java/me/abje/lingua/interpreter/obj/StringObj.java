@@ -36,13 +36,13 @@ public class StringObj extends Obj {
                     new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
             withFunction("split", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for split");
+                    throw new InterpreterException("CallException", "invalid number of arguments for split", interpreter);
                 return new ListObj(Arrays.asList((String[]) self.toString().split(args.get(0).toString())).
                         stream().map(StringObj::new).collect(Collectors.toList()));
             }).
             withFunction("trim", (interpreter, self, args) -> {
                 if (args.size() != 0)
-                    throw new InterpreterException("invalid number of arguments for trim");
+                    throw new InterpreterException("CallException", "invalid number of arguments for trim", interpreter);
                 return new StringObj(self.toString().trim());
             }).
             build();

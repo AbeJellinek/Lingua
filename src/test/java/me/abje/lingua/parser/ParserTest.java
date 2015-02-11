@@ -83,7 +83,7 @@ public class ParserTest {
         e = parser.next();
         assertThat(e, is(new ClassExpr("Test", asList(
                 new FunctionExpr("bar", asList("x", "y"), new NameExpr("z"))),
-                asList(new Field(null, "foo", new NullExpr())))));
+                asList(new Field(null, "foo", new NullExpr())), "Obj")));
 
         input("if x y else z; if (x) y");
         e = parser.next();

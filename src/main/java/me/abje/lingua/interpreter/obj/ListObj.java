@@ -38,30 +38,36 @@ public class ListObj extends Obj {
     public static final ClassObj SYNTHETIC = ClassObj.builder("List").
             withFunction("map", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for map");
+                    throw new InterpreterException("CallException", "invalid number of arguments for map", interpreter);
                 return ((ListObj) self).map(interpreter, args.get(0));
             }).
             withFunction("filter", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for filter");
+                    throw new InterpreterException("CallException", "invalid number of arguments for filter", interpreter);
                 return ((ListObj) self).filter(interpreter, args.get(0));
+            }).
+            withFunction("forEach", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("CallException", "invalid number of arguments for forEach", interpreter);
+                return ((ListObj) self).each(interpreter, args.get(0));
             }).
             withFunction("reverse", (interpreter, self, args) -> {
                 if (args.size() != 0)
-                    throw new InterpreterException("too many arguments for reverse");
+                    throw new InterpreterException("CallException", "too many arguments for reverse", interpreter);
                 return ((ListObj) self).reverse();
             }).
             withFunction("add", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("invalid number of arguments for reverse");
+                    throw new InterpreterException("CallException", "invalid number of arguments for reverse", interpreter);
                 return ((ListObj) self).add(args.get(0));
             }).
             withFunction("size", (interpreter, self, args) -> {
                 if (args.size() != 0)
-                    throw new InterpreterException("invalid number of arguments for size");
+                    throw new InterpreterException("CallException", "invalid number of arguments for size", interpreter);
                 return new NumberObj(((ListObj) self).items.size());
             }).
             build();
+
     /**
      * This list's items. Must be mutable for mutator methods to work.
      */
@@ -95,7 +101,7 @@ public class ListObj extends Obj {
         if (i >= 0 && i < items.size()) {
             return items.get(i);
         } else {
-            throw new InterpreterException("list index out of bounds: " + i);
+            throw new InterpreterException("OutOfBoundsException", "list index out of bounds: " + i);
         }
     }
 
@@ -110,7 +116,7 @@ public class ListObj extends Obj {
         if (i >= 0 && i < items.size()) {
             items.set(i, value);
         } else {
-            throw new InterpreterException("list index out of bounds: " + i);
+            throw new InterpreterException("OutOfBoundsException", "list index out of bounds: " + i);
         }
     }
 
@@ -119,7 +125,7 @@ public class ListObj extends Obj {
         if (index instanceof NumberObj)
             return get((int) ((NumberObj) index).getValue());
         else
-            throw new InterpreterException("list index not a number");
+            throw new InterpreterException("CallException", "list index not a number");
     }
 
     @Override
@@ -127,7 +133,7 @@ public class ListObj extends Obj {
         if (index instanceof NumberObj)
             set((int) ((NumberObj) index).getValue(), value);
         else
-            throw new InterpreterException("list index not a number");
+            throw new InterpreterException("CallException", "list index not a number");
     }
 
     /**
@@ -156,6 +162,13 @@ public class ListObj extends Obj {
         List<Obj> newList = items.stream().filter(obj -> predicate.call(interpreter, Arrays.asList(obj)).isTruthy()).
                 collect(Collectors.toList());
         return new ListObj(newList);
+    }
+
+    private Obj each(Interpreter interpreter, Obj function) {
+        for (Obj obj : items) {
+            function.call(interpreter, Arrays.asList(obj));
+        }
+        return NullObj.get();
     }
 
     /**

@@ -45,6 +45,13 @@ public class Obj {
     private Map<String, Obj> members = new HashMap<>();
 
     /**
+     * This object's super instance.
+     */
+    private Obj superInst;
+
+    public static final ClassObj SYNTHETIC = ClassObj.builder("Obj").build();
+
+    /**
      * Creates a new object with the given type.
      *
      * @param type The type. Can be null if this object is a type itself.
@@ -61,7 +68,7 @@ public class Obj {
      * @return The result of invoking this object.
      */
     public Obj call(Interpreter interpreter, List<Obj> args) {
-        throw new InterpreterException("object not callable");
+        throw new InterpreterException("InvalidOperationException", "object not callable", interpreter);
     }
 
     /**
@@ -81,7 +88,7 @@ public class Obj {
      * @throws me.abje.lingua.interpreter.InterpreterException If this object is not indexable.
      */
     public Obj getAtIndex(Obj index) {
-        throw new InterpreterException("object not indexable");
+        throw new InterpreterException("InvalidOperationException", "object not indexable");
     }
 
     /**
@@ -92,7 +99,7 @@ public class Obj {
      * @throws me.abje.lingua.interpreter.InterpreterException If this object is not indexable.
      */
     public void setAtIndex(Obj index, Obj value) {
-        throw new InterpreterException("object not indexable");
+        throw new InterpreterException("InvalidOperationException", "object not indexable");
     }
 
     /**
@@ -106,17 +113,33 @@ public class Obj {
         if (type != null && type.getFunctionMap().containsKey(name)) {
             Obj function = type.getFunctionMap().get(name);
             if (function instanceof FunctionObj) {
-                return ((FunctionObj) function).withSelf(this);
+                return ((FunctionObj) function).withSelf(this).withSuper(superInst);
             } else if (function instanceof SyntheticFunctionObj) {
-                ((SyntheticFunctionObj) function).setSelf(this);
+                SyntheticFunctionObj synthetic = (SyntheticFunctionObj) function;
+                synthetic.setSelf(this);
+                synthetic.setSuperInst(superInst);
                 return function;
             } else {
                 return function;
             }
         } else if (type != null && type.getFieldMap().containsKey(name)) {
             return members.getOrDefault(name, NullObj.get());
+        } else if (superInst != null && superInst.members.containsKey(name)) {
+            return superInst.members.getOrDefault(name, NullObj.get());
+        } else if (superInst != null && superInst.type.getFunctionMap().containsKey(name)) {
+            Obj function = superInst.type.getFunctionMap().get(name);
+            if (function instanceof FunctionObj) {
+                return ((FunctionObj) function).withSelf(this).withSuper(superInst);
+            } else if (function instanceof SyntheticFunctionObj) {
+                SyntheticFunctionObj synthetic = (SyntheticFunctionObj) function;
+                synthetic.setSelf(this);
+                synthetic.setSuperInst(superInst);
+                return function;
+            } else {
+                return function;
+            }
         } else {
-            throw new InterpreterException("unknown field: " + name);
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
         }
     }
 
@@ -131,7 +154,7 @@ public class Obj {
         if (type != null && type.getFieldMap().containsKey(name)) {
             members.put(name, value);
         } else {
-            throw new InterpreterException("unknown field: " + name);
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
         }
     }
 
@@ -149,5 +172,13 @@ public class Obj {
      */
     protected void setType(ClassObj type) {
         this.type = type;
+    }
+
+    public void setSuperInst(Obj superInst) {
+        this.superInst = superInst;
+    }
+
+    public Obj getSuperInst() {
+        return superInst;
     }
 }

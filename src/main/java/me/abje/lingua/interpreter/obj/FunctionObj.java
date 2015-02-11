@@ -34,22 +34,31 @@ import java.util.List;
  */
 public class FunctionObj extends Obj {
     public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
+
     /**
      * This function's name.
      */
     private String name;
+
     /**
      * This function's formal argument list.
      */
     private List<String> argNames;
+
     /**
      * This function's body expression.
      */
     private Expr body;
+
     /**
      * The "self" implicit argument passed to this function.
      */
     private Obj self;
+
+    /**
+     * The "super" implicit argument passed to this function.
+     */
+    private Obj superInst;
 
     /**
      * Creates a new function.
@@ -59,23 +68,25 @@ public class FunctionObj extends Obj {
      * @param body     The function's body expression.
      */
     public FunctionObj(String name, List<String> argNames, Expr body) {
-        this(name, argNames, body, null);
+        this(name, argNames, body, null, null);
     }
 
     /**
      * Creates a new function.
      *
-     * @param name     The function's name.
-     * @param argNames The function's formal argument list.
-     * @param body     The function's body expression.
-     * @param self     The function's "self" implicit argument.
+     * @param name      The function's name.
+     * @param argNames  The function's formal argument list.
+     * @param body      The function's body expression.
+     * @param self      The function's "self" implicit argument.
+     * @param superInst The function's "super" implicit argument.
      */
-    public FunctionObj(String name, List<String> argNames, Expr body, Obj self) {
+    public FunctionObj(String name, List<String> argNames, Expr body, Obj self, Obj superInst) {
         super(SYNTHETIC);
         this.name = name;
         this.argNames = argNames;
         this.body = body;
         this.self = self;
+        this.superInst = superInst;
     }
 
     /**
@@ -102,12 +113,17 @@ public class FunctionObj extends Obj {
     @Override
     public Obj call(Interpreter interpreter, List<Obj> args) {
         if (args.size() != argNames.size())
-            throw new InterpreterException("invalid number of arguments for function " + name);
+            throw new InterpreterException("CallException", "invalid number of arguments for function " + name, interpreter);
 
         Environment env = interpreter.getEnv();
-        env.pushFrame();
+        if (self != null)
+            env.pushFrame(self.getType().getName() + "." + name);
+        else
+            env.pushFrame(name);
         if (self != null)
             env.define("self", self);
+        if (superInst != null)
+            env.define("super", superInst);
         for (int i = 0; i < args.size(); i++) {
             env.define(argNames.get(i), args.get(i));
         }
@@ -140,27 +156,20 @@ public class FunctionObj extends Obj {
     }
 
     /**
-     * Returns this function's "self" implicit argument.
-     */
-    public Obj getSelf() {
-        return self;
-    }
-
-    /**
-     * Sets this function's "self" implicit argument.
-     *
-     * @param self The new value.
-     */
-    public void setSelf(Obj self) {
-        this.self = self;
-    }
-
-    /**
      * Returns a copy of this function with an updated {@link #self}.
      *
      * @param self The new value of <code>self</code>.
      */
     public FunctionObj withSelf(Obj self) {
-        return new FunctionObj(name, argNames, body, self);
+        return new FunctionObj(name, argNames, body, self, superInst);
+    }
+
+    /**
+     * Returns a copy of this function with an updated {@link #superInst}.
+     *
+     * @param superInst The new value of <code>super</code>.
+     */
+    public FunctionObj withSuper(Obj superInst) {
+        return new FunctionObj(name, argNames, body, self, superInst);
     }
 }

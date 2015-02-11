@@ -93,7 +93,7 @@ public class MemberAccessExpr extends Expr {
         } else if (left instanceof MemberAccessExpr) {
             return ((MemberAccessExpr) left).getPath() + "." + getName();
         } else {
-            throw new InterpreterException("not a valid path");
+            throw new InterpreterException("UndefinedException", "not a valid path");
         }
     }
 }

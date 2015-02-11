@@ -47,14 +47,14 @@ public class Intrinsics {
     /**
      * The environment to register in.
      */
-    private Environment.Frame env;
+    private Environment env;
 
     /**
      * Creates a new Intrinsics.
      *
      * @param env The environment to register in.
      */
-    public Intrinsics(Environment.Frame env) {
+    public Intrinsics(Environment env) {
         this.env = env;
     }
 
@@ -68,6 +68,7 @@ public class Intrinsics {
     }
 
     static {
+        registerClass(ClassObj.SYNTHETIC);
         registerClass(BooleanObj.SYNTHETIC);
         registerClass(FunctionObj.SYNTHETIC);
         registerClass(ListObj.SYNTHETIC);
@@ -80,10 +81,15 @@ public class Intrinsics {
      * Register the intrinsics.
      */
     public void register() {
-        classes.forEach(env::define);
+        classes.forEach(env.getGlobals()::define);
 
         addFunction("print", (interpreter, args) -> {
             System.out.println(args.stream().map(Object::toString).collect(Collectors.joining("")));
+            return NullObj.get();
+        });
+
+        addFunction("error", (interpreter, args) -> {
+            System.err.println(args.stream().map(Object::toString).collect(Collectors.joining("")));
             return NullObj.get();
         });
 
@@ -91,7 +97,7 @@ public class Intrinsics {
             if (args.size() == 1) {
                 return args.get(0).getType();
             } else {
-                throw new InterpreterException("wrong number of arguments for classOf");
+                throw new InterpreterException("CallException", "wrong number of arguments for classOf", interpreter);
             }
         });
 
@@ -105,7 +111,7 @@ public class Intrinsics {
                 }
                 return result;
             } else {
-                throw new InterpreterException("wrong number of arguments for eval");
+                throw new InterpreterException("CallException", "wrong number of arguments for eval", interpreter);
             }
         });
 
@@ -114,10 +120,10 @@ public class Intrinsics {
                 if (args.get(0) instanceof NumberObj) {
                     return new NumberObj((float) Math.sqrt(((NumberObj) args.get(0)).getValue()));
                 } else {
-                    throw new InterpreterException("wrong argument for sqrt");
+                    throw new InterpreterException("CallException", "wrong argument for sqrt", interpreter);
                 }
             } else {
-                throw new InterpreterException("wrong number of arguments for sqrt");
+                throw new InterpreterException("CallException", "wrong number of arguments for sqrt", interpreter);
             }
         });
 
@@ -128,9 +134,13 @@ public class Intrinsics {
                 System.out.print(args.get(0));
                 return new StringObj(new Scanner(System.in).nextLine());
             } else {
-                throw new InterpreterException("wrong number of arguments for read");
+                throw new InterpreterException("CallException", "wrong number of arguments for read", interpreter);
             }
         });
+
+        addFunction("dumpStack", (interpreter, args) ->
+                new ListObj(env.getOldStack().stream().map((frame) -> new StringObj(frame.getName())).
+                        collect(Collectors.toList())));
     }
 
     /**
@@ -140,7 +150,7 @@ public class Intrinsics {
      * @param func The function's body.
      */
     private void addFunction(String name, BiFunction<Interpreter, List<Obj>, Obj> func) {
-        env.define(name, new Obj(FunctionObj.SYNTHETIC) {
+        env.getGlobals().define(name, new Obj(FunctionObj.SYNTHETIC) {
             @Override
             public Obj call(Interpreter interpreter, List<Obj> args) {
                 return func.apply(interpreter, args);

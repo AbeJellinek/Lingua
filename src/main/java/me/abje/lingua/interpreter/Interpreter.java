@@ -24,6 +24,7 @@ package me.abje.lingua.interpreter;
 
 import me.abje.lingua.Phase;
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.obj.StringObj;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
@@ -31,9 +32,7 @@ import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
@@ -46,18 +45,20 @@ public class Interpreter implements Phase<Expr, Obj> {
 
     public static void main(String[] args) throws FileNotFoundException {
         if (args.length == 1) {
+            Interpreter interpreter = new Interpreter();
             try {
-                Interpreter interpreter = new Interpreter();
-                new Intrinsics(interpreter.env.getGlobals()).register();
+                new Intrinsics(interpreter.env).register();
                 interpreter.addImport("core");
                 interpreter.addImport(args[0]);
-            } catch (ParseException | InterpreterException e) {
+            } catch (ParseException e) {
                 e.printStackTrace();
+            } catch (InterpreterException e) {
+                handleInterpreterException(e, interpreter);
             }
         } else if (args.length == 0) {
             Scanner in = new Scanner(System.in);
             Interpreter interpreter = new Interpreter();
-            new Intrinsics(interpreter.env.getGlobals()).register();
+            new Intrinsics(interpreter.env).register();
             interpreter.addImport("core");
 
             System.out.print("> ");
@@ -81,8 +82,10 @@ public class Interpreter implements Phase<Expr, Obj> {
                         interpreter.env.define(varName, value);
                         System.out.println(varName + " = " + value);
                     }
-                } catch (ParseException | InterpreterException e) {
+                } catch (ParseException e) {
                     e.printStackTrace();
+                } catch (InterpreterException e) {
+                    handleInterpreterException(e, interpreter);
                 }
 
                 System.out.print("> ");
@@ -90,6 +93,20 @@ public class Interpreter implements Phase<Expr, Obj> {
         } else {
             System.err.println("Usage: lingua [script]");
         }
+    }
+
+    private static void handleInterpreterException(InterpreterException e, Interpreter interpreter) {
+        if (e.getExceptionObj() instanceof StringObj) {
+            e.setExceptionObj(interpreter.getEnv().get("Exception").call(interpreter, Arrays.asList(e.getExceptionObj())));
+        }
+
+        Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
+        interpreter.getEnv().setOldStack(stack);
+        Deque<Environment.Frame> newStack = new ArrayDeque<>();
+        newStack.add(stack.getLast());
+        interpreter.getEnv().setStack(newStack);
+        e.getExceptionObj().getMember("printError").call(interpreter, Collections.emptyList());
+        interpreter.getEnv().setStack(stack);
     }
 
     public void addImport(String fullName) {
@@ -103,7 +120,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 interpret(new FileReader(file));
             }
         } catch (FileNotFoundException e) {
-            throw new InterpreterException("not found: " + fullName);
+            throw new InterpreterException("UndefinedException", "not found: " + fullName, this);
         }
     }
 

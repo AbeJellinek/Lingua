@@ -87,7 +87,7 @@ public class PostfixExpr extends Expr {
                 }
                 return new NumberObj(result);
             default:
-                throw new InterpreterException("invalid postfix operator");
+                throw new InterpreterException("InvalidOperationException", "invalid postfix operator", interpreter);
         }
     }
 

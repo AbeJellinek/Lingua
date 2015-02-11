@@ -47,7 +47,7 @@ public class BlockExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        interpreter.getEnv().pushFrame();
+        interpreter.getEnv().pushFrame("<anon>");
         Obj result = null;
         for (Expr expr : exprs) {
             result = expr.evaluate(interpreter);

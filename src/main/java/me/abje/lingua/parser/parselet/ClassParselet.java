@@ -38,9 +38,12 @@ public class ClassParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
         Token name = parser.read();
+        String superClassName = "Obj";
         if (!name.is(Token.Type.NAME))
             throw new ParseException("invalid class name");
         parser.eatLines();
+        if (parser.match(Token.Type.COLON))
+            superClassName = parser.read().getValue();
         parser.expect(Token.Type.OPEN_BRACE);
         List<Field> fields = new ArrayList<>();
         List<FunctionExpr> functions = new ArrayList<>();
@@ -58,6 +61,6 @@ public class ClassParselet implements PrefixParselet {
             parser.eatLines();
         }
         parser.read();
-        return new ClassExpr(name.getValue(), functions, fields);
+        return new ClassExpr(name.getValue(), functions, fields, superClassName);
     }
 }

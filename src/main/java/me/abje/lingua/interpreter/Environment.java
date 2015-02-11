@@ -37,12 +37,13 @@ public class Environment {
      * This Environment's global frame. Holds variables accessible from anywhere.
      * If you pollute the global scope, you're a bad person.
      */
-    private Frame globals = new Frame();
+    private Frame globals = new Frame("<main>");
 
     /**
      * The stack that holds this Environment's frames.
      */
     private Deque<Frame> stack = new ArrayDeque<>();
+    private Deque<Frame> oldStack;
 
     /**
      * Creates a new, empty Environment.
@@ -106,7 +107,7 @@ public class Environment {
             }
         }
 
-        throw new InterpreterException("variable '" + name + "' is not defined in this context");
+        throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
     }
 
     /**
@@ -133,8 +134,8 @@ public class Environment {
     /**
      * Pushes a new frame onto the top of the stack.
      */
-    public void pushFrame() {
-        stack.push(new Frame());
+    public void pushFrame(String name) {
+        stack.push(new Frame(name));
     }
 
     /**
@@ -153,14 +154,39 @@ public class Environment {
         return globals;
     }
 
+    public Deque<Frame> getStack() {
+        return stack;
+    }
+
+    public void setStack(Deque<Frame> stack) {
+        this.stack = stack;
+    }
+
+    public void setOldStack(Deque<Frame> oldStack) {
+        this.oldStack = oldStack;
+    }
+
+    public Deque<Frame> getOldStack() {
+        return oldStack;
+    }
+
     /**
      * A stack frame. Holds local variables in a map.
      */
     public static class Frame {
         /**
+         * This Frame's name.
+         */
+        private String name;
+
+        /**
          * This Frame's local variables.
          */
         private Map<String, Obj> locals = new HashMap<>();
+
+        public Frame(String name) {
+            this.name = name;
+        }
 
         /**
          * Defines a new variable in this Frame.
@@ -172,7 +198,7 @@ public class Environment {
          */
         public Obj define(String name, Obj value) {
             if (locals.containsKey(name)) {
-                throw new InterpreterException("variable '" + name + "' is already defined in this context");
+                throw new InterpreterException("InvalidOperationException", "variable '" + name + "' is already defined in this context");
             } else {
                 locals.put(name, value);
                 return value;
@@ -189,7 +215,7 @@ public class Environment {
          */
         public Obj update(String name, Obj value) {
             if (!locals.containsKey(name)) {
-                throw new InterpreterException("variable '" + name + "' is not defined in this context");
+                throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
             } else {
                 locals.put(name, value);
                 return value;
@@ -214,10 +240,14 @@ public class Environment {
          */
         public Obj get(String name) {
             if (!locals.containsKey(name)) {
-                throw new InterpreterException("variable '" + name + "' is not defined in this context");
+                throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
             } else {
                 return locals.get(name);
             }
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

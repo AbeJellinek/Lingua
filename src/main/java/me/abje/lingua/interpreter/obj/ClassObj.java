@@ -66,17 +66,24 @@ public class ClassObj extends Obj {
     private boolean synthetic = false;
 
     /**
+     * This class's superclass.
+     */
+    private ClassObj superClass;
+
+    /**
      * Creates a new class.
      *
-     * @param name      The class's name.
-     * @param functions The functions provided by the class in map form.
-     * @param fields    The class's fields.
+     * @param name       The class's name.
+     * @param functions  The functions provided by the class in map form.
+     * @param fields     The class's fields.
+     * @param superClass This class's superclass.
      */
-    public ClassObj(String name, Map<String, Obj> functions, List<Field> fields) {
+    public ClassObj(String name, Map<String, Obj> functions, List<Field> fields, ClassObj superClass) {
         super(null);
         this.name = name;
         this.functionMap = functions;
         this.fields = fields;
+        this.superClass = superClass;
 
         for (Field fn : fields) {
             fieldMap.put(fn.getName(), fn);
@@ -86,12 +93,13 @@ public class ClassObj extends Obj {
     /**
      * Creates a new class.
      *
-     * @param name      The class's name.
-     * @param functions The functions provided by the class.
-     * @param fields    The class's fields.
+     * @param name       The class's name.
+     * @param functions  The functions provided by the class.
+     * @param fields     The class's fields.
+     * @param superClass This class's superclass.
      */
-    public ClassObj(String name, List<FunctionObj> functions, List<Field> fields) {
-        this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())), fields);
+    public ClassObj(String name, List<FunctionObj> functions, List<Field> fields, ClassObj superClass) {
+        this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())), fields, superClass);
     }
 
     /**
@@ -116,10 +124,14 @@ public class ClassObj extends Obj {
         if (synthetic) {
             return functionMap.get("init").call(interpreter, args);
         } else {
+            UserObj superInstance = new UserObj(superClass);
             UserObj instance = new UserObj(this);
+            instance.setSuperInst(superInstance);
 
-            interpreter.getEnv().pushFrame();
+            interpreter.getEnv().pushFrame(name + ".<init>");
+            interpreter.getEnv().define("super", superInstance);
             interpreter.getEnv().define("self", instance);
+            superClass.fieldMap.forEach((name, field) -> superInstance.setMember(name, interpreter.next(field.getDefaultValue())));
             fieldMap.forEach((name, field) -> instance.setMember(name, interpreter.next(field.getDefaultValue())));
             if (functionMap.containsKey("init")) {
                 functionMap.get("init").call(interpreter, args);
@@ -146,7 +158,7 @@ public class ClassObj extends Obj {
 
     @Override
     public String toString() {
-        return "class " + name;
+        return name;
     }
 
     /**
@@ -178,7 +190,7 @@ public class ClassObj extends Obj {
             this.functions.put("init", new Obj(FunctionObj.SYNTHETIC) {
                 @Override
                 public Obj call(Interpreter interpreter, List<Obj> args) {
-                    throw new InterpreterException("cannot initialize instance of synthetic class");
+                    throw new InterpreterException("InvalidOperationException", "cannot initialize instance of synthetic class", interpreter);
                 }
             });
         }
@@ -194,7 +206,10 @@ public class ClassObj extends Obj {
             this.functions.put(name, new SyntheticFunctionObj() {
                 @Override
                 public Obj call(Interpreter interpreter, List<Obj> args) {
-                    return body.apply(interpreter, getSelf(), args);
+                    interpreter.getEnv().pushFrame(Builder.this.name + "." + name + " (native)");
+                    Obj result = body.apply(interpreter, getSelf(), args);
+                    interpreter.getEnv().popFrame();
+                    return result;
                 }
             });
             return this;
@@ -217,7 +232,7 @@ public class ClassObj extends Obj {
          * @return The new class.
          */
         public ClassObj build() {
-            ClassObj clazz = new ClassObj(name, functions, fields);
+            ClassObj clazz = new ClassObj(name, functions, fields, Obj.SYNTHETIC);
             clazz.synthetic = true;
             return clazz;
         }

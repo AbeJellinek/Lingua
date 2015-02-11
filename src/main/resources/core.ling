@@ -1,0 +1,31 @@
+class Exception {
+    message
+
+    init(message) =
+        self.message = message
+
+    printError() = {
+        error(classOf(self) + ": " + self.message)
+        dumpStack().map(x -> " at " + x).forEach(error)
+    }
+}
+
+class UndefinedException : Exception {
+    init(message) = super.init(message)
+}
+
+class InvalidOperationException : Exception {
+    init(message) = super.init(message)
+}
+
+class CallException : Exception {
+    init(message) = super.init(message)
+}
+
+class OutOfBoundsException : Exception {
+    init(message) = super.init(message)
+}
+
+class ConversionException : Exception {
+    init(message) = super.init(message)
+}

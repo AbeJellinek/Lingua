@@ -194,6 +194,8 @@ public class Lexer implements Phase<Void, Token> {
                     return make(OPEN_BRACKET);
                 case ']':
                     return make(CLOSE_BRACKET);
+                case ':':
+                    return make(COLON);
                 case '@':
                     builder.setLength(0);
                     Token token = next(null);

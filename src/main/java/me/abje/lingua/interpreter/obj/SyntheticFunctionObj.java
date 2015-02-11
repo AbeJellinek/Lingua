@@ -32,6 +32,11 @@ public class SyntheticFunctionObj extends Obj {
     private Obj self;
 
     /**
+     * The "super" argument to this function.
+     */
+    private Obj superInst;
+
+    /**
      * Creates a new synthetic function.
      */
     public SyntheticFunctionObj() {
@@ -52,5 +57,21 @@ public class SyntheticFunctionObj extends Obj {
      */
     public void setSelf(Obj self) {
         this.self = self;
+    }
+
+    /**
+     * Returns the "super" argument.
+     */
+    public Obj getSuperInst() {
+        return superInst;
+    }
+
+    /**
+     * Sets the "super" argument.
+     *
+     * @param superInst The new "super" argument.
+     */
+    public void setSuperInst(Obj superInst) {
+        this.superInst = superInst;
     }
 }

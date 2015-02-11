@@ -51,23 +51,30 @@ public class ClassExpr extends Expr {
     private final List<Field> fields;
 
     /**
+     * This class's superclass name.
+     */
+    private final String superClassName;
+
+    /**
      * Creates a new class declaration expression.
      *
-     * @param name      The class's name.
-     * @param functions The class's functions.
-     * @param fields    The class's fields.
+     * @param name           The class's name.
+     * @param functions      The class's functions.
+     * @param fields         The class's fields.
+     * @param superClassName This class's superclass name.
      */
-    public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields) {
+    public ClassExpr(String name, List<FunctionExpr> functions, List<Field> fields, String superClassName) {
         this.name = name;
         this.functions = functions;
         this.fields = fields;
+        this.superClassName = superClassName;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
         List<FunctionObj> functionObjs = functions.stream().
                 map(expr -> (FunctionObj) interpreter.next(expr)).collect(Collectors.toList());
-        ClassObj clazz = new ClassObj(name, functionObjs, fields);
+        ClassObj clazz = new ClassObj(name, functionObjs, fields, (ClassObj) interpreter.getEnv().get(superClassName));
         interpreter.getEnv().define(name, clazz);
         return clazz;
     }

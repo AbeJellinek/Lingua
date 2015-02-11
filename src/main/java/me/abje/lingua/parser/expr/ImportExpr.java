@@ -43,7 +43,7 @@ public class ImportExpr extends Expr {
             interpreter.addImport(((MemberAccessExpr) name).getPath());
             return NullObj.get();
         } else {
-            throw new InterpreterException("invalid import path");
+            throw new InterpreterException("UndefinedException", "invalid import path", interpreter);
         }
     }
 }

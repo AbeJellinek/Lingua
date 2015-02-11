@@ -22,11 +22,41 @@
 
 package me.abje.lingua.interpreter;
 
+import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.obj.StringObj;
+
+import java.util.Arrays;
+
 /**
  * An exception thrown at runtime by the interpreter.
  */
 public class InterpreterException extends RuntimeException {
-    public InterpreterException(String message) {
-        super(message);
+    private String exceptionClass;
+    private Obj exceptionObj;
+
+    public InterpreterException(String exceptionClass, String message) {
+        this(new StringObj(message));
+        this.exceptionClass = exceptionClass;
+    }
+
+    public InterpreterException(String exceptionClass, String message, Interpreter interpreter) {
+        this(interpreter.getEnv().get(exceptionClass).call(interpreter, Arrays.asList(new StringObj(message))));
+    }
+
+    public InterpreterException(Obj exceptionObj) {
+        super(exceptionObj.toString());
+        this.exceptionObj = exceptionObj;
+    }
+
+    public Obj getExceptionObj() {
+        return exceptionObj;
+    }
+
+    public void setExceptionObj(Obj exceptionObj) {
+        this.exceptionObj = exceptionObj;
+    }
+
+    public String getExceptionClass() {
+        return exceptionClass;
     }
 }

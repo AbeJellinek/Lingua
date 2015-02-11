@@ -81,18 +81,18 @@ public class PrefixExpr extends Expr {
                 if (obj instanceof NumberObj) {
                     return new NumberObj(-((NumberObj) obj).getValue());
                 } else {
-                    throw new InterpreterException("operand is not a number");
+                    throw new InterpreterException("CallException", "operand is not a number", interpreter);
                 }
             case PLUS:
                 if (obj instanceof NumberObj) {
                     return obj;
                 } else {
-                    throw new InterpreterException("operand is not a number");
+                    throw new InterpreterException("CallException", "operand is not a number", interpreter);
                 }
             case BANG:
                 return new BooleanObj(obj.isTruthy());
             default:
-                throw new InterpreterException("invalid prefix operator");
+                throw new InterpreterException("CallException", "invalid prefix operator", interpreter);
         }
     }
 

@@ -136,7 +136,7 @@ public class OperatorExpr extends Expr {
             case IS:
                 return new BooleanObj(Objects.equals(interpreter.next(left).getType(), interpreter.next(right)));
             default:
-                throw new InterpreterException("invalid operator");
+                throw new InterpreterException("InvalidOperationException", "invalid operator", interpreter);
         }
     }
 
@@ -146,7 +146,7 @@ public class OperatorExpr extends Expr {
             //noinspection unchecked
             return (T) obj;
         } else {
-            throw new InterpreterException("invalid type");
+            throw new InterpreterException("CallException", "invalid type", interpreter);
         }
     }
 
