@@ -27,8 +27,6 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
-import java.util.Objects;
-
 public class TypePatternExpr extends Expr {
     private final Expr left;
     private final String type;
@@ -46,7 +44,7 @@ public class TypePatternExpr extends Expr {
 
     @Override
     public Obj match(Interpreter interpreter, Obj obj) {
-        if (Objects.equals(left.match(interpreter, obj).getType(), interpreter.getEnv().get(type))) {
+        if (left.match(interpreter, obj).getType().isSubclassOf(interpreter.getEnv().get(type))) {
             return obj;
         } else {
             return null;

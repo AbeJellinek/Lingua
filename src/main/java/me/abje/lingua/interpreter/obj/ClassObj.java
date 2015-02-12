@@ -161,6 +161,17 @@ public class ClassObj extends Obj {
         return name;
     }
 
+    public boolean isSubclassOf(Obj other) {
+        ClassObj clazz = this;
+        while (clazz != null) {
+            if (clazz.equals(other)) {
+                return true;
+            }
+            clazz = clazz.superClass;
+        }
+        return false;
+    }
+
     /**
      * Builds a synthetic class.
      */
