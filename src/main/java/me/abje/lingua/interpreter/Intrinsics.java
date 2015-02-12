@@ -140,12 +140,20 @@ public class Intrinsics {
 
         addFunction("dumpStack", (interpreter, args) ->
                 new ListObj(env.getOldStack().stream().map(frame -> {
-                    if (frame.getFileName().equals("<native>")) {
+                    if (frame.getFileName() == null || frame.getFileName().equals("<native>")) {
                         return new StringObj(frame.getName() + "(native)");
                     } else {
                         return new StringObj(frame.getName() + "(" + frame.getFileName() + ":" + frame.getLine() + ")");
                     }
                 }).collect(Collectors.toList())));
+
+        addFunction("throw", (interpreter, args) -> {
+            if (args.size() == 1) {
+                throw new InterpreterException(args.get(0));
+            } else {
+                throw new InterpreterException("CallException", "wrong number of arguments for throw", interpreter);
+            }
+        });
     }
 
     /**

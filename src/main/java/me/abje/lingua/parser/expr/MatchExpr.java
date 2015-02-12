@@ -20,27 +20,39 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.parser.parselet;
+package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
-import me.abje.lingua.parser.Parser;
-import me.abje.lingua.parser.Precedence;
-import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.FunctionExpr;
 
-import java.util.Collections;
+import java.util.Map;
 
-/**
- * Parses an anonymous function expression, such as <code>a -> b</code>.
- */
-public class MiniFunctionParselet implements InfixParselet {
-    @Override
-    public Expr parse(Parser parser, Expr left, Token token) {
-        return new FunctionExpr(token, "<anon>", Collections.singletonList(left), parser.next());
+public class MatchExpr extends Expr {
+    private Expr left;
+    private final Map<Expr, Expr> clauses;
+
+    public MatchExpr(Token token, Expr left, Map<Expr, Expr> clauses) {
+        super(token);
+        this.left = left;
+        this.clauses = clauses;
     }
 
     @Override
-    public int getPrecedence() {
-        return Precedence.COMPARISON;
+    public Obj evaluate(Interpreter interpreter) {
+        for (Map.Entry<Expr, Expr> clause : clauses.entrySet()) {
+            interpreter.getEnv().pushFrame("<case>");
+            Obj result = null;
+            if (clause.getKey().match(interpreter, left.evaluate(interpreter)) != null) {
+                result = clause.getValue().evaluate(interpreter);
+            }
+            interpreter.getEnv().popFrame();
+
+            if (result != null)
+                return result;
+        }
+
+        throw new InterpreterException("CallException", "no match clause matches input");
     }
 }

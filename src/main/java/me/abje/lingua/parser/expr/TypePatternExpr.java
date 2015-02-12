@@ -23,72 +23,33 @@
 package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.ListObj;
+import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-/**
- * A list expression, in the form of <code>[item1, item2, item3, ..., itemN]</code>.
- */
-public class ListExpr extends Expr {
-    /**
-     * This list's items.
-     */
-    private List<Expr> items;
+public class TypePatternExpr extends Expr {
+    private final Expr left;
+    private final String type;
 
-    /**
-     * Creates a new list expression.
-     *
-     * @param items The list's items.
-     */
-    public ListExpr(Token token, List<Expr> items) {
+    public TypePatternExpr(Token token, Expr left, String type) {
         super(token);
-        this.items = items;
-    }
-
-    /**
-     * Returns this list's items.
-     */
-    public List<Expr> getItems() {
-        return items;
+        this.left = left;
+        this.type = type;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        List<Obj> itemObjs = items.stream().map(interpreter::next).collect(Collectors.toList());
-        return new ListObj(itemObjs);
+        throw new InterpreterException("InvalidOperationException", "cannot evaluate type pattern");
     }
 
     @Override
     public Obj match(Interpreter interpreter, Obj obj) {
-        if (obj instanceof ListObj) {
-            ListObj list = (ListObj) obj;
-            for (int i = 0; i < list.size(); i++) {
-                if (items.get(i).match(interpreter, list.get(i)) == null) {
-                    return null;
-                }
-            }
+        if (Objects.equals(left.match(interpreter, obj).getType(), interpreter.getEnv().get(type))) {
             return obj;
         } else {
             return null;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ListExpr listExpr = (ListExpr) o;
-
-        return items.equals(listExpr.items);
-    }
-
-    @Override
-    public int hashCode() {
-        return items.hashCode();
     }
 }

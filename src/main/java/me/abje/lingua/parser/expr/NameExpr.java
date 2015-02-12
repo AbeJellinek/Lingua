@@ -63,6 +63,13 @@ public class NameExpr extends Expr {
     }
 
     @Override
+    public Obj match(Interpreter interpreter, Obj obj) {
+        if (!value.equals("_"))
+            interpreter.getEnv().define(value, obj);
+        return obj;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

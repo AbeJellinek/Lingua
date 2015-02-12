@@ -83,7 +83,8 @@ public class ParserTest {
         input("class Test {\n foo \n bar(x, y) = z \n}");
         e = parser.next();
         assertThat(e, is(new ClassExpr(null, "Test", Collections.singletonList(
-                new FunctionExpr(null, "bar", asList("x", "y"), new NameExpr(null, "z"))), Collections.singletonList(new Field(null, "foo", new NullExpr(null))), "Obj")));
+                new FunctionExpr(null, "bar", asList(new NameExpr(null, "x"), new NameExpr(null, "y")),
+                        new NameExpr(null, "z"))), Collections.singletonList(new Field(null, "foo", new NullExpr(null))), "Obj")));
 
         input("if x y else z; if (x) y");
         e = parser.next();
@@ -105,7 +106,8 @@ public class ParserTest {
 
         input("x -> y + z");
         e = parser.next();
-        assertThat(e, is(new FunctionExpr(null, "<anon>", Collections.singletonList("x"), new OperatorExpr(PLUS, new NameExpr(null, "y"), new NameExpr(null, "z")))));
+        assertThat(e, is(new FunctionExpr(null, "<anon>", Collections.singletonList(new NameExpr(null, "x")),
+                new OperatorExpr(PLUS, new NameExpr(null, "y"), new NameExpr(null, "z")))));
 
         input("foobar");
         e = parser.next();

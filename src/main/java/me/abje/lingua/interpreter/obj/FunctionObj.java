@@ -43,7 +43,7 @@ public class FunctionObj extends Obj {
     /**
      * This function's formal argument list.
      */
-    private List<String> argNames;
+    private List<Expr> argNames;
 
     /**
      * This function's body expression.
@@ -67,7 +67,7 @@ public class FunctionObj extends Obj {
      * @param argNames The function's formal argument list.
      * @param body     The function's body expression.
      */
-    public FunctionObj(String name, List<String> argNames, Expr body) {
+    public FunctionObj(String name, List<Expr> argNames, Expr body) {
         this(name, argNames, body, null, null);
     }
 
@@ -80,7 +80,7 @@ public class FunctionObj extends Obj {
      * @param self      The function's "self" implicit argument.
      * @param superInst The function's "super" implicit argument.
      */
-    public FunctionObj(String name, List<String> argNames, Expr body, Obj self, Obj superInst) {
+    public FunctionObj(String name, List<Expr> argNames, Expr body, Obj self, Obj superInst) {
         super(SYNTHETIC);
         this.name = name;
         this.argNames = argNames;
@@ -99,7 +99,7 @@ public class FunctionObj extends Obj {
     /**
      * Returns this function's argument names.
      */
-    public List<String> getArgNames() {
+    public List<Expr> getArgNames() {
         return argNames;
     }
 
@@ -125,7 +125,8 @@ public class FunctionObj extends Obj {
         if (superInst != null)
             env.define("super", superInst);
         for (int i = 0; i < args.size(); i++) {
-            env.define(argNames.get(i), args.get(i));
+            if (argNames.get(i).match(interpreter, args.get(i)) == null)
+                throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
         }
         Obj obj = interpreter.next(body);
         env.popFrame();

@@ -63,6 +63,17 @@ public class AssignmentExpr extends Expr {
         return valueObj;
     }
 
+    @Override
+    public Obj match(Interpreter interpreter, Obj obj) {
+        Obj rightMatch = value.match(interpreter, obj);
+        if (rightMatch != null) {
+            interpreter.getEnv().define(name, rightMatch);
+            return rightMatch;
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Returns the name of the variable.
      */

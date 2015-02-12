@@ -59,6 +59,14 @@ public class StringExpr extends Expr {
     }
 
     @Override
+    public Obj match(Interpreter interpreter, Obj obj) {
+        if (obj instanceof StringObj && ((StringObj) obj).getValue().equals(value))
+            return obj;
+        else
+            return null;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

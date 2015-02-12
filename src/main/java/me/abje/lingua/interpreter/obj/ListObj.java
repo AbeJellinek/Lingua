@@ -194,6 +194,13 @@ public class ListObj extends Obj {
     }
 
     /**
+     * Returns the size of this list.
+     */
+    public int size() {
+        return items.size();
+    }
+
+    /**
      * Lists are truthy when non-empty.
      *
      * @return Whether this list is non-empty.

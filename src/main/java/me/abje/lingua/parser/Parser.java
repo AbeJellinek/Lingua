@@ -79,6 +79,7 @@ public class Parser implements Phase<Token, Expr> {
         registerPrefix(CLASS, new ClassParselet());
         registerPrefix(ANNOTATION, new AnnotationParselet());
         registerPrefix(IMPORT, new ImportParselet());
+        registerPrefix(TRY, new TryCatchParselet());
         prefix(PLUS, MINUS, TILDE, BANG);
         infix(PLUS, Precedence.SUM);
         infix(MINUS, Precedence.SUM);
@@ -103,6 +104,8 @@ public class Parser implements Phase<Token, Expr> {
         registerInfix(MINUS_EQ, new BinaryMutatorParselet(Token.Type.MINUS));
         registerInfix(TIMES_EQ, new BinaryMutatorParselet(Token.Type.TIMES));
         registerInfix(DIVIDE_EQ, new BinaryMutatorParselet(Token.Type.DIVIDE));
+        registerInfix(COLON, new TypePatternParselet());
+        registerInfix(MATCH, new MatchParselet());
         postfix(BANG);
     }
 

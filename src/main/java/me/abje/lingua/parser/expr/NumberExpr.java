@@ -79,6 +79,14 @@ public class NumberExpr extends Expr {
     }
 
     @Override
+    public Obj match(Interpreter interpreter, Obj obj) {
+        if (obj instanceof NumberObj && Float.compare(((NumberObj) obj).getValue(), value) == 0)
+            return obj;
+        else
+            return null;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

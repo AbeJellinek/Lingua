@@ -23,24 +23,41 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.FunctionExpr;
+import me.abje.lingua.parser.expr.MatchExpr;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Parses an anonymous function expression, such as <code>a -> b</code>.
- */
-public class MiniFunctionParselet implements InfixParselet {
+public class MatchParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
-        return new FunctionExpr(token, "<anon>", Collections.singletonList(left), parser.next());
+        Map<Expr, Expr> clauses = new HashMap<>();
+
+        parser.expect(Token.Type.OPEN_BRACE);
+        while (parser.peek() != null && !parser.peek().is(Token.Type.CLOSE_BRACE)) {
+            Expr pattern = parser.next(Precedence.SUM);
+            parser.eatLines();
+            parser.expect(Token.Type.ARROW);
+            Expr body = parser.next();
+            if (clauses.containsKey(pattern))
+                throw new ParseException("duplicate match pattern");
+            clauses.put(pattern, body);
+
+            parser.eatLines();
+        }
+
+        if (parser.peek() != null)
+            parser.read();
+
+        return new MatchExpr(token, left, clauses);
     }
 
     @Override
     public int getPrecedence() {
-        return Precedence.COMPARISON;
+        return Precedence.EQUALITY;
     }
 }

@@ -28,9 +28,6 @@ import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Parses an assignment, index assignment, or method definition expression.
  */
@@ -39,18 +36,10 @@ public class AssignmentParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
         if (left instanceof CallExpr) {
             CallExpr call = (CallExpr) left;
-            List<String> argNames = new ArrayList<>();
-            for (Expr arg : call.getArgs()) {
-                if (arg instanceof NameExpr) {
-                    argNames.add(((NameExpr) arg).getValue());
-                } else {
-                    throw new ParseException("function definition arguments must be names");
-                }
-            }
 
             if (call.getFunc() instanceof NameExpr) {
                 Expr value = parser.next(Precedence.ASSIGNMENT - 1);
-                return new FunctionExpr(token, ((NameExpr) call.getFunc()).getValue(), argNames, value);
+                return new FunctionExpr(token, ((NameExpr) call.getFunc()).getValue(), call.getArgs(), value);
             } else {
                 throw new ParseException("function name must actually be a name");
             }

@@ -330,6 +330,12 @@ public class Lexer implements Phase<Void, Token> {
                 return make(IS);
             case "import":
                 return make(IMPORT);
+            case "try":
+                return make(TRY);
+            case "catch":
+                return make(CATCH);
+            case "match":
+                return make(MATCH);
             default:
                 return make(NAME);
         }

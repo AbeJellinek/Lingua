@@ -48,15 +48,13 @@ public class InterpreterException extends RuntimeException {
         this.exceptionObj = exceptionObj;
     }
 
+    public void initialize(Interpreter interpreter) {
+        if (exceptionObj instanceof StringObj) {
+            exceptionObj = interpreter.getEnv().get(exceptionClass).call(interpreter, Collections.singletonList(exceptionObj));
+        }
+    }
+
     public Obj getExceptionObj() {
         return exceptionObj;
-    }
-
-    public void setExceptionObj(Obj exceptionObj) {
-        this.exceptionObj = exceptionObj;
-    }
-
-    public String getExceptionClass() {
-        return exceptionClass;
     }
 }

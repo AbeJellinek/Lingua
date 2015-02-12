@@ -52,6 +52,14 @@ public abstract class Expr {
      */
     public abstract Obj evaluate(Interpreter interpreter);
 
+    public Obj match(Interpreter interpreter, Obj obj) {
+        Obj evaluated = evaluate(interpreter);
+        if (evaluated.equals(obj))
+            return evaluated;
+        else
+            return null;
+    }
+
     /**
      * Returns the annotations present on this expression.
      */

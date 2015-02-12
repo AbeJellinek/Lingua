@@ -28,6 +28,7 @@ import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +43,7 @@ public class FunctionExpr extends Expr {
     /**
      * This function's formal argument list.
      */
-    private List<String> argNames;
+    private List<Expr> argNames;
 
     /**
      * This function's body.
@@ -56,7 +57,7 @@ public class FunctionExpr extends Expr {
      * @param argNames The function's argument names.
      * @param body     The function's body.
      */
-    public FunctionExpr(Token token, String name, List<String> argNames, Expr body) {
+    public FunctionExpr(Token token, String name, List<Expr> argNames, Expr body) {
         super(token);
         this.name = name;
         this.argNames = argNames;
@@ -72,7 +73,7 @@ public class FunctionExpr extends Expr {
 
     @Override
     public String toString() {
-        return "FUNCTION(" + name + ", " + argNames.stream().collect(Collectors.joining(", ", "(", ")")) +
+        return "FUNCTION(" + name + ", " + argNames.stream().map(Objects::toString).collect(Collectors.joining(", ", "(", ")")) +
                 ", " + body + ")";
     }
 
@@ -86,7 +87,7 @@ public class FunctionExpr extends Expr {
     /**
      * Returns this function's argument names.
      */
-    public List<String> getArgNames() {
+    public List<Expr> getArgNames() {
         return argNames;
     }
 

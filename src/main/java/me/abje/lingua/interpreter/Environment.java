@@ -135,7 +135,11 @@ public class Environment {
      * Pushes a new frame onto the top of the stack.
      */
     public void pushFrame(String name) {
-        stack.push(new Frame(name));
+        Frame frame = new Frame(name);
+        Frame top = stack.peek();
+        frame.fileName = top.fileName;
+        frame.line = top.line;
+        stack.push(frame);
     }
 
     /**

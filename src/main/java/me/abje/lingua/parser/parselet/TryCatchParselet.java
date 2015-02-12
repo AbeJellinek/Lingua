@@ -23,24 +23,28 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
-import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.FunctionExpr;
+import me.abje.lingua.parser.expr.TryCatchExpr;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Parses an anonymous function expression, such as <code>a -> b</code>.
- */
-public class MiniFunctionParselet implements InfixParselet {
+public class TryCatchParselet implements PrefixParselet {
     @Override
-    public Expr parse(Parser parser, Expr left, Token token) {
-        return new FunctionExpr(token, "<anon>", Collections.singletonList(left), parser.next());
-    }
-
-    @Override
-    public int getPrecedence() {
-        return Precedence.COMPARISON;
+    public Expr parse(Parser parser, Token token) {
+        Expr body = parser.next();
+        Map<Expr, Expr> clauses = new HashMap<>();
+        while (parser.match(Token.Type.CATCH)) {
+            Expr pattern = parser.next();
+            Expr catchBody = parser.next();
+            if (clauses.containsKey(pattern)) {
+                throw new ParseException("duplicate catch block");
+            } else {
+                clauses.put(pattern, catchBody);
+            }
+        }
+        return new TryCatchExpr(token, body, clauses);
     }
 }

@@ -22,38 +22,49 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.NullObj;
+import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
-/**
- * A null literal expression.
- */
-public class NullExpr extends Expr {
-    public NullExpr(Token token) {
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
+
+public class TryCatchExpr extends Expr {
+    private final Expr body;
+    private final Map<Expr, Expr> clauses;
+
+    public TryCatchExpr(Token token, Expr body, Map<Expr, Expr> clauses) {
         super(token);
+        this.body = body;
+        this.clauses = clauses;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return NullObj.get();
-    }
+        try {
+            return body.evaluate(interpreter);
+        } catch (InterpreterException e) {
+            e.initialize(interpreter);
+            for (Map.Entry<Expr, Expr> clause : clauses.entrySet()) {
+                Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
+                interpreter.getEnv().setOldStack(stack);
+                Deque<Environment.Frame> newStack = new ArrayDeque<>();
+                newStack.add(stack.getLast());
+                interpreter.getEnv().setStack(newStack);
+                Obj result = null;
+                if (clause.getKey().match(interpreter, e.getExceptionObj()) != null) {
+                    result = clause.getValue().evaluate(interpreter);
+                }
+                interpreter.getEnv().setStack(stack);
 
-    @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
-        if (obj instanceof NullObj)
-            return obj;
-        else
-            return null;
-    }
+                if (result != null)
+                    return result;
+            }
 
-    public boolean equals(Object o) {
-        return o instanceof NullExpr;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
+            throw e;
+        }
     }
 }

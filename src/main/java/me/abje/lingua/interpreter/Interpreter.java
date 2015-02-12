@@ -24,7 +24,6 @@ package me.abje.lingua.interpreter;
 
 import me.abje.lingua.Phase;
 import me.abje.lingua.interpreter.obj.Obj;
-import me.abje.lingua.interpreter.obj.StringObj;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
@@ -96,9 +95,7 @@ public class Interpreter implements Phase<Expr, Obj> {
     }
 
     private static void handleInterpreterException(InterpreterException e, Interpreter interpreter) {
-        if (e.getExceptionObj() instanceof StringObj) {
-            e.setExceptionObj(interpreter.getEnv().get("Exception").call(interpreter, Collections.singletonList(e.getExceptionObj())));
-        }
+        e.initialize(interpreter);
 
         Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
         interpreter.getEnv().setOldStack(stack);
