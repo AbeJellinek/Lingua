@@ -18,12 +18,14 @@ class Triangle {
 }
 
 lenString = read("Side lengths (comma-separated): ")
-lengths = lenString.split(",").map(x -> Number(x.trim()))
+if (lenString != null) {
+    lengths = lenString.split(",").map(x -> Number(x.trim()))
 
-if (lengths.size() != 3) {
-    error("Invalid number of sides.")
-} else {
-    tri = Triangle(lengths[0], lengths[1], lengths[2])
-    print("Area: " + tri.area())
-    print("Perimeter: " + tri.perimeter())
+    if (lengths.size() != 3) {
+        error("Invalid number of sides.")
+    } else {
+        tri = Triangle(lengths[0], lengths[1], lengths[2])
+        print("Area: " + tri.area())
+        print("Perimeter: " + tri.perimeter())
+    }
 }

@@ -22,6 +22,8 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.InterpreterException;
+
 /**
  * The Lingua "null" singleton. Has no fields, cannot be invoked, and is generally quite useless.
  */
@@ -44,6 +46,16 @@ public class NullObj extends Obj {
      */
     public static NullObj get() {
         return self;
+    }
+
+    @Override
+    public Obj getMember(String name) {
+        throw new InterpreterException("NullReferenceException", "attempt to dereference null");
+    }
+
+    @Override
+    public void setMember(String name, Obj value) {
+        throw new InterpreterException("NullReferenceException", "attempt to dereference null");
     }
 
     @Override

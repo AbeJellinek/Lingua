@@ -128,11 +128,20 @@ public class Intrinsics {
         });
 
         addFunction("read", (interpreter, args) -> {
+            Scanner scanner = new Scanner(System.in);
             if (args.size() == 0) {
-                return new StringObj(new Scanner(System.in).nextLine());
+                if (scanner.hasNextLine()) {
+                    return new StringObj(scanner.nextLine());
+                } else {
+                    return NullObj.get();
+                }
             } else if (args.size() == 1) {
                 System.out.print(args.get(0));
-                return new StringObj(new Scanner(System.in).nextLine());
+                if (scanner.hasNextLine()) {
+                    return new StringObj(scanner.nextLine());
+                } else {
+                    return NullObj.get();
+                }
             } else {
                 throw new InterpreterException("CallException", "wrong number of arguments for read", interpreter);
             }
