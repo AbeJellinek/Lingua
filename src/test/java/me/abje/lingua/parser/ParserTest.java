@@ -25,6 +25,7 @@ package me.abje.lingua.parser;
 import me.abje.lingua.interpreter.obj.Field;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
+import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.expr.*;
 import org.junit.Test;
 
@@ -37,11 +38,14 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * BROKEN :(
+ */
 public class ParserTest {
     private Parser parser;
 
     private void input(String input) {
-        parser = new Parser(new Morpher(new Lexer(new StringReader(input), "<test>")));
+        parser = new Parser(new Morpher(new Lexer(new StringReader(input), "")));
     }
 
     @Test
@@ -60,7 +64,7 @@ public class ParserTest {
 
         input("x += y");
         e = parser.next();
-        assertThat(e, is(new AssignmentExpr(null, "x", new OperatorExpr(PLUS, new NameExpr(null, "x"), new NameExpr(null, "y")))));
+        assertThat(e, is(new AssignmentExpr(new Token(EQ, "+=", 1, ""), "x", new OperatorExpr(PLUS, new NameExpr(null, "x"), new NameExpr(null, "y")))));
 
         input("x + y");
         e = parser.next();

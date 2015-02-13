@@ -22,6 +22,8 @@
 
 package me.abje.lingua.lexer;
 
+import java.util.Objects;
+
 /**
  * A source token. Has a type, value, and position.
  */
@@ -99,6 +101,22 @@ public class Token {
 
     public String getFile() {
         return file;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return Objects.equals(line, token.line) &&
+                Objects.equals(type, token.type) &&
+                Objects.equals(value, token.value) &&
+                Objects.equals(file, token.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, value, line, file);
     }
 
     /**

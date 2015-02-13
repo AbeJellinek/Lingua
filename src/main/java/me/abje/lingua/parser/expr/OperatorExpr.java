@@ -65,7 +65,7 @@ public class OperatorExpr extends Expr {
      * @param right The right expression.
      */
     public OperatorExpr(Token.Type token, Expr left, Expr right) {
-        super(new Token(token, "", 0, "<none>"));
+        super(new Token(token, "", 1, "<none>"));
         this.left = left;
         this.right = right;
     }
@@ -156,7 +156,7 @@ public class OperatorExpr extends Expr {
 
         OperatorExpr that = (OperatorExpr) o;
 
-        return left.equals(that.left) && right.equals(that.right) && getToken() == that.getToken();
+        return left.equals(that.left) && right.equals(that.right) && getToken().equals(that.getToken());
     }
 
     @Override
