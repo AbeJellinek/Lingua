@@ -129,12 +129,17 @@ public class ClassObj extends Obj {
             instance.setSuperInst(superInstance);
 
             interpreter.getEnv().pushFrame(name + ".<init>");
-            interpreter.getEnv().define("super", superInstance);
-            interpreter.getEnv().define("self", instance);
             superClass.fieldMap.forEach((name, field) -> superInstance.setMember(name, interpreter.next(field.getDefaultValue())));
             fieldMap.forEach((name, field) -> instance.setMember(name, interpreter.next(field.getDefaultValue())));
             if (functionMap.containsKey("init")) {
-                functionMap.get("init").call(interpreter, args);
+                Obj init = functionMap.get("init");
+                init.setSuperInst(superInstance);
+                if (init instanceof SyntheticFunctionObj) {
+                    ((SyntheticFunctionObj) init).setSelf(instance);
+                } else if (init instanceof FunctionObj) {
+                    init = ((FunctionObj) init).withSelf(instance);
+                }
+                init.call(interpreter, args);
             }
             interpreter.getEnv().popFrame();
 

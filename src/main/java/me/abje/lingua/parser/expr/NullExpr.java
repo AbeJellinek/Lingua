@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -41,7 +42,7 @@ public class NullExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         if (obj instanceof NullObj)
             return obj;
         else

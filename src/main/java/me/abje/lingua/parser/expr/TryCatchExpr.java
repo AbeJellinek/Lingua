@@ -55,7 +55,7 @@ public class TryCatchExpr extends Expr {
                 newStack.add(stack.getLast());
                 interpreter.getEnv().setStack(newStack);
                 Obj result = null;
-                if (clause.getKey().match(interpreter, e.getExceptionObj()) != null) {
+                if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj()) != null) {
                     result = clause.getValue().evaluate(interpreter);
                 }
                 interpreter.getEnv().setStack(stack);

@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.NumberObj;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -79,7 +80,7 @@ public class NumberExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         if (obj instanceof NumberObj && Float.compare(((NumberObj) obj).getValue(), value) == 0)
             return obj;
         else

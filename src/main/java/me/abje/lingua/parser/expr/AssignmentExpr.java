@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
@@ -64,8 +65,8 @@ public class AssignmentExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
-        Obj rightMatch = value.match(interpreter, obj);
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+        Obj rightMatch = value.match(interpreter, frame, obj);
         if (rightMatch != null) {
             interpreter.getEnv().define(name, rightMatch);
             return rightMatch;

@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.obj.FunctionObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class FunctionExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        Obj functionObj = new FunctionObj(name, argNames, body);
+        Obj functionObj = new FunctionObj(name, argNames, body, new ArrayDeque<>(interpreter.getEnv().getStack()));
         interpreter.getEnv().put(name, functionObj);
         return functionObj;
     }

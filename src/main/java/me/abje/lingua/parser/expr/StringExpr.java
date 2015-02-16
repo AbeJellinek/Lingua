@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.StringObj;
@@ -59,7 +60,7 @@ public class StringExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         if (obj instanceof StringObj && ((StringObj) obj).getValue().equals(value))
             return obj;
         else

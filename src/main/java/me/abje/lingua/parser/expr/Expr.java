@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
@@ -52,7 +53,7 @@ public abstract class Expr {
      */
     public abstract Obj evaluate(Interpreter interpreter);
 
-    public Obj match(Interpreter interpreter, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         Obj evaluated = evaluate(interpreter);
         if (evaluated.equals(obj))
             return evaluated;

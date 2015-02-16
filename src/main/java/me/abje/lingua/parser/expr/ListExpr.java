@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.ListObj;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -63,11 +64,11 @@ public class ListExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         if (obj instanceof ListObj) {
             ListObj list = (ListObj) obj;
             for (int i = 0; i < list.size(); i++) {
-                if (items.get(i).match(interpreter, list.get(i)) == null) {
+                if (items.get(i).match(interpreter, frame, list.get(i)) == null) {
                     return null;
                 }
             }

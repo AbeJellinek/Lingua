@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -43,8 +44,8 @@ public class TypePatternExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Obj obj) {
-        if (left.match(interpreter, obj).getType().isSubclassOf(interpreter.getEnv().get(type))) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+        if (left.match(interpreter, frame, obj).getType().isSubclassOf(interpreter.getEnv().get(type))) {
             return obj;
         } else {
             return null;

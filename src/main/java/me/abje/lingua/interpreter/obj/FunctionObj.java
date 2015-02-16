@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.parser.expr.Expr;
 
+import java.util.Deque;
 import java.util.List;
 
 /**
@@ -55,10 +56,7 @@ public class FunctionObj extends Obj {
      */
     private Obj self;
 
-    /**
-     * The "super" implicit argument passed to this function.
-     */
-    private Obj superInst;
+    private Deque<Environment.Frame> captured;
 
     /**
      * Creates a new function.
@@ -66,9 +64,10 @@ public class FunctionObj extends Obj {
      * @param name     The function's name.
      * @param argNames The function's formal argument list.
      * @param body     The function's body expression.
+     * @param captured The function's captured frames.
      */
-    public FunctionObj(String name, List<Expr> argNames, Expr body) {
-        this(name, argNames, body, null, null);
+    public FunctionObj(String name, List<Expr> argNames, Expr body, Deque<Environment.Frame> captured) {
+        this(name, argNames, body, null, null, captured);
     }
 
     /**
@@ -79,14 +78,17 @@ public class FunctionObj extends Obj {
      * @param body      The function's body expression.
      * @param self      The function's "self" implicit argument.
      * @param superInst The function's "super" implicit argument.
+     * @param captured  The function's captured frames.
      */
-    public FunctionObj(String name, List<Expr> argNames, Expr body, Obj self, Obj superInst) {
+    public FunctionObj(String name, List<Expr> argNames, Expr body, Obj self, Obj superInst, Deque<Environment.Frame> captured) {
         super(SYNTHETIC);
         this.name = name;
         this.argNames = argNames;
         this.body = body;
         this.self = self;
-        this.superInst = superInst;
+        this.captured = captured;
+
+        setSuperInst(superInst);
     }
 
     /**
@@ -120,16 +122,25 @@ public class FunctionObj extends Obj {
             env.pushFrame(self.getType().getName() + "." + name);
         else
             env.pushFrame(name);
+
+        Environment.Frame frame = env.getStack().peek();
+        for (int i = 0; i < args.size(); i++)
+            if (argNames.get(i).match(interpreter, frame, args.get(i)) == null)
+                throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
+
+        Deque<Environment.Frame> oldStack = env.getStack();
+        env.setStack(captured);
+        captured.push(frame);
+
         if (self != null)
             env.define("self", self);
-        if (superInst != null)
-            env.define("super", superInst);
-        for (int i = 0; i < args.size(); i++) {
-            if (argNames.get(i).match(interpreter, args.get(i)) == null)
-                throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
-        }
+        if (getSuperInst() != null)
+            env.define("super", getSuperInst());
         Obj obj = interpreter.next(body);
         env.popFrame();
+        env.popFrame();
+        env.setStack(oldStack);
+
         return obj;
     }
 
@@ -162,7 +173,7 @@ public class FunctionObj extends Obj {
      * @param self The new value of <code>self</code>.
      */
     public FunctionObj withSelf(Obj self) {
-        return new FunctionObj(name, argNames, body, self, superInst);
+        return new FunctionObj(name, argNames, body, self, getSuperInst(), captured);
     }
 
     /**
@@ -171,6 +182,6 @@ public class FunctionObj extends Obj {
      * @param superInst The new value of <code>super</code>.
      */
     public FunctionObj withSuper(Obj superInst) {
-        return new FunctionObj(name, argNames, body, self, superInst);
+        return new FunctionObj(name, argNames, body, self, superInst, captured);
     }
 }
