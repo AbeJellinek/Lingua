@@ -118,6 +118,8 @@ public class FunctionObj extends Obj {
             throw new InterpreterException("CallException", "invalid number of arguments for function " + name, interpreter);
 
         Environment env = interpreter.getEnv();
+        Deque<Environment.Frame> oldStack = env.getStack();
+        env.setStack(captured);
         if (self != null)
             env.pushFrame(self.getType().getName() + "." + name);
         else
@@ -128,17 +130,13 @@ public class FunctionObj extends Obj {
             if (argNames.get(i).match(interpreter, frame, args.get(i)) == null)
                 throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
 
-        Deque<Environment.Frame> oldStack = env.getStack();
-        env.setStack(captured);
-        captured.push(frame);
-
         if (self != null)
             env.define("self", self);
         if (getSuperInst() != null)
             env.define("super", getSuperInst());
         Obj obj = interpreter.next(body);
-        env.popFrame();
-        env.popFrame();
+
+        captured.pop();
         env.setStack(oldStack);
 
         return obj;

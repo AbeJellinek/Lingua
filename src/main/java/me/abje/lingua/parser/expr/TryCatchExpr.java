@@ -28,7 +28,6 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
 
@@ -51,14 +50,12 @@ public class TryCatchExpr extends Expr {
             for (Map.Entry<Expr, Expr> clause : clauses.entrySet()) {
                 Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
                 interpreter.getEnv().setOldStack(stack);
-                Deque<Environment.Frame> newStack = new ArrayDeque<>();
-                newStack.add(stack.getLast());
-                interpreter.getEnv().setStack(newStack);
+                interpreter.getEnv().pushFrame("<catch>");
                 Obj result = null;
                 if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj()) != null) {
                     result = clause.getValue().evaluate(interpreter);
                 }
-                interpreter.getEnv().setStack(stack);
+                interpreter.getEnv().popFrame();
 
                 if (result != null)
                     return result;

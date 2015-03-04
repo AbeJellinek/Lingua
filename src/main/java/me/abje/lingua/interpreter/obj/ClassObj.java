@@ -132,7 +132,7 @@ public class ClassObj extends Obj {
             superClass.fieldMap.forEach((name, field) -> superInstance.setMember(name, interpreter.next(field.getDefaultValue())));
             fieldMap.forEach((name, field) -> instance.setMember(name, interpreter.next(field.getDefaultValue())));
             if (functionMap.containsKey("init")) {
-                Obj init = functionMap.get("init");
+                Obj init = instance.getMember("init");
                 init.setSuperInst(superInstance);
                 if (init instanceof SyntheticFunctionObj) {
                     ((SyntheticFunctionObj) init).setSelf(instance);

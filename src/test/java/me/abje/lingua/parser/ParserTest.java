@@ -25,7 +25,6 @@ package me.abje.lingua.parser;
 import me.abje.lingua.interpreter.obj.Field;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
-import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.expr.*;
 import org.junit.Test;
 
@@ -57,14 +56,6 @@ public class ParserTest {
         assertThat(e, is(instanceOf(NameExpr.class)));
         assertThat(((NameExpr) e).getValue(), is("test"));
         assertThat(e.getAnnotations(), is(Collections.singletonList("ann")));
-
-        input("x = y");
-        e = parser.next();
-        assertThat(e, is(new AssignmentExpr(null, "x", new NameExpr(null, "y"))));
-
-        input("x += y");
-        e = parser.next();
-        assertThat(e, is(new AssignmentExpr(new Token(EQ, "+=", 1, ""), "x", new OperatorExpr(PLUS, new NameExpr(null, "x"), new NameExpr(null, "y")))));
 
         input("x + y");
         e = parser.next();

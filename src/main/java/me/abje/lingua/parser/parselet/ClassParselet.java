@@ -52,7 +52,12 @@ public class ClassParselet implements PrefixParselet {
             if (expr instanceof FunctionExpr) {
                 functions.add((FunctionExpr) expr);
             } else if (expr instanceof AssignmentExpr) {
-                fields.add(new Field((AssignmentExpr) expr));
+                AssignmentExpr assgn = (AssignmentExpr) expr;
+                if (assgn.getName() instanceof NameExpr) {
+                    fields.add(new Field(null, ((NameExpr) assgn.getName()).getValue(), assgn.getValue()));
+                } else {
+                    throw new ParseException("invalid class member (left side must be a name)");
+                }
             } else if (expr instanceof NameExpr) {
                 fields.add(new Field(null, ((NameExpr) expr).getValue(), new NullExpr(token)));
             } else {

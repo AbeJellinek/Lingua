@@ -22,7 +22,6 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import me.abje.lingua.parser.expr.AssignmentExpr;
 import me.abje.lingua.parser.expr.Expr;
 
 /**
@@ -55,15 +54,6 @@ public class Field {
         this.type = type;
         this.name = name;
         this.defaultValue = defaultValue;
-    }
-
-    /**
-     * Creates a new field based on an assignment expression.
-     *
-     * @param expr The expression.
-     */
-    public Field(AssignmentExpr expr) {
-        this(null, expr.getName(), expr.getValue());
     }
 
     /**

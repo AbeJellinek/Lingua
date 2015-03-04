@@ -29,7 +29,3 @@ if (lenString != null) {
         print("Perimeter: " + tri.perimeter())
     }
 }
-
-test(list = [x, y, z]) = {
-    // ...
-}

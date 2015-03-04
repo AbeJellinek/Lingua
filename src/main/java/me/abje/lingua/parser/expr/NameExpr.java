@@ -65,8 +65,13 @@ public class NameExpr extends Expr {
 
     @Override
     public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
-        if (!value.equals("_"))
-            frame.define(value, obj);
+        if (!value.equals("_")) {
+            if (getAnnotations().contains("var")) {
+                interpreter.getEnv().define(value, obj);
+            } else {
+                interpreter.getEnv().put(value, obj);
+            }
+        }
         return obj;
     }
 

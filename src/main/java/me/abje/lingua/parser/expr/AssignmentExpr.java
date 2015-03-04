@@ -34,7 +34,7 @@ public class AssignmentExpr extends Expr {
     /**
      * The name of the variable.
      */
-    private String name;
+    private Expr name;
 
     /**
      * The expression of the value to be assigned to this variable.
@@ -47,7 +47,7 @@ public class AssignmentExpr extends Expr {
      * @param name  The name of the variable.
      * @param value The expression of the value to be assigned.
      */
-    public AssignmentExpr(Token token, String name, Expr value) {
+    public AssignmentExpr(Token token, Expr name, Expr value) {
         super(token);
         this.name = name;
         this.value = value;
@@ -55,20 +55,18 @@ public class AssignmentExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
+        name.getAnnotations().clear();
+        name.getAnnotations().addAll(getAnnotations());
+
         Obj valueObj = interpreter.next(value);
-        if (getAnnotations().contains("var")) {
-            interpreter.getEnv().define(name, valueObj);
-        } else {
-            interpreter.getEnv().put(name, valueObj);
-        }
-        return valueObj;
+        return name.match(interpreter, interpreter.getEnv().getStack().peek(), valueObj);
     }
 
     @Override
     public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
         Obj rightMatch = value.match(interpreter, frame, obj);
         if (rightMatch != null) {
-            interpreter.getEnv().define(name, rightMatch);
+            evaluate(interpreter);
             return rightMatch;
         } else {
             return null;
@@ -78,7 +76,7 @@ public class AssignmentExpr extends Expr {
     /**
      * Returns the name of the variable.
      */
-    public String getName() {
+    public Expr getName() {
         return name;
     }
 

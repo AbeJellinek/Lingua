@@ -29,7 +29,10 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.*;
 import me.abje.lingua.lexer.Token;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A class declaration expression.
@@ -73,6 +76,7 @@ public class ClassExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
+        ClassObj superClass = (ClassObj) interpreter.getEnv().get(superClassName);
         ListMultimap<String, FunctionObj> objs = ArrayListMultimap.create();
         for (Expr expr : functions) {
             FunctionObj obj = (FunctionObj) interpreter.next(expr);
@@ -98,11 +102,15 @@ public class ClassExpr extends Expr {
                         }
                     }
 
-                    throw new InterpreterException("CallException", "invalid argument for function " + name);
+                    if (superClass.getFunctionMap().containsKey(name) && !name.equals("init")) {
+                        return superClass.getMember(name).call(interpreter, args);
+                    } else {
+                        throw new InterpreterException("CallException", "invalid argument for function " + name);
+                    }
                 }
             });
         }
-        ClassObj clazz = new ClassObj(name, flattened, fields, (ClassObj) interpreter.getEnv().get(superClassName));
+        ClassObj clazz = new ClassObj(name, flattened, fields, superClass);
         interpreter.getEnv().define(name, clazz);
         return clazz;
     }
