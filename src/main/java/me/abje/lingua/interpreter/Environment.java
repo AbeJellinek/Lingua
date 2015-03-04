@@ -132,6 +132,17 @@ public class Environment {
     }
 
     /**
+     * Deletes a variable with the given name.
+     *
+     * @param name The variable's name.
+     */
+    public void delete(String name) {
+        stack.stream().filter(frame -> frame.has(name)).forEach(frame -> frame.delete(name));
+
+        throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
+    }
+
+    /**
      * Pushes a new frame onto the top of the stack.
      */
     public void pushFrame(String name) {
@@ -257,6 +268,19 @@ public class Environment {
                 throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
             } else {
                 return locals.get(name);
+            }
+        }
+
+        /**
+         * Deletes a variable with the given name.
+         *
+         * @param name The variable's name.
+         */
+        public void delete(String name) {
+            if (!locals.containsKey(name)) {
+                throw new InterpreterException("UndefinedException", "variable '" + name + "' is not defined in this context");
+            } else {
+                locals.remove(name);
             }
         }
 

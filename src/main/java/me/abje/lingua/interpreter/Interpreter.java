@@ -73,13 +73,15 @@ public class Interpreter implements Phase<Expr, Obj> {
                     }
 
                     for (Expr x : exprs) {
+                        long startTime = System.nanoTime();
                         Obj value = interpreter.next(x);
+                        long time = System.nanoTime() - startTime;
                         do {
                             num++;
                         } while (interpreter.env.has("res" + num));
                         String varName = "res" + num;
                         interpreter.env.define(varName, value);
-                        System.out.println(varName + " = " + value);
+                        System.out.println(varName + " = " + value + " (" + time + "ns)");
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -115,7 +117,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 interpret(new FileReader(file), parts[parts.length - 1]);
             }
         } catch (FileNotFoundException e) {
-            throw new InterpreterException("UndefinedException", "not found: " + fullName, this);
+            throw new InterpreterException("UndefinedException", "module not found: " + fullName, this);
         }
     }
 

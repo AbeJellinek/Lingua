@@ -22,15 +22,14 @@
 
 package me.abje.lingua.parser.expr;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.ClassObj;
-import me.abje.lingua.interpreter.obj.Field;
-import me.abje.lingua.interpreter.obj.FunctionObj;
-import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.obj.*;
 import me.abje.lingua.lexer.Token;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * A class declaration expression.
@@ -74,9 +73,36 @@ public class ClassExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        List<FunctionObj> functionObjs = functions.stream().
-                map(expr -> (FunctionObj) interpreter.next(expr)).collect(Collectors.toList());
-        ClassObj clazz = new ClassObj(name, functionObjs, fields, (ClassObj) interpreter.getEnv().get(superClassName));
+        ListMultimap<String, FunctionObj> objs = ArrayListMultimap.create();
+        for (Expr expr : functions) {
+            FunctionObj obj = (FunctionObj) interpreter.next(expr);
+            objs.put(obj.getName(), obj);
+        }
+
+        Map<String, Obj> flattened = new HashMap<>();
+        for (Map.Entry<String, Collection<FunctionObj>> entry : objs.asMap().entrySet()) {
+            String name = entry.getKey();
+            Collection<FunctionObj> possibilities = entry.getValue();
+            flattened.put(name, new SyntheticFunctionObj(FunctionObj.SYNTHETIC) {
+                @Override
+                public Obj call(Interpreter interpreter, List<Obj> args) {
+                    for (FunctionObj function : possibilities) {
+                        Obj result;
+                        interpreter.getEnv().pushFrame("<" + function.getName() + ":args>");
+                        if (function.isApplicable(interpreter, args)) {
+                            interpreter.getEnv().popFrame();
+                            result = function.withSelf(getSelf()).withSuper(getSuperInst()).call(interpreter, args);
+                            return result;
+                        } else {
+                            interpreter.getEnv().popFrame();
+                        }
+                    }
+
+                    throw new InterpreterException("CallException", "invalid argument for function " + name);
+                }
+            });
+        }
+        ClassObj clazz = new ClassObj(name, flattened, fields, (ClassObj) interpreter.getEnv().get(superClassName));
         interpreter.getEnv().define(name, clazz);
         return clazz;
     }

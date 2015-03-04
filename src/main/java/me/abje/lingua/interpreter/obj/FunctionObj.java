@@ -184,4 +184,16 @@ public class FunctionObj extends Obj {
     public FunctionObj withSuper(Obj superInst) {
         return new FunctionObj(name, argNames, body, self, superInst, captured);
     }
+
+    public boolean isApplicable(Interpreter interpreter, List<Obj> args) {
+        if (args.size() != argNames.size())
+            return false;
+
+        Environment.Frame frame = interpreter.getEnv().getStack().peek();
+        for (int i = 0; i < args.size(); i++)
+            if (argNames.get(i).match(interpreter, frame, args.get(i)) == null)
+                return false;
+
+        return true;
+    }
 }

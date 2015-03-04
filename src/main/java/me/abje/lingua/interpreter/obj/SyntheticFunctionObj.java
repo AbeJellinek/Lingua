@@ -38,6 +38,10 @@ public class SyntheticFunctionObj extends Obj {
         super(FunctionObj.SYNTHETIC);
     }
 
+    public SyntheticFunctionObj(ClassObj type) {
+        super(type);
+    }
+
     /**
      * Returns the "self" argument.
      */

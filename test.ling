@@ -10,7 +10,7 @@ class Triangle {
     }
 
     area() = {
-        p = perimeter() / 2
+        p = self.perimeter() / 2
         sqrt(p(p - self.side1)(p - self.side2)(p - self.side3)) // This is the formula for the area of a triangle.
     }
 
@@ -28,4 +28,8 @@ if (lenString != null) {
         print("Area: " + tri.area())
         print("Perimeter: " + tri.perimeter())
     }
+}
+
+test(list = [x, y, z]) = {
+    // ...
 }

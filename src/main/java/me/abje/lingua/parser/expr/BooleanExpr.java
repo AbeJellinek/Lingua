@@ -61,7 +61,7 @@ public class BooleanExpr extends Expr {
 
     @Override
     public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
-        if (obj instanceof BooleanObj && obj.isTruthy())
+        if (obj instanceof BooleanObj && ((BooleanObj) obj).getValue() == value)
             return obj;
         else
             return null;
