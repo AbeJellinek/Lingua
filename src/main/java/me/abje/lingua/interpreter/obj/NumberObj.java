@@ -31,7 +31,7 @@ import java.util.List;
  * A Lingua number. Represented by a Java float.
  */
 public class NumberObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Number").
+    public static final ClassObj SYNTHETIC = ClassObj.<NumberObj>builder("Number").
             withFunction("init", (interpreter, self, args) -> {
                 if (args.size() != 1)
                     throw new InterpreterException("CallException", "wrong number of arguments for Number constructor", interpreter);

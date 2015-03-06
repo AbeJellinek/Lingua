@@ -27,6 +27,7 @@ import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.FunctionExpr;
+import me.abje.lingua.parser.expr.TupleExpr;
 
 import java.util.Collections;
 
@@ -36,7 +37,11 @@ import java.util.Collections;
 public class MiniFunctionParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
-        return new FunctionExpr(token, "<anon>", Collections.singletonList(left), parser.next());
+        if (left instanceof TupleExpr) {
+            return new FunctionExpr(token, "<anon>", ((TupleExpr) left).getItems(), parser.next());
+        } else {
+            return new FunctionExpr(token, "<anon>", Collections.singletonList(left), parser.next());
+        }
     }
 
     @Override

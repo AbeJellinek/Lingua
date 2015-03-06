@@ -108,8 +108,8 @@ public class ClassObj extends Obj {
      * @param name The new class's name.
      * @return The Builder.
      */
-    public static Builder builder(String name) {
-        return new Builder(name);
+    public static <O> Builder<O> builder(String name) {
+        return new Builder<O>(name);
     }
 
     /**
@@ -180,7 +180,7 @@ public class ClassObj extends Obj {
     /**
      * Builds a synthetic class.
      */
-    public static class Builder {
+    public static class Builder<O> {
         /**
          * The class's name.
          */
@@ -218,13 +218,14 @@ public class ClassObj extends Obj {
          * @param body The function's body.
          * @return This builder, for chaining.
          */
-        public Builder withFunction(String name, TriFunction<Interpreter, Obj, List<Obj>, Obj> body) {
+        public Builder<O> withFunction(String name, TriFunction<Interpreter, O, List<Obj>, Obj> body) {
             this.functions.put(name, new SyntheticFunctionObj() {
                 @Override
                 public Obj call(Interpreter interpreter, List<Obj> args) {
                     interpreter.getEnv().pushFrame(Builder.this.name + "." + name);
                     interpreter.getEnv().getStack().peek().setFileName("<native>");
-                    Obj result = body.apply(interpreter, getSelf(), args);
+                    @SuppressWarnings("unchecked")
+                    Obj result = body.apply(interpreter, (O) getSelf(), args);
                     interpreter.getEnv().popFrame();
                     return result;
                 }
@@ -238,7 +239,7 @@ public class ClassObj extends Obj {
          * @param fields The fields to add.
          * @return This builder, for chaining.
          */
-        public Builder withFields(List<Field> fields) {
+        public Builder<O> withFields(List<Field> fields) {
             this.fields.addAll(fields);
             return this;
         }

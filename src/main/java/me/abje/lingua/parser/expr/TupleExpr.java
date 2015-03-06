@@ -20,35 +20,46 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.parser.parselet;
+package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
+import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.obj.TupleObj;
 import me.abje.lingua.lexer.Token;
-import me.abje.lingua.parser.Parser;
-import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.TupleExpr;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Parses an expression in parentheses, such as <code>(x + y)</code>.
- */
-public class ParenthesesParselet implements PrefixParselet {
+public class TupleExpr extends Expr {
+    private final List<Expr> exprs;
+
+    public TupleExpr(Token token, List<Expr> exprs) {
+        super(token);
+        this.exprs = exprs;
+    }
+
     @Override
-    public Expr parse(Parser parser, Token token) {
-        Expr first = parser.next();
-        parser.eatLines();
-        if (parser.match(Token.Type.COMMA)) {
-            List<Expr> exprs = new ArrayList<>();
-            exprs.add(first);
-            while (!parser.match(Token.Type.CLOSE_PAREN)) {
-                exprs.add(parser.next());
-                parser.match(Token.Type.COMMA);
+    public Obj evaluate(Interpreter interpreter) {
+        return new TupleObj(exprs.stream().map(interpreter::next).collect(Collectors.toList()));
+    }
+
+    @Override
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+        if (obj instanceof TupleObj) {
+            TupleObj tuple = (TupleObj) obj;
+            for (int i = 0; i < tuple.size(); i++) {
+                if (exprs.get(i).match(interpreter, frame, tuple.get(i)) == null) {
+                    return null;
+                }
             }
-            return new TupleExpr(token, exprs);
+            return obj;
         } else {
-            parser.expect(Token.Type.CLOSE_PAREN);
-            return first;
+            return null;
         }
+    }
+
+    public List<Expr> getItems() {
+        return exprs;
     }
 }

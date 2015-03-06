@@ -34,36 +34,36 @@ import java.util.stream.Collectors;
  * A Lingua list. Mutable, but designed with functional usage in mind.
  */
 public class ListObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("List").
+    public static final ClassObj SYNTHETIC = ClassObj.<ListObj>builder("List").
             withFunction("map", (interpreter, self, args) -> {
                 if (args.size() != 1)
                     throw new InterpreterException("CallException", "invalid number of arguments for map", interpreter);
-                return ((ListObj) self).map(interpreter, args.get(0));
+                return self.map(interpreter, args.get(0));
             }).
             withFunction("filter", (interpreter, self, args) -> {
                 if (args.size() != 1)
                     throw new InterpreterException("CallException", "invalid number of arguments for filter", interpreter);
-                return ((ListObj) self).filter(interpreter, args.get(0));
+                return self.filter(interpreter, args.get(0));
             }).
             withFunction("forEach", (interpreter, self, args) -> {
                 if (args.size() != 1)
                     throw new InterpreterException("CallException", "invalid number of arguments for forEach", interpreter);
-                return ((ListObj) self).each(interpreter, args.get(0));
+                return self.each(interpreter, args.get(0));
             }).
             withFunction("reverse", (interpreter, self, args) -> {
                 if (args.size() != 0)
                     throw new InterpreterException("CallException", "too many arguments for reverse", interpreter);
-                return ((ListObj) self).reverse();
+                return self.reverse();
             }).
             withFunction("add", (interpreter, self, args) -> {
                 if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for reverse", interpreter);
-                return ((ListObj) self).add(args.get(0));
+                    throw new InterpreterException("CallException", "invalid number of arguments for add", interpreter);
+                return self.add(args.get(0));
             }).
             withFunction("size", (interpreter, self, args) -> {
                 if (args.size() != 0)
                     throw new InterpreterException("CallException", "invalid number of arguments for size", interpreter);
-                return new NumberObj(((ListObj) self).items.size());
+                return new NumberObj(self.items.size());
             }).
             build();
 

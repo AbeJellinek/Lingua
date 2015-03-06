@@ -24,31 +24,28 @@ package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.Parser;
+import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.TupleExpr;
+import me.abje.lingua.parser.expr.MapExpr;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Parses an expression in parentheses, such as <code>(x + y)</code>.
- */
-public class ParenthesesParselet implements PrefixParselet {
+public class MapParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
-        Expr first = parser.next();
-        parser.eatLines();
-        if (parser.match(Token.Type.COMMA)) {
-            List<Expr> exprs = new ArrayList<>();
-            exprs.add(first);
-            while (!parser.match(Token.Type.CLOSE_PAREN)) {
-                exprs.add(parser.next());
-                parser.match(Token.Type.COMMA);
+        Map<Expr, Expr> items = new HashMap<>();
+        while (!parser.peek().is(Token.Type.CLOSE_BRACE)) {
+            Expr key = parser.next(Precedence.PREFIX);
+            parser.match(Token.Type.COLON);
+            Expr value = parser.next();
+            items.put(key, value);
+            if (parser.peek().is(Token.Type.COMMA)) {
+                parser.read();
             }
-            return new TupleExpr(token, exprs);
-        } else {
-            parser.expect(Token.Type.CLOSE_PAREN);
-            return first;
         }
+        parser.read();
+
+        return new MapExpr(token, items);
     }
 }

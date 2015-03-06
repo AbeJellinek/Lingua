@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * A Lingua character string.
  */
 public class StringObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("String").
+    public static final ClassObj SYNTHETIC = ClassObj.<StringObj>builder("String").
             withFunction("init", (interpreter, self, args) ->
                     new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
             withFunction("split", (interpreter, self, args) -> {
@@ -43,7 +43,7 @@ public class StringObj extends Obj {
             withFunction("trim", (interpreter, self, args) -> {
                 if (args.size() != 0)
                     throw new InterpreterException("CallException", "invalid number of arguments for trim", interpreter);
-                return new StringObj(self.toString().trim());
+                return new StringObj(self.getValue().trim());
             }).
             build();
 

@@ -171,6 +171,13 @@ public class Lexer implements Phase<Void, Token> {
                     return make(OPEN_BRACE);
                 case '}':
                     return make(CLOSE_BRACE);
+                case '#':
+                    if (isNext('{'))
+                        return make(OPEN_MAP_BRACE);
+                    else if (isNext('['))
+                        return make(OPEN_SET_BRACE);
+                    else
+                        return make(HASH);
                 case '[':
                     return make(OPEN_BRACKET);
                 case ']':

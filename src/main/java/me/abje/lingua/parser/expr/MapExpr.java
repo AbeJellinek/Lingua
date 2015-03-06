@@ -20,35 +20,44 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.parser.parselet;
+package me.abje.lingua.parser.expr;
 
+import me.abje.lingua.interpreter.Environment;
+import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.obj.MapObj;
+import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
-import me.abje.lingua.parser.Parser;
-import me.abje.lingua.parser.expr.Expr;
-import me.abje.lingua.parser.expr.TupleExpr;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Parses an expression in parentheses, such as <code>(x + y)</code>.
- */
-public class ParenthesesParselet implements PrefixParselet {
+public class MapExpr extends Expr {
+    private final Map<Expr, Expr> items;
+
+    public MapExpr(Token token, Map<Expr, Expr> items) {
+        super(token);
+        this.items = items;
+    }
+
     @Override
-    public Expr parse(Parser parser, Token token) {
-        Expr first = parser.next();
-        parser.eatLines();
-        if (parser.match(Token.Type.COMMA)) {
-            List<Expr> exprs = new ArrayList<>();
-            exprs.add(first);
-            while (!parser.match(Token.Type.CLOSE_PAREN)) {
-                exprs.add(parser.next());
-                parser.match(Token.Type.COMMA);
+    public Obj evaluate(Interpreter interpreter) {
+        Map<Obj, Obj> objMap = new HashMap<>();
+        items.forEach((k, v) -> objMap.put(interpreter.next(k), interpreter.next(v)));
+        return new MapObj(objMap);
+    }
+
+    @Override
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+        if (obj instanceof MapObj) {
+            MapObj map = (MapObj) obj;
+            for (Expr key : items.keySet()) {
+                if (items.get(key).match(interpreter, frame, map.get(interpreter.next(key))) == null) {
+                    return null;
+                }
             }
-            return new TupleExpr(token, exprs);
+            return obj;
         } else {
-            parser.expect(Token.Type.CLOSE_PAREN);
-            return first;
+            return null;
         }
     }
 }
