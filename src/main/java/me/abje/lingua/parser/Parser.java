@@ -57,6 +57,11 @@ public class Parser implements Phase<Token, Expr> {
     private Token peeked;
 
     /**
+     * The token that was last peeked, if any.
+     */
+    private Token lastRead;
+
+    /**
      * Creates a new Parser and registers the default parselets.
      *
      * @param lexer The lexer to use as input.
@@ -127,7 +132,7 @@ public class Parser implements Phase<Token, Expr> {
         PrefixParselet prefix = prefixParselets.get(token.getType());
 
         if (prefix == null)
-            throw new ParseException("unexpected " + token.getType());
+            throw new ParseException("unexpected " + token.getType(), token);
 
         Expr left = prefix.parse(this, token);
 
@@ -276,9 +281,9 @@ public class Parser implements Phase<Token, Expr> {
         if (peeked != null) {
             Token peeked = this.peeked;
             this.peeked = null;
-            return peeked;
+            return lastRead = peeked;
         } else {
-            return lexer.next(null);
+            return lastRead = lexer.next(null);
         }
     }
 
@@ -289,8 +294,14 @@ public class Parser implements Phase<Token, Expr> {
      * @throws me.abje.lingua.parser.ParseException If the type of the read token is different from the given type.
      */
     public void expect(Token.Type type) {
-        if (peek() == null || !read().is(type)) {
-            throw new ParseException("expected " + type);
+        Token read = null;
+        if (peek() == null || !(read = read()).is(type)) {
+            if (read != null)
+                throw new ParseException("expected " + type, read);
+            else if (lastRead != null)
+                throw new ParseException("expected " + type, lastRead);
+            else
+                throw new ParseException("expected " + type, "", 1);
         }
     }
 

@@ -34,7 +34,7 @@ public class TypePatternParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
         Token type = parser.read();
         if (!type.is(Token.Type.NAME))
-            throw new ParseException("type pattern must be a name");
+            throw new ParseException("type pattern must be a name", type);
         return new TypePatternExpr(token, left, type.getValue());
     }
 

@@ -183,7 +183,7 @@ public class Lexer implements Phase<Void, Token> {
                     if (token.is(NAME)) {
                         return new Token(ANNOTATION, token.getValue(), token.getLine(), "<none>");
                     } else {
-                        throw new ParseException("invalid annotation");
+                        throw new ParseException("invalid annotation", token);
                     }
                 default:
                     if (Character.isWhitespace(read)) {
@@ -219,7 +219,7 @@ public class Lexer implements Phase<Void, Token> {
                             unread(read);
                         return make(NUMBER);
                     } else {
-                        throw new ParseException("unexpected character: " + read);
+                        throw new ParseException("unexpected character: " + read, fileName, line);
                     }
             }
         } catch (EOSException e) {
@@ -261,7 +261,7 @@ public class Lexer implements Phase<Void, Token> {
                         stringBuilder.append('\0');
                         break;
                     default:
-                        throw new ParseException("invalid escape code in literal");
+                        throw new ParseException("invalid escape code in literal", fileName, line);
                 }
                 escape = false;
             } else {

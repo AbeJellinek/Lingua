@@ -41,7 +41,7 @@ public class AssignmentParselet implements InfixParselet {
                 Expr value = parser.next(Precedence.ASSIGNMENT - 1);
                 return new FunctionExpr(token, ((NameExpr) call.getFunc()).getValue(), call.getArgs(), value);
             } else {
-                throw new ParseException("function name must actually be a name");
+                throw new ParseException("function name must actually be a name", call.getToken());
             }
         } else if (left instanceof IndexExpr) {
             IndexExpr index = (IndexExpr) left;

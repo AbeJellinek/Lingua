@@ -40,7 +40,7 @@ public class TryCatchParselet implements PrefixParselet {
             Expr pattern = parser.next();
             Expr catchBody = parser.next();
             if (clauses.containsKey(pattern)) {
-                throw new ParseException("duplicate catch block");
+                throw new ParseException("duplicate catch block", catchBody.getToken());
             } else {
                 clauses.put(pattern, catchBody);
             }

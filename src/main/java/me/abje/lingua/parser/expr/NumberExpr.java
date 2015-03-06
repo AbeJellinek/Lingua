@@ -24,10 +24,10 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.NumberObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
-import me.abje.lingua.parser.ParseException;
 
 /**
  * A number literal expression.
@@ -48,7 +48,7 @@ public class NumberExpr extends Expr {
         try {
             this.value = Float.parseFloat(value);
         } catch (NumberFormatException e) {
-            throw new ParseException("invalid number");
+            throw new InterpreterException("ConversionException", "invalid number");
         }
     }
 

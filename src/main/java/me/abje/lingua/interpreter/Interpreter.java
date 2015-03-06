@@ -50,7 +50,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 interpreter.addImport("core");
                 interpreter.addImport(args[0]);
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println(e.getMessage());
             } catch (InterpreterException e) {
                 handleInterpreterException(e, interpreter);
             }
@@ -84,11 +84,16 @@ public class Interpreter implements Phase<Expr, Obj> {
                         System.out.println(varName + " = " + value + " (" + time + "ns)");
                     }
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    System.err.println(e.getMessage());
                 } catch (InterpreterException e) {
                     handleInterpreterException(e, interpreter);
                 }
 
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 System.out.print("> ");
             }
         } else {

@@ -60,7 +60,7 @@ public class BinaryMutatorParselet implements InfixParselet {
             Expr value = parser.next(Precedence.ASSIGNMENT);
             return new AssignmentExpr(token, left, new OperatorExpr(type, left, value));
         } else {
-            throw new ParseException("assignments must have a function call, index expression, or variable as a target");
+            throw new ParseException("assignments must have a function call, index expression, or variable as a target", token);
         }
     }
 

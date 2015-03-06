@@ -22,11 +22,17 @@
 
 package me.abje.lingua.parser;
 
+import me.abje.lingua.lexer.Token;
+
 /**
  * An exception thrown while lexing or parsing.
  */
 public class ParseException extends RuntimeException {
-    public ParseException(String message) {
-        super(message);
+    public ParseException(String message, Token token) {
+        super(message + "\n  at " + token.getFile() + ":" + token.getLine());
+    }
+
+    public ParseException(String message, String fileName, int line) {
+        super(message + "\n  at " + fileName + ":" + line);
     }
 }

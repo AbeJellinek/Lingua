@@ -44,7 +44,7 @@ public class MatchParselet implements InfixParselet {
             parser.expect(Token.Type.ARROW);
             Expr body = parser.next();
             if (clauses.containsKey(pattern))
-                throw new ParseException("duplicate match pattern");
+                throw new ParseException("duplicate match pattern", pattern.getToken());
             clauses.put(pattern, body);
 
             parser.eatLines();

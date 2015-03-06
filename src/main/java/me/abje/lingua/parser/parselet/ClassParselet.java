@@ -40,7 +40,7 @@ public class ClassParselet implements PrefixParselet {
         Token name = parser.read();
         String superClassName = "Obj";
         if (!name.is(Token.Type.NAME))
-            throw new ParseException("invalid class name");
+            throw new ParseException("invalid class name", name);
         parser.eatLines();
         if (parser.match(Token.Type.COLON))
             superClassName = parser.read().getValue();
@@ -56,12 +56,12 @@ public class ClassParselet implements PrefixParselet {
                 if (assgn.getName() instanceof NameExpr) {
                     fields.add(new Field(null, ((NameExpr) assgn.getName()).getValue(), assgn.getValue()));
                 } else {
-                    throw new ParseException("invalid class member (left side must be a name)");
+                    throw new ParseException("invalid class member (left side must be a name)", expr.getToken());
                 }
             } else if (expr instanceof NameExpr) {
                 fields.add(new Field(null, ((NameExpr) expr).getValue(), new NullExpr(token)));
             } else {
-                throw new ParseException("invalid class member");
+                throw new ParseException("invalid class member", expr.getToken());
             }
             parser.eatLines();
         }
