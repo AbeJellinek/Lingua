@@ -68,13 +68,16 @@ public class Intrinsics {
     }
 
     static {
-        registerClass(ClassObj.SYNTHETIC);
         registerClass(BooleanObj.SYNTHETIC);
+        registerClass(CharObj.SYNTHETIC);
+        registerClass(ClassObj.SYNTHETIC);
         registerClass(FunctionObj.SYNTHETIC);
         registerClass(ListObj.SYNTHETIC);
+        registerClass(MapObj.SYNTHETIC);
         registerClass(NullObj.SYNTHETIC);
         registerClass(NumberObj.SYNTHETIC);
         registerClass(StringObj.SYNTHETIC);
+        registerClass(TupleObj.SYNTHETIC);
     }
 
     /**

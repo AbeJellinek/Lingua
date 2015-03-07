@@ -167,6 +167,8 @@ public class Lexer implements Phase<Void, Token> {
                         return make(OR);
                 case '"':
                     return readString();
+                case '\'':
+                    return readChar();
                 case '{':
                     return make(OPEN_BRACE);
                 case '}':
@@ -284,6 +286,44 @@ public class Lexer implements Phase<Void, Token> {
         builder.setLength(0);
         builder.append(stringBuilder);
         return make(STRING);
+    }
+
+    /**
+     * Reads a quote-delimited char from the input.
+     *
+     * @return The Token that was read.
+     */
+    private Token readChar() {
+        char c = read();
+        if (c == '\\') {
+            c = read();
+            switch (c) {
+                case '\'':
+                case '"':
+                case '\\':
+                    break;
+                case 'n':
+                    c = '\n';
+                    break;
+                case 'r':
+                    c = '\r';
+                    break;
+                case 'f':
+                    c = '\f';
+                    break;
+                case 't':
+                    c = '\t';
+                    break;
+                case '0':
+                    c = '\0';
+                    break;
+                default:
+                    throw new ParseException("invalid escape code in literal", fileName, line);
+            }
+        }
+        builder.setLength(0);
+        builder.append(c);
+        return make(CHAR);
     }
 
     /**

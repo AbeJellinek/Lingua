@@ -45,6 +45,11 @@ public class StringObj extends Obj {
                     throw new InterpreterException("CallException", "invalid number of arguments for trim", interpreter);
                 return new StringObj(self.getValue().trim());
             }).
+            withFunction("charAt", (interpreter, self, args) -> {
+                if (args.size() != 1)
+                    throw new InterpreterException("CallException", "invalid number of arguments for charAt", interpreter);
+                return new CharObj(self.value.charAt((int) ((NumberObj) args.get(0)).getValue()));
+            }).
             build();
 
     /**

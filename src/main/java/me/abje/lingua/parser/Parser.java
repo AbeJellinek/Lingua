@@ -86,6 +86,7 @@ public class Parser implements Phase<Token, Expr> {
         registerPrefix(IMPORT, new ImportParselet());
         registerPrefix(TRY, new TryCatchParselet());
         registerPrefix(OPEN_MAP_BRACE, new MapParselet());
+        registerPrefix(CHAR, new CharParselet());
         prefix(PLUS, MINUS, TILDE, BANG);
         infix(PLUS, Precedence.SUM);
         infix(MINUS, Precedence.SUM);

@@ -22,42 +22,21 @@
 
 package me.abje.lingua.parser.expr;
 
-import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.MapObj;
+import me.abje.lingua.interpreter.obj.CharObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
-import java.util.HashMap;
-import java.util.Map;
+public class CharExpr extends Expr {
+    private final char c;
 
-public class MapExpr extends Expr {
-    private final Map<Expr, Expr> items;
-
-    public MapExpr(Token token, Map<Expr, Expr> items) {
+    public CharExpr(Token token, char c) {
         super(token);
-        this.items = items;
+        this.c = c;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        Map<Obj, Obj> objMap = new HashMap<>();
-        items.forEach((k, v) -> objMap.put(interpreter.next(k), interpreter.next(v)));
-        return new MapObj(objMap);
-    }
-
-    @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
-        if (obj instanceof MapObj) {
-            MapObj map = (MapObj) obj;
-            for (Map.Entry<Expr, Expr> entry : items.entrySet()) {
-                if (entry.getValue().match(interpreter, frame, map.get(interpreter.next(entry.getKey()))) == null) {
-                    return null;
-                }
-            }
-            return obj;
-        } else {
-            return null;
-        }
+        return new CharObj(c);
     }
 }
