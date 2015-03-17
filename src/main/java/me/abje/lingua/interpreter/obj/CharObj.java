@@ -22,6 +22,8 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import java.util.Objects;
+
 public class CharObj extends Obj {
     public static final ClassObj SYNTHETIC = ClassObj.builder("Char").build();
 
@@ -39,5 +41,18 @@ public class CharObj extends Obj {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharObj charObj = (CharObj) o;
+        return Objects.equals(value, charObj.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

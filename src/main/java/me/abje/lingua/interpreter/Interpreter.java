@@ -60,12 +60,22 @@ public class Interpreter implements Phase<Expr, Obj> {
             new Intrinsics(interpreter.env).register();
             interpreter.addImport("core");
 
-            System.out.print("> ");
+            System.out.println("Welcome to Lingua REPL version 1.0 (" +
+                    System.getProperty("java.vm.name") + ", Java " +
+                    System.getProperty("java.version") + ").");
+            System.out.println("Type in expressions to evaluate them.\n");
+            System.out.print("lingua> ");
 
             int num = 0;
             while (in.hasNextLine()) {
                 try {
-                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(in.nextLine()), "<user>")));
+                    String line = in.nextLine();
+                    while (line.trim().endsWith("\\")) {
+                        System.out.print("| ");
+                        line += in.nextLine();
+                    }
+
+                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(line), "<user>")));
                     List<Expr> exprs = new ArrayList<>();
                     Expr expr;
                     while ((expr = parser.next()) != null) {
@@ -73,15 +83,13 @@ public class Interpreter implements Phase<Expr, Obj> {
                     }
 
                     for (Expr x : exprs) {
-                        long startTime = System.nanoTime();
                         Obj value = interpreter.next(x);
-                        long time = System.nanoTime() - startTime;
                         do {
                             num++;
                         } while (interpreter.env.has("res" + num));
                         String varName = "res" + num;
                         interpreter.env.define(varName, value);
-                        System.out.println(varName + " = " + value + " (" + time + "ns)");
+                        System.out.println(varName + " = " + value);
                     }
                 } catch (ParseException e) {
                     System.err.println(e.getMessage());
@@ -94,7 +102,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.print("> ");
+                System.out.print("lingua> ");
             }
         } else {
             System.err.println("Usage: lingua [script]");
