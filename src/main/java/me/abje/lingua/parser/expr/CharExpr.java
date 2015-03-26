@@ -39,4 +39,9 @@ public class CharExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         return CharObj.of(c);
     }
+
+    @Override
+    public String toString() {
+        return "'" + c + "'";
+    }
 }

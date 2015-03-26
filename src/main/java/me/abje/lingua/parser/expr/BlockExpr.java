@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
@@ -82,6 +83,6 @@ public class BlockExpr extends Expr {
 
     @Override
     public String toString() {
-        return "BLOCK(" + exprs + ")";
+        return "{\n" + Joiner.on('\n').join(exprs) + "\n}";
     }
 }

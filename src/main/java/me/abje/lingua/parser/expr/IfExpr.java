@@ -112,4 +112,13 @@ public class IfExpr extends Expr {
         result = 31 * result + (elseBranch != null ? elseBranch.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        if (elseBranch != null) {
+            return "if (" + condition + " {...} else {...}";
+        } else {
+            return "if (" + condition + " {...}";
+        }
+    }
 }

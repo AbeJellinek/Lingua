@@ -64,4 +64,9 @@ public class TryCatchExpr extends Expr {
             throw e;
         }
     }
+
+    @Override
+    public String toString() {
+        return "try {...} catch {...}";
+    }
 }

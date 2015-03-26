@@ -71,7 +71,7 @@ public class NumberExpr extends Expr {
 
     @Override
     public String toString() {
-        return String.format("NUMBER(%.0f)", value);
+        return String.format("%.0f", value);
     }
 
     @Override

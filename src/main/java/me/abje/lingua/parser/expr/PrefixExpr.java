@@ -71,7 +71,7 @@ public class PrefixExpr extends Expr {
 
     @Override
     public String toString() {
-        return "PREFIX(" + type + ", " + operand + ")";
+        return type + String.valueOf(operand);
     }
 
     @Override

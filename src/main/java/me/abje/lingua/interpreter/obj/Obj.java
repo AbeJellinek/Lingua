@@ -247,7 +247,7 @@ public class Obj {
                             handle = MethodHandles.insertArguments(handle, finalInterpreterIndex - 1, interpreter);
                         if (args.size() == handle.type().parameterCount()) {
                             for (int i = 0; i < args.size(); i++) {
-                                if (!args.get(i).getClass().isAssignableFrom(handle.type().parameterType(i))) {
+                                if (!handle.type().parameterType(i).isAssignableFrom(args.get(i).getClass())) {
                                     throw new InterpreterException("CallException", "invalid argument for function " + method.getName());
                                 }
                             }
@@ -262,7 +262,7 @@ public class Obj {
                             throw e;
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
-                            return null;
+                            return NullObj.get();
                         }
                     });
                 } catch (IllegalAccessException e) {

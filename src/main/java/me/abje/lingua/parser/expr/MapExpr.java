@@ -60,4 +60,14 @@ public class MapExpr extends Expr {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("#{ ");
+        items.forEach((k, v) -> sb.append(k).append(": ").append(v).append(", "));
+        sb.setLength(sb.length() - 2);
+        sb.append(" }");
+        return sb.toString();
+    }
 }

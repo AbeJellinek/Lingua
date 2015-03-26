@@ -115,6 +115,6 @@ public class WhileExpr extends Expr {
 
     @Override
     public String toString() {
-        return "WHILE(" + condition + ", " + body + ", " + doWhile + ")";
+        return "while (" + condition + ") {...}";
     }
 }

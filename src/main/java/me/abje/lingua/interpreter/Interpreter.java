@@ -28,7 +28,7 @@ import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
-import me.abje.lingua.parser.expr.Expr;
+import me.abje.lingua.parser.expr.*;
 
 import java.io.*;
 import java.util.*;
@@ -84,12 +84,17 @@ public class Interpreter implements Phase<Expr, Obj> {
 
                     for (Expr x : exprs) {
                         Obj value = interpreter.next(x);
-                        do {
-                            num++;
-                        } while (interpreter.env.has("res" + num));
-                        String varName = "res" + num;
-                        interpreter.env.define(varName, value);
-                        System.out.println(varName + " = " + value);
+                        if (x instanceof AssignmentExpr || x instanceof FunctionExpr ||
+                                x instanceof IndexSetExpr || x instanceof MemberSetExpr) {
+                            System.out.println(x);
+                        } else {
+                            do {
+                                num++;
+                            } while (interpreter.env.has("res" + num));
+                            String varName = "res" + num;
+                            interpreter.env.define(varName, value);
+                            System.out.println(varName + " = " + value);
+                        }
                     }
                 } catch (ParseException e) {
                     System.err.println(e.getMessage());

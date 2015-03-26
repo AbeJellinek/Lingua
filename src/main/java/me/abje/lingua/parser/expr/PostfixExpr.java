@@ -70,7 +70,7 @@ public class PostfixExpr extends Expr {
 
     @Override
     public String toString() {
-        return "POSTFIX(" + expr + ", " + type + ")";
+        return String.valueOf(expr) + type;
     }
 
     @Override

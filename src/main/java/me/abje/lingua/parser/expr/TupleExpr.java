@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -61,5 +62,10 @@ public class TupleExpr extends Expr {
 
     public List<Expr> getItems() {
         return exprs;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + Joiner.on(", ").join(exprs) + ")";
     }
 }

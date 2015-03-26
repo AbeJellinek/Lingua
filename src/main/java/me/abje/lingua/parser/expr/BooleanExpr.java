@@ -81,4 +81,9 @@ public class BooleanExpr extends Expr {
     public int hashCode() {
         return (value ? 1 : 0);
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

@@ -55,4 +55,9 @@ public class MatchExpr extends Expr {
 
         throw new InterpreterException("CallException", "no match clause matches input");
     }
+
+    @Override
+    public String toString() {
+        return left + " match {...}";
+    }
 }

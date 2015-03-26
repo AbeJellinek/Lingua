@@ -87,4 +87,9 @@ public class IndexExpr extends Expr {
         result = 31 * result + index.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return target + "[" + index + "]";
+    }
 }

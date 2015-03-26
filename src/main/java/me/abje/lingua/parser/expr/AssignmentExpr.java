@@ -89,7 +89,7 @@ public class AssignmentExpr extends Expr {
 
     @Override
     public String toString() {
-        return "ASSIGNMENT(" + name + ", " + value + ")";
+        return name + " = " + value;
     }
 
     @Override

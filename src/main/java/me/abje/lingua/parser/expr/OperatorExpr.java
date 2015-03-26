@@ -86,7 +86,7 @@ public class OperatorExpr extends Expr {
 
     @Override
     public String toString() {
-        return "OPERATOR(" + left + ", " + getToken().getType() + ", " + right + ")";
+        return left + " " + getToken().getValue() + " " + right;
     }
 
     @Override

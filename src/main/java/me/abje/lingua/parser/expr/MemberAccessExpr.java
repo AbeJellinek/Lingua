@@ -98,4 +98,9 @@ public class MemberAccessExpr extends Expr {
             throw new InterpreterException("UndefinedException", "not a valid path");
         }
     }
+
+    @Override
+    public String toString() {
+        return getPath();
+    }
 }

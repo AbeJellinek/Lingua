@@ -74,8 +74,8 @@ public class FunctionExpr extends Expr {
 
     @Override
     public String toString() {
-        return "FUNCTION(" + name + ", " + argNames.stream().map(Objects::toString).collect(Collectors.joining(", ", "(", ")")) +
-                ", " + body + ")";
+        return name + argNames.stream().map(Objects::toString).collect(Collectors.joining(", ", "(", ")")) +
+                " = {...}";
     }
 
     /**

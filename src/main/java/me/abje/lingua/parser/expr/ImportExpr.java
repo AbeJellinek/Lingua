@@ -48,4 +48,9 @@ public class ImportExpr extends Expr {
             throw new InterpreterException("UndefinedException", "invalid import path", interpreter);
         }
     }
+
+    @Override
+    public String toString() {
+        return "import " + name;
+    }
 }

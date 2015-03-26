@@ -22,6 +22,7 @@
 
 package me.abje.lingua.parser.expr;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import me.abje.lingua.interpreter.Interpreter;
@@ -156,6 +157,6 @@ public class ClassExpr extends Expr {
 
     @Override
     public String toString() {
-        return "CLASS(" + name + ", " + functions + ", " + fields + ")";
+        return "class " + name + "{\n" + Joiner.on("\n") + "\n\n" + fields + "\n}";
     }
 }

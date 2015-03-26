@@ -92,4 +92,9 @@ public class ListExpr extends Expr {
     public int hashCode() {
         return items.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return items.toString();
+    }
 }

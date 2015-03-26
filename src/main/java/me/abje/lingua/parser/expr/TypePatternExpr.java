@@ -51,4 +51,9 @@ public class TypePatternExpr extends Expr {
             return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return left + ": " + type;
+    }
 }

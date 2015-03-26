@@ -57,4 +57,9 @@ public class NullExpr extends Expr {
     public int hashCode() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "null";
+    }
 }

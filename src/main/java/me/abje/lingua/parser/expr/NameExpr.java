@@ -55,7 +55,7 @@ public class NameExpr extends Expr {
 
     @Override
     public String toString() {
-        return "NAME(" + value + ")";
+        return value;
     }
 
     @Override
