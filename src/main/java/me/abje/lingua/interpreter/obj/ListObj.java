@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
@@ -34,38 +35,7 @@ import java.util.stream.Collectors;
  * A Lingua list. Mutable, but designed with functional usage in mind.
  */
 public class ListObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.<ListObj>builder("List").
-            withFunction("map", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for map", interpreter);
-                return self.map(interpreter, args.get(0));
-            }).
-            withFunction("filter", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for filter", interpreter);
-                return self.filter(interpreter, args.get(0));
-            }).
-            withFunction("forEach", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for forEach", interpreter);
-                return self.each(interpreter, args.get(0));
-            }).
-            withFunction("reverse", (interpreter, self, args) -> {
-                if (args.size() != 0)
-                    throw new InterpreterException("CallException", "too many arguments for reverse", interpreter);
-                return self.reverse();
-            }).
-            withFunction("add", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for add", interpreter);
-                return self.add(args.get(0));
-            }).
-            withFunction("size", (interpreter, self, args) -> {
-                if (args.size() != 0)
-                    throw new InterpreterException("CallException", "invalid number of arguments for size", interpreter);
-                return new NumberObj(self.items.size());
-            }).
-            build();
+    public static final ClassObj SYNTHETIC = bridgeClass(ListObj.class);
 
     /**
      * This list's items. Must be mutable for mutator methods to work.
@@ -143,6 +113,7 @@ public class ListObj extends Obj {
      * @param function    The function to apply to each item.
      * @return The mapped list.
      */
+    @Bridge
     public ListObj map(Interpreter interpreter, Obj function) {
         List<Obj> newList = items.stream().map(obj -> function.call(interpreter, Collections.singletonList(obj))).
                 collect(Collectors.toList());
@@ -157,13 +128,15 @@ public class ListObj extends Obj {
      * @param predicate   The predicate to apply to each item.
      * @return The filtered list.
      */
+    @Bridge
     public ListObj filter(Interpreter interpreter, Obj predicate) {
         List<Obj> newList = items.stream().filter(obj -> predicate.call(interpreter, Collections.singletonList(obj)).isTruthy()).
                 collect(Collectors.toList());
         return new ListObj(newList);
     }
 
-    private Obj each(Interpreter interpreter, Obj function) {
+    @Bridge
+    public Obj forEach(Interpreter interpreter, Obj function) {
         for (Obj obj : items) {
             function.call(interpreter, Collections.singletonList(obj));
         }
@@ -176,6 +149,7 @@ public class ListObj extends Obj {
      *
      * @return The reversed list.
      */
+    @Bridge
     public ListObj reverse() {
         List<Obj> newList = new ArrayList<>(items);
         Collections.reverse(newList);
@@ -188,6 +162,7 @@ public class ListObj extends Obj {
      * @param obj The item.
      * @return This list.
      */
+    @Bridge
     public ListObj add(Obj obj) {
         items.add(obj);
         return this;
@@ -196,6 +171,7 @@ public class ListObj extends Obj {
     /**
      * Returns the size of this list.
      */
+    @Bridge
     public int size() {
         return items.size();
     }

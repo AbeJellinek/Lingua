@@ -229,6 +229,11 @@ public class ClassObj extends Obj {
                     interpreter.getEnv().popFrame();
                     return result;
                 }
+
+                @Override
+                public String toString() {
+                    return "<function " + name + ">";
+                }
             });
             return this;
         }

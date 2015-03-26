@@ -80,7 +80,7 @@ public class NumberExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof NumberObj && Float.compare(((NumberObj) obj).getValue(), value) == 0)
             return obj;
         else

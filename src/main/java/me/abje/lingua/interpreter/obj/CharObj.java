@@ -25,7 +25,7 @@ package me.abje.lingua.interpreter.obj;
 import java.util.Objects;
 
 public class CharObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Char").build();
+    public static final ClassObj SYNTHETIC = bridgeClass(CharObj.class);
 
     private final char value;
 

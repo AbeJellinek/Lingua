@@ -59,12 +59,12 @@ public class AssignmentExpr extends Expr {
         name.getAnnotations().addAll(getAnnotations());
 
         Obj valueObj = interpreter.next(value);
-        return name.match(interpreter, interpreter.getEnv().getStack().peek(), valueObj);
+        return name.match(interpreter, interpreter.getEnv().getStack().peek(), valueObj, false);
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
-        Obj rightMatch = value.match(interpreter, frame, obj);
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+        Obj rightMatch = value.match(interpreter, frame, obj, alwaysDefineNew);
         if (rightMatch != null) {
             evaluate(interpreter);
             return rightMatch;

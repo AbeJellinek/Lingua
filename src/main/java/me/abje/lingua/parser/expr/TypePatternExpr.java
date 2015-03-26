@@ -44,8 +44,8 @@ public class TypePatternExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
-        if (left.match(interpreter, frame, obj).getType().isSubclassOf(interpreter.getEnv().get(type))) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+        if (left.match(interpreter, frame, obj, alwaysDefineNew).getType().isSubclassOf(interpreter.getEnv().get(type))) {
             return obj;
         } else {
             return null;

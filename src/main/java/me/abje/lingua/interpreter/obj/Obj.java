@@ -22,9 +22,14 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +54,21 @@ public class Obj {
      */
     private Obj superInst;
 
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Obj").build();
+    private static final MethodHandle convertToNumber;
+
+    static {
+        MethodHandle toNumberObj = null;
+        try {
+            toNumberObj = MethodHandles.lookup().unreflect(
+                    Obj.class.getDeclaredMethod("toNumberObj", float.class));
+        } catch (IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        convertToNumber = toNumberObj;
+    }
+
+    public static final ClassObj SYNTHETIC = bridgeClass(Obj.class);
 
     /**
      * Creates a new object with the given type.
@@ -180,5 +199,81 @@ public class Obj {
 
     public Obj getSuperInst() {
         return superInst;
+    }
+
+    public static <C extends Obj> ClassObj bridgeClass(Class<C> clazz) {
+
+        String originalName = clazz.getSimpleName();
+
+        // Calculate the name of the synthetic class as:
+        // "Obj"     -> "Obj"
+        // "${x}Obj" -> x
+        // "${x}"    -> x
+
+        String name;
+        if (originalName.equals("Obj"))
+            name = originalName;
+        else if (originalName.endsWith("Obj"))
+            name = originalName.substring(0, originalName.length() - 3);
+        else
+            name = originalName;
+
+        ClassObj.Builder<C> builder = ClassObj.<C>builder(name);
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getAnnotation(Bridge.class) != null) {
+                try {
+                    MethodHandle initialHandle = MethodHandles.lookup().unreflect(method);
+                    Class<?> returnType = initialHandle.type().returnType();
+                    if (returnType == byte.class || returnType == short.class ||
+                            returnType == int.class || returnType == float.class) {
+                        initialHandle = MethodHandles.filterReturnValue(initialHandle,
+                                convertToNumber.asType(MethodType.methodType(NumberObj.class, returnType)));
+                    }
+                    Class<?>[] parameterArray = initialHandle.type().parameterArray();
+                    int interpreterIndex = -1;
+                    for (int i = 0; i < parameterArray.length; i++) {
+                        Class<?> type = parameterArray[i];
+                        if (type == Interpreter.class) {
+                            interpreterIndex = i;
+                        }
+                    }
+                    final int finalInterpreterIndex = interpreterIndex;
+                    final MethodHandle finalInitialHandle = initialHandle;
+                    builder.withFunction(method.getName(), (interpreter, self, args) -> {
+                        MethodHandle handle = finalInitialHandle;
+                        if (self != null)
+                            handle = handle.bindTo(self);
+                        if (finalInterpreterIndex != -1)
+                            handle = MethodHandles.insertArguments(handle, finalInterpreterIndex - 1, interpreter);
+                        if (args.size() == handle.type().parameterCount()) {
+                            for (int i = 0; i < args.size(); i++) {
+                                if (!args.get(i).getClass().isAssignableFrom(handle.type().parameterType(i))) {
+                                    throw new InterpreterException("CallException", "invalid argument for function " + method.getName());
+                                }
+                            }
+                        } else {
+                            throw new InterpreterException("CallException", "invalid arguments for function " + method.getName());
+                        }
+
+                        try {
+                            //noinspection RedundantCast
+                            return (Obj) handle.invokeWithArguments(args);
+                        } catch (InterpreterException e) {
+                            throw e;
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                            return null;
+                        }
+                    });
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return builder.build();
+    }
+
+    public static NumberObj toNumberObj(float f) {
+        return new NumberObj(f);
     }
 }

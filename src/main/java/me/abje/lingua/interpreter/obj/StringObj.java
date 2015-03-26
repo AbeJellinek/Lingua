@@ -22,35 +22,18 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import me.abje.lingua.interpreter.InterpreterException;
+import com.google.common.base.Joiner;
+import me.abje.lingua.interpreter.Bridge;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 /**
  * A Lingua character string.
  */
 public class StringObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.<StringObj>builder("String").
-            withFunction("init", (interpreter, self, args) ->
-                    new StringObj(args.stream().map(Object::toString).collect(Collectors.joining("")))).
-            withFunction("split", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for split", interpreter);
-                return new ListObj(Arrays.asList((String[]) self.toString().split(args.get(0).toString())).
-                        stream().map(StringObj::new).collect(Collectors.toList()));
-            }).
-            withFunction("trim", (interpreter, self, args) -> {
-                if (args.size() != 0)
-                    throw new InterpreterException("CallException", "invalid number of arguments for trim", interpreter);
-                return new StringObj(self.getValue().trim());
-            }).
-            withFunction("charAt", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for charAt", interpreter);
-                return new CharObj(self.value.charAt((int) ((NumberObj) args.get(0)).getValue()));
-            }).
-            build();
+    public static final ClassObj SYNTHETIC = bridgeClass(StringObj.class);
+
+    private static Joiner joiner = Joiner.on("");
 
     /**
      * This String's internal value.
@@ -92,5 +75,29 @@ public class StringObj extends Obj {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Bridge
+    public static StringObj init(Obj... objs) {
+        return new StringObj(joiner.join(objs));
+    }
+
+    @Bridge
+    public ListObj split(Obj delimiter) {
+        ListObj list = new ListObj(new ArrayList<>());
+        for (String s : value.split(delimiter.toString())) {
+            list.add(new StringObj(s));
+        }
+        return list;
+    }
+
+    @Bridge
+    public StringObj trim() {
+        return new StringObj(value.trim());
+    }
+
+    @Bridge
+    public CharObj charAt(NumberObj index) {
+        return new CharObj(value.charAt((int) index.getValue()));
     }
 }

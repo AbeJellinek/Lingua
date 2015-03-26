@@ -44,7 +44,7 @@ public class MatchExpr extends Expr {
         for (Map.Entry<Expr, Expr> clause : clauses.entrySet()) {
             interpreter.getEnv().pushFrame("<case>");
             Obj result = null;
-            if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), left.evaluate(interpreter)) != null) {
+            if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), left.evaluate(interpreter), true) != null) {
                 result = clause.getValue().evaluate(interpreter);
             }
             interpreter.getEnv().popFrame();

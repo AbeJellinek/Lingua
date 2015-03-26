@@ -53,7 +53,7 @@ public abstract class Expr {
      */
     public abstract Obj evaluate(Interpreter interpreter);
 
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         Obj evaluated = evaluate(interpreter);
         if (evaluated.equals(obj))
             return evaluated;

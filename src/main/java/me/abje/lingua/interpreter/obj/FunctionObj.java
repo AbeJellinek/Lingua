@@ -34,7 +34,7 @@ import java.util.List;
  * A Lingua function. Functions can be called, have a body and take arguments.
  */
 public class FunctionObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Function").build();
+    public static final ClassObj SYNTHETIC = bridgeClass(FunctionObj.class);
 
     /**
      * This function's name.
@@ -127,7 +127,7 @@ public class FunctionObj extends Obj {
 
         Environment.Frame frame = env.getStack().peek();
         for (int i = 0; i < args.size(); i++)
-            if (argNames.get(i).match(interpreter, frame, args.get(i)) == null)
+            if (argNames.get(i).match(interpreter, frame, args.get(i), true) == null)
                 throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
 
         if (self != null)
@@ -189,7 +189,7 @@ public class FunctionObj extends Obj {
 
         Environment.Frame frame = interpreter.getEnv().getStack().peek();
         for (int i = 0; i < args.size(); i++)
-            if (argNames.get(i).match(interpreter, frame, args.get(i)) == null)
+            if (argNames.get(i).match(interpreter, frame, args.get(i), true) == null)
                 return false;
 
         return true;

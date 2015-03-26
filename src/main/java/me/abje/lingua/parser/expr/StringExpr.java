@@ -60,7 +60,7 @@ public class StringExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof StringObj && ((StringObj) obj).getValue().equals(value))
             return obj;
         else

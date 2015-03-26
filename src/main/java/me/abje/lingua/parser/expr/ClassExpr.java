@@ -105,7 +105,7 @@ public class ClassExpr extends Expr {
                     if (superClass.getFunctionMap().containsKey(name) && !name.equals("init")) {
                         return superClass.getMember(name).call(interpreter, args);
                     } else {
-                        throw new InterpreterException("CallException", "invalid argument for function " + name);
+                        throw new InterpreterException("CallException", "invalid arguments for function " + name);
                     }
                 }
             });

@@ -47,11 +47,11 @@ public class MapExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof MapObj) {
             MapObj map = (MapObj) obj;
             for (Map.Entry<Expr, Expr> entry : items.entrySet()) {
-                if (entry.getValue().match(interpreter, frame, map.get(interpreter.next(entry.getKey()))) == null) {
+                if (entry.getValue().match(interpreter, frame, map.get(interpreter.next(entry.getKey())), alwaysDefineNew) == null) {
                     return null;
                 }
             }

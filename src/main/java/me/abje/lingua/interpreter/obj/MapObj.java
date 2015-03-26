@@ -22,36 +22,15 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.InterpreterException;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
 public class MapObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.<MapObj>builder("Map").
-            withFunction("forEach", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for forEach", interpreter);
-                return self.each(interpreter, args.get(0));
-            }).
-            withFunction("put", (interpreter, self, args) -> {
-                if (args.size() != 2)
-                    throw new InterpreterException("CallException", "invalid number of arguments for put", interpreter);
-                return self.put(args.get(0), args.get(1));
-            }).
-            withFunction("size", (interpreter, self, args) -> {
-                if (args.size() != 0)
-                    throw new InterpreterException("CallException", "invalid number of arguments for size", interpreter);
-                return new NumberObj(self.items.size());
-            }).
-            withFunction("contains", ((interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "invalid number of arguments for contains", interpreter);
-                return new BooleanObj(self.contains(args.get(0)));
-            })).
-            build();
+    public static final ClassObj SYNTHETIC = bridgeClass(MapObj.class);
 
     private final Map<Obj, Obj> items;
 
@@ -78,6 +57,7 @@ public class MapObj extends Obj {
         return items.put(key, value);
     }
 
+    @Bridge
     public boolean contains(Obj key) {
         return items.containsKey(key);
     }
@@ -86,7 +66,13 @@ public class MapObj extends Obj {
         return items.keySet();
     }
 
-    public Obj each(Interpreter interpreter, Obj function) {
+    @Bridge
+    public int size() {
+        return items.size();
+    }
+
+    @Bridge
+    public Obj forEach(Interpreter interpreter, Obj function) {
         for (Map.Entry<Obj, Obj> entry : items.entrySet()) {
             function.call(interpreter, Arrays.asList(entry.getKey(), entry.getValue()));
         }

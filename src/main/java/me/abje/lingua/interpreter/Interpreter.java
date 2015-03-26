@@ -116,6 +116,8 @@ public class Interpreter implements Phase<Expr, Obj> {
         ArrayDeque<Environment.Frame> oldStack = new ArrayDeque<>(stack);
         interpreter.getEnv().setOldStack(oldStack);
         e.getExceptionObj().getMember("printError").call(interpreter, Collections.emptyList());
+        interpreter.getEnv().setOldStack(null);
+        interpreter.getEnv().setStack(stack);
     }
 
     public void addImport(String fullName) {

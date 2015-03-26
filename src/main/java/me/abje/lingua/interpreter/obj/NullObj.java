@@ -28,7 +28,8 @@ import me.abje.lingua.interpreter.InterpreterException;
  * The Lingua "null" singleton. Has no fields, cannot be invoked, and is generally quite useless.
  */
 public class NullObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Null").build();
+    public static final ClassObj SYNTHETIC = bridgeClass(NullObj.class);
+
     /**
      * The singleton instance.
      */

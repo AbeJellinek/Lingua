@@ -52,7 +52,7 @@ public class TryCatchExpr extends Expr {
                 interpreter.getEnv().setOldStack(stack);
                 interpreter.getEnv().pushFrame("<catch>");
                 Obj result = null;
-                if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj()) != null) {
+                if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj(), true) != null) {
                     result = clause.getValue().evaluate(interpreter);
                 }
                 interpreter.getEnv().popFrame();

@@ -64,11 +64,11 @@ public class ListExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof ListObj) {
             ListObj list = (ListObj) obj;
             for (int i = 0; i < list.size(); i++) {
-                if (items.get(i).match(interpreter, frame, list.get(i)) == null) {
+                if (items.get(i).match(interpreter, frame, list.get(i), alwaysDefineNew) == null) {
                     return null;
                 }
             }

@@ -60,7 +60,7 @@ public class BooleanExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof BooleanObj && ((BooleanObj) obj).getValue() == value)
             return obj;
         else

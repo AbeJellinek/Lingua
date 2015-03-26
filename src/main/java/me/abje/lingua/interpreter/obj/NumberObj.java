@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
@@ -31,17 +32,8 @@ import java.util.List;
  * A Lingua number. Represented by a Java float.
  */
 public class NumberObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.<NumberObj>builder("Number").
-            withFunction("init", (interpreter, self, args) -> {
-                if (args.size() != 1)
-                    throw new InterpreterException("CallException", "wrong number of arguments for Number constructor", interpreter);
-                try {
-                    return new NumberObj(Float.parseFloat(args.get(0).toString()));
-                } catch (NumberFormatException e) {
-                    throw new InterpreterException("ConversionException", "not a number: " + args.get(0), interpreter);
-                }
-            }).
-            build();
+    public static final ClassObj SYNTHETIC = bridgeClass(NumberObj.class);
+
     /**
      * This Number's value.
      */
@@ -104,5 +96,14 @@ public class NumberObj extends Obj {
     @Override
     public boolean isTruthy() {
         return value != 0;
+    }
+
+    @Bridge
+    public static NumberObj init(Obj source) {
+        try {
+            return new NumberObj(Float.parseFloat(source.toString()));
+        } catch (NumberFormatException e) {
+            throw new InterpreterException("ConversionException", "not a number: " + source);
+        }
     }
 }

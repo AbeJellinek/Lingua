@@ -45,11 +45,11 @@ public class TupleExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof TupleObj) {
             TupleObj tuple = (TupleObj) obj;
             for (int i = 0; i < tuple.size(); i++) {
-                if (exprs.get(i).match(interpreter, frame, tuple.get(i)) == null) {
+                if (exprs.get(i).match(interpreter, frame, tuple.get(i), alwaysDefineNew) == null) {
                     return null;
                 }
             }
