@@ -47,7 +47,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             Interpreter interpreter = new Interpreter();
             try {
                 new Intrinsics(interpreter.env).register();
-                interpreter.addImport("core");
+                interpreter.addImport("lingua.core");
                 interpreter.addImport(args[0]);
             } catch (ParseException e) {
                 System.err.println(e.getMessage());
@@ -58,7 +58,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             Scanner in = new Scanner(System.in);
             Interpreter interpreter = new Interpreter();
             new Intrinsics(interpreter.env).register();
-            interpreter.addImport("core");
+            interpreter.addImport("lingua.core");
 
             System.out.println("Welcome to Lingua REPL version 1.0 (" +
                     System.getProperty("java.vm.name") + ", Java " +
