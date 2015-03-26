@@ -20,23 +20,11 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.parser.expr;
+package me.abje.lingua.interpreter;
 
-import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.CharObj;
-import me.abje.lingua.interpreter.obj.Obj;
-import me.abje.lingua.lexer.Token;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class CharExpr extends Expr {
-    private final char c;
-
-    public CharExpr(Token token, char c) {
-        super(token);
-        this.c = c;
-    }
-
-    @Override
-    public Obj evaluate(Interpreter interpreter) {
-        return CharObj.of(c);
-    }
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Bridge {
 }

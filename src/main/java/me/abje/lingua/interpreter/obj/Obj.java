@@ -273,7 +273,8 @@ public class Obj {
         return builder.build();
     }
 
+    @SuppressWarnings("unused")
     public static NumberObj toNumberObj(float f) {
-        return new NumberObj(f);
+        return NumberObj.of(f);
     }
 }

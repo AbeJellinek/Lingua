@@ -28,6 +28,9 @@ package me.abje.lingua.interpreter.obj;
 public class BooleanObj extends Obj {
     public static final ClassObj SYNTHETIC = bridgeClass(BooleanObj.class);
 
+    public static final BooleanObj TRUE = new BooleanObj(true);
+    public static final BooleanObj FALSE = new BooleanObj(false);
+
     /**
      * The value of this object.
      */
@@ -38,7 +41,7 @@ public class BooleanObj extends Obj {
      *
      * @param value The value.
      */
-    public BooleanObj(boolean value) {
+    private BooleanObj(boolean value) {
         super(SYNTHETIC);
         this.value = value;
     }
@@ -78,5 +81,15 @@ public class BooleanObj extends Obj {
     @Override
     public boolean isTruthy() {
         return value;
+    }
+
+    /**
+     * Returns a BooleanObj corresponding to the given value.
+     *
+     * @param b The value.
+     * @return If {@literal b} is true, {@link BooleanObj#TRUE}, otherwise {@link BooleanObj#FALSE}.
+     */
+    public static BooleanObj of(boolean b) {
+        return b ? TRUE : FALSE;
     }
 }

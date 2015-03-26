@@ -80,7 +80,7 @@ public class PrefixExpr extends Expr {
         switch (type) {
             case MINUS:
                 if (obj instanceof NumberObj) {
-                    return new NumberObj(-((NumberObj) obj).getValue());
+                    return NumberObj.of(-((NumberObj) obj).getValue());
                 } else {
                     throw new InterpreterException("CallException", "operand is not a number", interpreter);
                 }
@@ -91,7 +91,7 @@ public class PrefixExpr extends Expr {
                     throw new InterpreterException("CallException", "operand is not a number", interpreter);
                 }
             case BANG:
-                return new BooleanObj(obj.isTruthy());
+                return BooleanObj.of(obj.isTruthy());
             default:
                 throw new InterpreterException("CallException", "invalid prefix operator", interpreter);
         }

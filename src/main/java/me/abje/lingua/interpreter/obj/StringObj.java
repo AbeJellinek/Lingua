@@ -98,6 +98,7 @@ public class StringObj extends Obj {
 
     @Bridge
     public CharObj charAt(NumberObj index) {
-        return new CharObj(value.charAt((int) index.getValue()));
+        // todo cache this
+        return CharObj.of(value.charAt((int) index.getValue()));
     }
 }

@@ -26,10 +26,17 @@ import java.util.Objects;
 
 public class CharObj extends Obj {
     public static final ClassObj SYNTHETIC = bridgeClass(CharObj.class);
+    private static final CharObj[] CACHE = new CharObj[128];
+
+    static {
+        for (int i = 0; i < 128; i++) {
+            CACHE[i] = new CharObj((char) i);
+        }
+    }
 
     private final char value;
 
-    public CharObj(char c) {
+    private CharObj(char c) {
         super(SYNTHETIC);
         value = c;
     }
@@ -54,5 +61,11 @@ public class CharObj extends Obj {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    public static CharObj of(char c) {
+        if (c <= 127)
+            return CACHE[c];
+        return new CharObj(c);
     }
 }

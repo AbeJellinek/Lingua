@@ -76,7 +76,7 @@ public class NumberExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return new NumberObj(value);
+        return NumberObj.of(value);
     }
 
     @Override

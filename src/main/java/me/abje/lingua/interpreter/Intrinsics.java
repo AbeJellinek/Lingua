@@ -121,7 +121,7 @@ public class Intrinsics {
         addFunction("sqrt", (interpreter, args) -> {
             if (args.size() == 1) {
                 if (args.get(0) instanceof NumberObj) {
-                    return new NumberObj((float) Math.sqrt(((NumberObj) args.get(0)).getValue()));
+                    return NumberObj.of((float) Math.sqrt(((NumberObj) args.get(0)).getValue()));
                 } else {
                     throw new InterpreterException("CallException", "wrong argument for sqrt", interpreter);
                 }

@@ -33,6 +33,13 @@ import java.util.List;
  */
 public class NumberObj extends Obj {
     public static final ClassObj SYNTHETIC = bridgeClass(NumberObj.class);
+    private static final NumberObj[] CACHE = new NumberObj[256];
+
+    static {
+        for (int i = -128; i < 128; i++) {
+            CACHE[i + 128] = new NumberObj(i);
+        }
+    }
 
     /**
      * This Number's value.
@@ -44,7 +51,7 @@ public class NumberObj extends Obj {
      *
      * @param value The value.
      */
-    public NumberObj(float value) {
+    private NumberObj(float value) {
         super(SYNTHETIC);
         this.value = value;
     }
@@ -105,5 +112,12 @@ public class NumberObj extends Obj {
         } catch (NumberFormatException e) {
             throw new InterpreterException("ConversionException", "not a number: " + source);
         }
+    }
+
+    public static NumberObj of(float f) {
+        int i = (int) f;
+        if (f == i && i <= 127 && i >= -128)
+            return CACHE[i + 128];
+        return new NumberObj(f);
     }
 }

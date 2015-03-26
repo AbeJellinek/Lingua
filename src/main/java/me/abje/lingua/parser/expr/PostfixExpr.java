@@ -81,12 +81,12 @@ public class PostfixExpr extends Expr {
                 int current = (int) operand.getValue();
                 int result = 1;
                 if (current == 0) {
-                    return new NumberObj(1);
+                    return NumberObj.of(1);
                 } else while (current > 0) {
                     result *= current;
                     current -= 1;
                 }
-                return new NumberObj(result);
+                return NumberObj.of(result);
             default:
                 throw new InterpreterException("InvalidOperationException", "invalid postfix operator", interpreter);
         }

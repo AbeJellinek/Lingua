@@ -49,7 +49,7 @@ public class BooleanExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return new BooleanObj(value);
+        return BooleanObj.of(value);
     }
 
     /**
