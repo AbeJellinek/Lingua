@@ -81,7 +81,15 @@ public class Lexer implements Phase<Void, Token> {
                 case '\\':
                     return make(LINE_CONTINUATION);
                 case '.':
-                    return make(DOT);
+                    if (isNext('.')) {
+                        if (isNext('.')) {
+                            return make(TRIPLE_DOT);
+                        } else {
+                            return make(DOUBLE_DOT);
+                        }
+                    } else {
+                        return make(DOT);
+                    }
                 case '+':
                     if (isNext('='))
                         return make(PLUS_EQ);
@@ -197,7 +205,7 @@ public class Lexer implements Phase<Void, Token> {
                 default:
                     if (Character.isWhitespace(read)) {
                         return make(WHITESPACE);
-                    } else if (Character.isLetter(read)) {
+                    } else if (read == '_' || Character.isLetter(read)) {
                         boolean isEOS = false;
 
                         do {
