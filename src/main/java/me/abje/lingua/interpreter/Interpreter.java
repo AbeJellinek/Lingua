@@ -81,6 +81,9 @@ public class Interpreter implements Phase<Expr, Obj> {
             while (true) {
                 try {
                     String line = console.readLine("lingua> ");
+                    if (line.equals(":exit") || line.equals(":quit"))
+                        break;
+
                     while (line.trim().endsWith("\\")) {
                         line += console.readLine("| ");
                     }
