@@ -22,31 +22,27 @@
 
 package me.abje.lingua.compat;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.*;
 
 import java.io.*;
-import java.util.ArrayList;
 
-public class ByteInputObj extends Obj {
-    public static ClassObj SYNTHETIC = bridgeClass(ByteInputObj.class);
-    private final InputStream in;
+public class ByteOutputObj extends Obj {
+    public static ClassObj SYNTHETIC = bridgeClass(ByteOutputObj.class);
+    private final OutputStream out;
 
-    public ByteInputObj(InputStream in) {
+    public ByteOutputObj(OutputStream out) {
         super(SYNTHETIC);
-        this.in = in;
+        this.out = out;
     }
 
     @Bridge
-    public static ByteInputObj init(Obj o) {
-        if (o instanceof StringObj) {
-            return new ByteInputObj(new ByteArrayInputStream(((StringObj) o).getValue().getBytes(Charsets.UTF_8)));
-        } else if (o instanceof FileObj) {
+    public static ByteOutputObj init(Obj o) {
+        if (o instanceof FileObj) {
             try {
-                return new ByteInputObj(new FileInputStream(((FileObj) o).getFile()));
+                return new ByteOutputObj(new FileOutputStream(((FileObj) o).getFile()));
             } catch (FileNotFoundException e) {
                 throw new InterpreterException("IOException", e.getMessage());
             }
@@ -56,28 +52,53 @@ public class ByteInputObj extends Obj {
     }
 
     @Bridge
-    public int read() {
+    public Obj write(NumberObj num) {
         try {
-            return in.read();
+            out.write((int) num.getValue());
+        } catch (IOException e) {
+            throw new InterpreterException("IOException", e.getMessage());
+        }
+        return NullObj.get();
+    }
+
+    @Bridge
+    public NumberObj writeAll(ListObj all) {
+        try {
+            return NumberObj.of(ByteStreams.copy(new ByteArrayInputStream(fromListObj(all)), out));
         } catch (IOException e) {
             throw new InterpreterException("IOException", e.getMessage());
         }
     }
 
     @Bridge
-    public ListObj all() {
+    public Obj flush() {
         try {
-            return toListObj(ByteStreams.toByteArray(in));
+            out.flush();
+            return NullObj.get();
         } catch (IOException e) {
             throw new InterpreterException("IOException", e.getMessage());
         }
     }
 
-    private ListObj toListObj(byte[] bytes) {
-        ListObj list = new ListObj(new ArrayList<>());
-        for (byte b : bytes) {
-            list.add(NumberObj.of(b));
+    @Bridge
+    public Obj close() {
+        try {
+            out.close();
+            return NullObj.get();
+        } catch (IOException e) {
+            throw new InterpreterException("IOException", e.getMessage());
         }
-        return list;
+    }
+
+    private byte[] fromListObj(ListObj list) {
+        try {
+            byte[] bytes = new byte[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                bytes[i] = (byte) ((NumberObj) list.get(i)).getValue();
+            }
+            return bytes;
+        } catch (ClassCastException e) {
+            throw new InterpreterException("IOException", "non-byte value passed to writeAll");
+        }
     }
 }

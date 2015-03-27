@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
@@ -166,6 +167,16 @@ public class ListObj extends Obj {
     public ListObj add(Obj obj) {
         items.add(obj);
         return this;
+    }
+
+    @Bridge
+    public StringObj join() {
+        return new StringObj(Joiner.on("").join(items));
+    }
+
+    @Bridge
+    public StringObj join(Obj separator) {
+        return new StringObj(Joiner.on(separator.toString()).join(items));
     }
 
     /**

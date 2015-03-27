@@ -107,4 +107,8 @@ public class FileObj extends Obj {
     public String toString() {
         return file.toString();
     }
+
+    public File getFile() {
+        return file;
+    }
 }

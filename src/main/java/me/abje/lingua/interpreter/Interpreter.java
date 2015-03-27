@@ -41,6 +41,7 @@ public class Interpreter implements Phase<Expr, Obj> {
      * The environment used for interpretation.
      */
     private Environment env = new Environment();
+    private List<String> imported = new ArrayList<>();
 
     public static void main(String[] args) throws FileNotFoundException {
         if (args.length == 1) {
@@ -128,13 +129,16 @@ public class Interpreter implements Phase<Expr, Obj> {
     public void addImport(String fullName) {
         try {
             String name = fullName.replace('.', '/') + ".ling";
-            InputStream classpathStream = Interpreter.class.getResourceAsStream("/" + name);
-            String[] parts = name.split("/");
-            if (classpathStream != null) {
-                interpret(new InputStreamReader(classpathStream), parts[parts.length - 1]);
-            } else {
-                File file = new File(name);
-                interpret(new FileReader(file), parts[parts.length - 1]);
+            if (!imported.contains(name)) {
+                InputStream classpathStream = Interpreter.class.getResourceAsStream("/" + name);
+                String[] parts = name.split("/");
+                imported.add(name);
+                if (classpathStream != null) {
+                    interpret(new InputStreamReader(classpathStream), parts[parts.length - 1]);
+                } else {
+                    File file = new File(name);
+                    interpret(new FileReader(file), parts[parts.length - 1]);
+                }
             }
         } catch (FileNotFoundException e) {
             throw new InterpreterException("UndefinedException", "module not found: " + fullName, this);

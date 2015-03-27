@@ -1,1 +1,3 @@
 ByteInput = native("me.abje.lingua.compat.ByteInputObj")
+ByteOutput = native("me.abje.lingua.compat.ByteOutputObj")
+File = native("me.abje.lingua.compat.FileObj")
