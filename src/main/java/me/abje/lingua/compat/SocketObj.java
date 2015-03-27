@@ -20,59 +20,26 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.interpreter.obj;
+package me.abje.lingua.compat;
 
 import me.abje.lingua.interpreter.Bridge;
+import me.abje.lingua.interpreter.obj.ClassObj;
+import me.abje.lingua.interpreter.obj.Obj;
 
-import java.util.Objects;
+import java.net.Socket;
 
-public class CharObj extends Obj {
-    public static final ClassObj SYNTHETIC = bridgeClass(CharObj.class);
-    private static final CharObj[] CACHE = new CharObj[128];
+public class SocketObj extends Obj {
+    public static final ClassObj SYNTHETIC = bridgeClass(SocketObj.class);
 
-    static {
-        for (int i = 0; i < 128; i++) {
-            CACHE[i] = new CharObj((char) i);
-        }
-    }
+    private Socket socket;
 
-    private final char value;
-
-    private CharObj(char c) {
+    public SocketObj(Socket socket) {
         super(SYNTHETIC);
-        value = c;
-    }
-
-    public char getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CharObj charObj = (CharObj) o;
-        return Objects.equals(value, charObj.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-
-    public static CharObj of(char c) {
-        if (c <= 127)
-            return CACHE[c];
-        return new CharObj(c);
+        this.socket = socket;
     }
 
     @Bridge
-    public static CharObj init(NumberObj n) {
-        return new CharObj((char) n.getValue());
+    public static SocketObj init() {
+        return new SocketObj(new Socket());
     }
 }

@@ -252,7 +252,7 @@ public class Obj {
                                 }
                             }
                         } else {
-                            throw new InterpreterException("CallException", "invalid arguments for function " + method.getName());
+                            throw new InterpreterException("CallException", "invalid number of arguments for function " + method.getName());
                         }
 
                         try {

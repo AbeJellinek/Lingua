@@ -1,3 +1,20 @@
+// ==== Intrinsics pt. 1 ==== //
+// ======= Primitives ======= //
+
+Obj      =  native("me.abje.lingua.interpreter.obj.Obj")
+Boolean  =  native("me.abje.lingua.interpreter.obj.BooleanObj")
+Char     =  native("me.abje.lingua.interpreter.obj.CharObj")
+Class    =  native("me.abje.lingua.interpreter.obj.ClassObj")
+Function =  native("me.abje.lingua.interpreter.obj.FunctionObj")
+List     =  native("me.abje.lingua.interpreter.obj.ListObj")
+Map      =  native("me.abje.lingua.interpreter.obj.MapObj")
+Number   =  native("me.abje.lingua.interpreter.obj.NumberObj")
+String   =  native("me.abje.lingua.interpreter.obj.StringObj")
+Tuple    =  native("me.abje.lingua.interpreter.obj.TupleObj")
+
+// ==== Intrinsics pt. 2 ==== //
+// ======= Exceptions ======= //
+
 class Exception {
     message
 
@@ -31,5 +48,9 @@ class OutOfBoundsException : Exception {
 }
 
 class ConversionException : Exception {
+    init(message) = super.init(message)
+}
+
+class IOException : Exception {
     init(message) = super.init(message)
 }

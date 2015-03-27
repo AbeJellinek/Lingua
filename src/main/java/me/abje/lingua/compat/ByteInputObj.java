@@ -20,59 +20,39 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.interpreter.obj;
+package me.abje.lingua.compat;
 
+import com.google.common.base.Charsets;
 import me.abje.lingua.interpreter.Bridge;
+import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.obj.ClassObj;
+import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.obj.StringObj;
 
-import java.util.Objects;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-public class CharObj extends Obj {
-    public static final ClassObj SYNTHETIC = bridgeClass(CharObj.class);
-    private static final CharObj[] CACHE = new CharObj[128];
+public class ByteInputObj extends Obj {
+    public static ClassObj SYNTHETIC = bridgeClass(ByteInputObj.class);
+    private final InputStream in;
 
-    static {
-        for (int i = 0; i < 128; i++) {
-            CACHE[i] = new CharObj((char) i);
-        }
-    }
-
-    private final char value;
-
-    private CharObj(char c) {
+    public ByteInputObj(InputStream in) {
         super(SYNTHETIC);
-        value = c;
-    }
-
-    public char getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CharObj charObj = (CharObj) o;
-        return Objects.equals(value, charObj.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-
-    public static CharObj of(char c) {
-        if (c <= 127)
-            return CACHE[c];
-        return new CharObj(c);
+        this.in = in;
     }
 
     @Bridge
-    public static CharObj init(NumberObj n) {
-        return new CharObj((char) n.getValue());
+    public static ByteInputObj init(StringObj s) {
+        return new ByteInputObj(new ByteArrayInputStream(s.getValue().getBytes(Charsets.UTF_8)));
+    }
+
+    @Bridge
+    public int next() {
+        try {
+            return in.read();
+        } catch (IOException e) {
+            throw new InterpreterException("IOException", e.getMessage());
+        }
     }
 }

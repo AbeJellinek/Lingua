@@ -91,64 +91,60 @@ public class OperatorExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        switch (getToken().getType()) {
-            case PLUS:
-                Obj leftObj = interpreter.next(left);
-                Obj rightObj = interpreter.next(right);
-                if (leftObj instanceof NumberObj && rightObj instanceof NumberObj) {
-                    return NumberObj.of(((NumberObj) leftObj).getValue() + ((NumberObj) rightObj).getValue());
-                } else {
-                    return new StringObj(leftObj.toString() + rightObj.toString());
-                }
-            case MINUS:
-                return NumberObj.of(as(left, NumberObj.class, interpreter).getValue() -
-                        as(right, NumberObj.class, interpreter).getValue());
-            case TIMES:
-                return NumberObj.of(as(left, NumberObj.class, interpreter).getValue() *
-                        as(right, NumberObj.class, interpreter).getValue());
-            case DIVIDE:
-                return NumberObj.of(as(left, NumberObj.class, interpreter).getValue() /
-                        as(right, NumberObj.class, interpreter).getValue());
-            case POW:
-                return NumberObj.of((float) Math.pow(as(left, NumberObj.class, interpreter).getValue(),
-                        as(right, NumberObj.class, interpreter).getValue()));
-            case EQEQ:
-                return BooleanObj.of(interpreter.next(left).equals(interpreter.next(right)));
-            case NEQ:
-                return BooleanObj.of(!interpreter.next(left).equals(interpreter.next(right)));
-            case LT:
-                return BooleanObj.of(as(left, NumberObj.class, interpreter).getValue() <
-                        as(right, NumberObj.class, interpreter).getValue());
-            case LTE:
-                return BooleanObj.of(as(left, NumberObj.class, interpreter).getValue() <=
-                        as(right, NumberObj.class, interpreter).getValue());
-            case GT:
-                return BooleanObj.of(as(left, NumberObj.class, interpreter).getValue() >
-                        as(right, NumberObj.class, interpreter).getValue());
-            case GTE:
-                return BooleanObj.of(as(left, NumberObj.class, interpreter).getValue() >=
-                        as(right, NumberObj.class, interpreter).getValue());
-            case ANDAND:
-                return BooleanObj.of(interpreter.next(left).isTruthy() && interpreter.next(right).isTruthy());
-            case OROR:
-                return BooleanObj.of(interpreter.next(left).isTruthy() || interpreter.next(right).isTruthy());
-            case IS:
-                return BooleanObj.of(interpreter.next(left).getType().isSubclassOf(interpreter.next(right)));
-            default:
-                throw new InterpreterException("InvalidOperationException", "invalid operator", interpreter);
+        try {
+            switch (getToken().getType()) {
+                case PLUS:
+                    Obj leftObj = interpreter.next(left);
+                    Obj rightObj = interpreter.next(right);
+                    if (leftObj instanceof NumberObj && rightObj instanceof NumberObj) {
+                        return NumberObj.of(((NumberObj) leftObj).getValue() + ((NumberObj) rightObj).getValue());
+                    } else {
+                        return new StringObj(leftObj.toString() + rightObj.toString());
+                    }
+                case MINUS:
+                    return NumberObj.of(((NumberObj) next(left, interpreter)).getValue() -
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case TIMES:
+                    return NumberObj.of(((NumberObj) next(left, interpreter)).getValue() *
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case DIVIDE:
+                    return NumberObj.of(((NumberObj) next(left, interpreter)).getValue() /
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case POW:
+                    return NumberObj.of((float) Math.pow(((NumberObj) next(left, interpreter)).getValue(),
+                            ((NumberObj) next(right, interpreter)).getValue()));
+                case EQEQ:
+                    return BooleanObj.of(interpreter.next(left).equals(interpreter.next(right)));
+                case NEQ:
+                    return BooleanObj.of(!interpreter.next(left).equals(interpreter.next(right)));
+                case LT:
+                    return BooleanObj.of(((NumberObj) next(left, interpreter)).getValue() <
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case LTE:
+                    return BooleanObj.of(((NumberObj) next(left, interpreter)).getValue() <=
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case GT:
+                    return BooleanObj.of(((NumberObj) next(left, interpreter)).getValue() >
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case GTE:
+                    return BooleanObj.of(((NumberObj) next(left, interpreter)).getValue() >=
+                            ((NumberObj) next(right, interpreter)).getValue());
+                case ANDAND:
+                    return BooleanObj.of(interpreter.next(left).isTruthy() && interpreter.next(right).isTruthy());
+                case OROR:
+                    return BooleanObj.of(interpreter.next(left).isTruthy() || interpreter.next(right).isTruthy());
+                case IS:
+                    return BooleanObj.of(interpreter.next(left).getType().isSubclassOf(interpreter.next(right)));
+                default:
+                    throw new InterpreterException("InvalidOperationException", "invalid operator", interpreter);
+            }
+        } catch (ClassCastException e) {
+            throw new InterpreterException("CallException", "invalid type", interpreter);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Obj> T as(Expr expr, Class<T> clazz, Interpreter interpreter) {
-        // this is a really horrific hack
-
-        Obj obj = interpreter.next(expr);
-        if (clazz.isInstance(obj)) {
-            return (T) obj;
-        } else {
-            throw new InterpreterException("CallException", "invalid type", interpreter);
-        }
+    private Obj next(Expr expr, Interpreter interpreter) {
+        return interpreter.next(expr);
     }
 
     @Override

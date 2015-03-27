@@ -29,9 +29,7 @@ import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
 
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -40,10 +38,6 @@ import java.util.stream.Collectors;
  * Registers intrinsic (built-in) functions with the interpreter.
  */
 public class Intrinsics {
-    /**
-     * The map of names to intrinsic (synthetic) classes to register.
-     */
-    private static Map<String, ClassObj> classes = new HashMap<>();
     /**
      * The environment to register in.
      */
@@ -59,33 +53,9 @@ public class Intrinsics {
     }
 
     /**
-     * Registers a class.
-     *
-     * @param clazz The class.
-     */
-    public static void registerClass(ClassObj clazz) {
-        classes.put(clazz.getName(), clazz);
-    }
-
-    static {
-        registerClass(BooleanObj.SYNTHETIC);
-        registerClass(CharObj.SYNTHETIC);
-        registerClass(ClassObj.SYNTHETIC);
-        registerClass(FunctionObj.SYNTHETIC);
-        registerClass(ListObj.SYNTHETIC);
-        registerClass(MapObj.SYNTHETIC);
-        registerClass(NullObj.SYNTHETIC);
-        registerClass(NumberObj.SYNTHETIC);
-        registerClass(StringObj.SYNTHETIC);
-        registerClass(TupleObj.SYNTHETIC);
-    }
-
-    /**
      * Register the intrinsics.
      */
     public void register() {
-        classes.forEach(env.getGlobals()::define);
-
         addFunction("print", (interpreter, args) -> {
             System.out.println(args.stream().map(Object::toString).collect(Collectors.joining("")));
             return NullObj.get();
@@ -164,6 +134,21 @@ public class Intrinsics {
                 throw new InterpreterException(args.get(0));
             } else {
                 throw new InterpreterException("CallException", "wrong number of arguments for throw", interpreter);
+            }
+        });
+
+        addFunction("native", (interpreter, args) -> {
+            if (args.size() == 1) {
+                try {
+                    Class<?> clazz = Class.forName(args.get(0).toString());
+                    //noinspection RedundantCast
+                    return (ClassObj) clazz.getField("SYNTHETIC").get(null);
+                } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+                    e.printStackTrace();
+                    return NullObj.get();
+                }
+            } else {
+                throw new InterpreterException("CallException", "wrong number of arguments for native", interpreter);
             }
         });
     }
