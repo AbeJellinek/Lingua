@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter;
 
+import jline.console.ConsoleReader;
 import me.abje.lingua.Phase;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Lexer;
@@ -37,13 +38,23 @@ import java.util.*;
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
  */
 public class Interpreter implements Phase<Expr, Obj> {
+    private static ConsoleReader console;
+
+    static {
+        try {
+            console = new ConsoleReader();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * The environment used for interpretation.
      */
     private Environment env = new Environment();
     private List<String> imported = new ArrayList<>();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         if (args.length == 1) {
             Interpreter interpreter = new Interpreter();
             try {
@@ -56,24 +67,22 @@ public class Interpreter implements Phase<Expr, Obj> {
                 handleInterpreterException(e, interpreter);
             }
         } else if (args.length == 0) {
-            Scanner in = new Scanner(System.in);
             Interpreter interpreter = new Interpreter();
             new Intrinsics(interpreter.env).register();
             interpreter.addImport("lingua.core");
 
-            System.out.println("Welcome to Lingua REPL version 1.0 (" +
+            console.println("Welcome to Lingua REPL version 1.0 (" +
                     System.getProperty("java.vm.name") + ", Java " +
                     System.getProperty("java.version") + ").");
-            System.out.println("Type in expressions to evaluate them.\n");
-            System.out.print("lingua> ");
+            console.println("Type in expressions to evaluate them.");
+            console.println();
 
             int num = 0;
-            while (in.hasNextLine()) {
+            while (true) {
                 try {
-                    String line = in.nextLine();
+                    String line = console.readLine("lingua> ");
                     while (line.trim().endsWith("\\")) {
-                        System.out.print("| ");
-                        line += in.nextLine();
+                        line += console.readLine("| ");
                     }
 
                     Parser parser = new Parser(new Morpher(new Lexer(new StringReader(line), "<user>")));
@@ -94,7 +103,7 @@ public class Interpreter implements Phase<Expr, Obj> {
                             } while (interpreter.env.has("res" + num));
                             String varName = "res" + num;
                             interpreter.env.define(varName, value);
-                            System.out.println(varName + " = " + value);
+                            console.println(varName + " = " + value);
                         }
                     }
                 } catch (ParseException e) {
@@ -108,7 +117,6 @@ public class Interpreter implements Phase<Expr, Obj> {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.print("lingua> ");
             }
         } else {
             System.err.println("Usage: lingua [script]");

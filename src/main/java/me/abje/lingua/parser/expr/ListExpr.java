@@ -68,7 +68,15 @@ public class ListExpr extends Expr {
         if (obj instanceof ListObj) {
             ListObj list = (ListObj) obj;
             for (int i = 0; i < list.size(); i++) {
-                if (items.get(i).match(interpreter, frame, list.get(i), alwaysDefineNew) == null) {
+                Expr item = items.get(i);
+                if (item.getAnnotations().contains("rest")) {
+                    if (i == list.size() - 1) {
+
+                    } else {
+
+                    }
+                }
+                if (item.match(interpreter, frame, list.get(i), alwaysDefineNew) == null) {
                     return null;
                 }
             }
