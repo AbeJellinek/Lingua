@@ -1,3 +1,0 @@
-import lingua.io
-
-Socket = native("me.abje.lingua.compat.SocketObj")

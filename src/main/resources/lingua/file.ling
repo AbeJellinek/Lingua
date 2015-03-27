@@ -1,0 +1,3 @@
+import lingua.io
+
+File = native("me.abje.lingua.compat.FileObj")

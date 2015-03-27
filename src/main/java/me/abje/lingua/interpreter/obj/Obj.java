@@ -30,6 +30,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,18 +211,20 @@ public class Obj {
         // "${x}Obj" -> x
         // "${x}"    -> x
 
-        String name;
+        String className;
         if (originalName.equals("Obj"))
-            name = originalName;
+            className = originalName;
         else if (originalName.endsWith("Obj"))
-            name = originalName.substring(0, originalName.length() - 3);
+            className = originalName.substring(0, originalName.length() - 3);
         else
-            name = originalName;
+            className = originalName;
 
-        ClassObj.Builder<C> builder = ClassObj.<C>builder(name);
+        ClassObj.Builder<C> builder = ClassObj.<C>builder(className);
+        Map<String, Map<Integer, MethodMetadata>> methodMap = new HashMap<>();
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.getAnnotation(Bridge.class) != null) {
                 try {
+                    String methodName = method.getName();
                     MethodHandle initialHandle = MethodHandles.lookup().unreflect(method);
                     Class<?> returnType = initialHandle.type().returnType();
                     if (returnType == byte.class || returnType == short.class ||
@@ -237,44 +240,78 @@ public class Obj {
                             interpreterIndex = i;
                         }
                     }
-                    final int finalInterpreterIndex = interpreterIndex;
-                    final MethodHandle finalInitialHandle = initialHandle;
-                    builder.withFunction(method.getName(), (interpreter, self, args) -> {
-                        MethodHandle handle = finalInitialHandle;
-                        if (self != null)
-                            handle = handle.bindTo(self);
-                        if (finalInterpreterIndex != -1)
-                            handle = MethodHandles.insertArguments(handle, finalInterpreterIndex - 1, interpreter);
-                        if (args.size() == handle.type().parameterCount()) {
-                            for (int i = 0; i < args.size(); i++) {
-                                if (!handle.type().parameterType(i).isAssignableFrom(args.get(i).getClass())) {
-                                    throw new InterpreterException("CallException", "invalid argument for function " + method.getName());
-                                }
-                            }
-                        } else {
-                            throw new InterpreterException("CallException", "invalid number of arguments for function " + method.getName());
-                        }
-
-                        try {
-                            //noinspection RedundantCast
-                            return (Obj) handle.invokeWithArguments(args);
-                        } catch (InterpreterException e) {
-                            throw e;
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                            return NullObj.get();
-                        }
-                    });
+                    Map<Integer, MethodMetadata> map = methodMap.computeIfAbsent(methodName, s -> new HashMap<>());
+                    map.put(parameterArray.length - (interpreterIndex != -1 ? 1 : 0) -
+                                    (!Modifier.isStatic(method.getModifiers()) ? 1 : 0),
+                            new MethodMetadata(initialHandle, interpreterIndex));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         }
+        methodMap.forEach((methodName, map) -> addFunction(builder, methodName, map));
         return builder.build();
+    }
+
+    private static <C extends Obj> void addFunction(ClassObj.Builder<C> builder, String methodName, Map<Integer, MethodMetadata> map) {
+        builder.withFunction(methodName, (interpreter, self, args) -> {
+            if (map.containsKey(args.size())) {
+                MethodMetadata meta = map.get(args.size());
+                MethodHandle handle = meta.getHandle();
+                int interpreterIndex = meta.getInterpreterIndex();
+                if (self != null)
+                    handle = handle.bindTo(self);
+                if (interpreterIndex != -1)
+                    handle = MethodHandles.insertArguments(handle, interpreterIndex - 1, interpreter);
+                for (int i = 0; i < args.size(); i++) {
+                    if (!handle.type().parameterType(i).isAssignableFrom(args.get(i).getClass())) {
+                        throw new InterpreterException("CallException", "invalid argument for function " + methodName);
+                    }
+                }
+
+                try {
+                    //noinspection RedundantCast
+                    return (Obj) handle.invokeWithArguments(args);
+                } catch (InterpreterException e) {
+                    throw e;
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                    return NullObj.get();
+                }
+            } else {
+                throw new InterpreterException("CallException", "invalid number of arguments for function " + methodName);
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public static NumberObj toNumberObj(float f) {
         return NumberObj.of(f);
+    }
+
+    private static class MethodMetadata {
+        private MethodHandle handle;
+        private int interpreterIndex;
+
+        private MethodMetadata(MethodHandle handle, int interpreterIndex) {
+            this.handle = handle;
+            this.interpreterIndex = interpreterIndex;
+        }
+
+        public MethodHandle getHandle() {
+            return handle;
+        }
+
+        public void setHandle(MethodHandle handle) {
+            this.handle = handle;
+        }
+
+        public int getInterpreterIndex() {
+            return interpreterIndex;
+        }
+
+        public void setInterpreterIndex(int interpreterIndex) {
+            this.interpreterIndex = interpreterIndex;
+        }
     }
 }
