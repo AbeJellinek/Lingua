@@ -15,6 +15,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.ow2.asm:asm-all:5.0.3'
     compile 'jline:jline:2.12'
+    compile 'net.sf.jopt-simple:jopt-simple:4.9-beta-1'
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
 }
 

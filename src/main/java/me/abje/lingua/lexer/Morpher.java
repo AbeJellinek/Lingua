@@ -22,8 +22,6 @@
 
 package me.abje.lingua.lexer;
 
-import me.abje.lingua.Phase;
-
 /**
  * Converts a raw token sequence to a stream of just the meaningful ones.
  * Strips out comments and whitespace, and handles eliding newlines where
@@ -35,7 +33,7 @@ import me.abje.lingua.Phase;
  * @author Bob Nystrom
  * @author Abe Jellinek
  */
-public class Morpher implements Phase<Void, Token> {
+public class Morpher {
 
     private final Lexer mTokens;
     private boolean mEatLines;
@@ -47,9 +45,9 @@ public class Morpher implements Phase<Void, Token> {
         mEatLines = true;
     }
 
-    public Token next(Void unused) {
+    public Token next() {
         while (true) {
-            Token token = mTokens.next(null);
+            Token token = mTokens.next();
 
             if (token == null) {
                 return null;

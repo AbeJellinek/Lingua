@@ -22,7 +22,7 @@
 
 package me.abje.lingua.parser;
 
-import me.abje.lingua.Phase;
+import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.parselet.*;
@@ -35,7 +35,7 @@ import static me.abje.lingua.lexer.Token.Type.*;
 /**
  * A phase which produces expressions from tokens. Usually the second phase in the pipeline.
  */
-public class Parser implements Phase<Token, Expr> {
+public class Parser {
     /**
      * The map of token types to prefix parselets.
      */
@@ -49,7 +49,7 @@ public class Parser implements Phase<Token, Expr> {
     /**
      * The lexer that provides input to the parser.
      */
-    private Phase<Void, Token> lexer;
+    private Morpher lexer;
 
     /**
      * The token that was previously peeked, if any.
@@ -66,7 +66,7 @@ public class Parser implements Phase<Token, Expr> {
      *
      * @param lexer The lexer to use as input.
      */
-    public Parser(Phase<Void, Token> lexer) {
+    public Parser(Morpher lexer) {
         this.lexer = lexer;
 
         registerPrefix(NAME, new NameParselet());
@@ -157,7 +157,6 @@ public class Parser implements Phase<Token, Expr> {
      * @param token The token input to parse.
      * @return An expression, or null if the end of the stream is reached.
      */
-    @Override
     public Expr next(Token token) {
         return next(token, 0);
     }
@@ -285,7 +284,7 @@ public class Parser implements Phase<Token, Expr> {
             this.peeked = null;
             return lastRead = peeked;
         } else {
-            return lastRead = lexer.next(null);
+            return lastRead = lexer.next();
         }
     }
 

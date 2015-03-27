@@ -23,7 +23,8 @@
 package me.abje.lingua.interpreter;
 
 import jline.console.ConsoleReader;
-import me.abje.lingua.Phase;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
@@ -37,7 +38,7 @@ import java.util.*;
 /**
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
  */
-public class Interpreter implements Phase<Expr, Obj> {
+public class Interpreter {
     private static ConsoleReader console;
 
     static {
@@ -55,22 +56,36 @@ public class Interpreter implements Phase<Expr, Obj> {
     private List<String> imported = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        if (args.length == 1) {
-            Interpreter interpreter = new Interpreter();
+        OptionParser optParser = new OptionParser() {
+            {
+                accepts("no-core", "Don't import core (advanced)");
+                accepts("h", "Show help").forHelp();
+            }
+        };
+        OptionSet options = optParser.parse(args);
+
+        if (options.has("h")) {
+            optParser.printHelpOn(System.out);
+            return;
+        }
+
+        List<?> files = options.nonOptionArguments();
+        Interpreter interpreter = new Interpreter();
+
+        new Intrinsics(interpreter.env).register();
+        if (!options.has("no-core"))
+            interpreter.addImport("lingua.core");
+
+        if (!files.isEmpty()) {
             try {
-                new Intrinsics(interpreter.env).register();
-                interpreter.addImport("lingua.core");
-                interpreter.addImport(args[0]);
+                for (Object file : files)
+                    interpreter.addImport((String) file);
             } catch (ParseException e) {
                 System.err.println(e.getMessage());
             } catch (InterpreterException e) {
                 handleInterpreterException(e, interpreter);
             }
-        } else if (args.length == 0) {
-            Interpreter interpreter = new Interpreter();
-            new Intrinsics(interpreter.env).register();
-            interpreter.addImport("lingua.core");
-
+        } else {
             console.println("Welcome to Lingua REPL version 1.0 (" +
                     System.getProperty("java.vm.name") + ", Java " +
                     System.getProperty("java.version") + ").");
@@ -81,7 +96,7 @@ public class Interpreter implements Phase<Expr, Obj> {
             while (true) {
                 try {
                     String line = console.readLine("lingua> ");
-                    if (line.equals(":exit") || line.equals(":quit"))
+                    if (line == null || line.equals(":exit") || line.equals(":quit"))
                         break;
 
                     while (line.trim().endsWith("\\")) {
@@ -121,8 +136,6 @@ public class Interpreter implements Phase<Expr, Obj> {
                     e.printStackTrace();
                 }
             }
-        } else {
-            System.err.println("Usage: lingua [script]");
         }
     }
 

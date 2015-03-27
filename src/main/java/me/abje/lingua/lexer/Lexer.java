@@ -22,7 +22,6 @@
 
 package me.abje.lingua.lexer;
 
-import me.abje.lingua.Phase;
 import me.abje.lingua.parser.ParseException;
 
 import java.io.IOException;
@@ -34,7 +33,7 @@ import static me.abje.lingua.lexer.Token.Type.*;
 /**
  * The phase which produces tokens from text. Usually the first phase in the pipeline.
  */
-public class Lexer implements Phase<Void, Token> {
+public class Lexer {
     /**
      * The reader that code is read from.
      */
@@ -67,10 +66,9 @@ public class Lexer implements Phase<Void, Token> {
     /**
      * Reads a token from the input and returns it.
      *
-     * @param unused Null.
      * @return The token that was read, or null if the end of the input was reached.
      */
-    public Token next(Void unused) {
+    public Token next() {
         try {
             char read = read();
             switch (read) {
@@ -196,7 +194,7 @@ public class Lexer implements Phase<Void, Token> {
                     return make(COLON);
                 case '@':
                     builder.setLength(0);
-                    Token token = next(null);
+                    Token token = next();
                     if (token.is(NAME)) {
                         return new Token(ANNOTATION, token.getValue(), token.getLine(), "<none>");
                     } else {
@@ -450,9 +448,5 @@ public class Lexer implements Phase<Void, Token> {
         Token token = new Token(type, builder.toString(), line, fileName);
         builder.setLength(0);
         return token;
-    }
-
-    public Token next() {
-        return next(null);
     }
 }
