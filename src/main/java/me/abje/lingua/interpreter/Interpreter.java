@@ -31,6 +31,9 @@ import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.*;
+import org.fusesource.jansi.Ansi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -39,6 +42,7 @@ import java.util.*;
  * The phase which produces objects from expressions. Usually the last phase in the pipeline.
  */
 public class Interpreter {
+    public static Logger log = LoggerFactory.getLogger(Interpreter.class);
     private static ConsoleReader console;
 
     static {
@@ -58,6 +62,7 @@ public class Interpreter {
     public static void main(String[] args) throws IOException {
         OptionParser optParser = new OptionParser() {
             {
+                accepts("clear", "Clear the screen before running");
                 accepts("no-core", "Don't import core (advanced)");
                 accepts("h", "Show help").forHelp();
             }
@@ -75,19 +80,20 @@ public class Interpreter {
         new Intrinsics(interpreter.env).register();
         if (!options.has("no-core"))
             interpreter.addImport("lingua.core");
+        if (options.has("clear"))
+            console.clearScreen();
 
         if (!files.isEmpty()) {
             try {
                 for (Object file : files)
                     interpreter.addImport((String) file);
             } catch (ParseException e) {
-                System.err.println(e.getMessage());
+                log.error("Parse error:\n{}", e.getMessage());
             } catch (InterpreterException e) {
                 handleInterpreterException(e, interpreter);
             }
         } else {
-            console.println("Welcome to Lingua REPL version 1.0 (" +
-                    System.getProperty("java.vm.name") + ", Java " +
+            console.println("Welcome to Lingua REPL version 1.0 (Java " +
                     System.getProperty("java.version") + ").");
             console.println("Type in expressions to evaluate them.");
             console.println();
@@ -95,12 +101,20 @@ public class Interpreter {
             int num = 0;
             while (true) {
                 try {
-                    String line = console.readLine("lingua> ");
+                    Ansi ansi = new Ansi();
+                    ansi.fg(Ansi.Color.GREEN);
+                    ansi.a("lingua> ");
+                    ansi.reset();
+                    String line = console.readLine(ansi.toString());
                     if (line == null || line.equals(":exit") || line.equals(":quit"))
                         break;
 
                     while (line.trim().endsWith("\\")) {
-                        line += console.readLine("| ");
+                        ansi = new Ansi();
+                        ansi.fg(Ansi.Color.YELLOW);
+                        ansi.a(" | ");
+                        ansi.reset();
+                        line += console.readLine(ansi.toString());
                     }
 
                     Parser parser = new Parser(new Morpher(new Lexer(new StringReader(line), "<user>")));
@@ -114,7 +128,7 @@ public class Interpreter {
                         Obj value = interpreter.next(x);
                         if (x instanceof AssignmentExpr || x instanceof FunctionExpr ||
                                 x instanceof IndexSetExpr || x instanceof MemberSetExpr) {
-                            System.out.println(x);
+                            console.println(x.toString());
                         } else {
                             do {
                                 num++;
@@ -125,7 +139,7 @@ public class Interpreter {
                         }
                     }
                 } catch (ParseException e) {
-                    System.err.println(e.getMessage());
+                    log.error("Parse error:\n{}", e.getMessage());
                 } catch (InterpreterException e) {
                     handleInterpreterException(e, interpreter);
                 }
@@ -163,6 +177,8 @@ public class Interpreter {
                     File file = new File(name);
                     interpret(new FileReader(file), parts[parts.length - 1]);
                 }
+            } else {
+                log.warn("Ignoring already-imported module {}.", fullName);
             }
         } catch (FileNotFoundException e) {
             throw new InterpreterException("UndefinedException", "module not found: " + fullName, this);

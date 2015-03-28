@@ -29,4 +29,9 @@ public class UserObj extends Obj {
     public UserObj(ClassObj clazz) {
         super(clazz);
     }
+
+    @Override
+    public String toString() {
+        return "<object " + getType().getName() + ">";
+    }
 }

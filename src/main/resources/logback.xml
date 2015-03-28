@@ -1,0 +1,13 @@
+<configuration>
+    <appender name="STDOUT" class="me.abje.lingua.util.AnsiFixConsoleAppender">
+        <target>System.out</target>
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %highlight(%5level) %blue([%logger{0}]) %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
