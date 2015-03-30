@@ -23,7 +23,6 @@
 package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
@@ -90,13 +89,7 @@ public class MemberAccessExpr extends Expr {
     }
 
     public String getPath() {
-        if (left instanceof NameExpr) {
-            return ((NameExpr) left).getValue() + "." + getName();
-        } else if (left instanceof MemberAccessExpr) {
-            return ((MemberAccessExpr) left).getPath() + "." + getName();
-        } else {
-            throw new InterpreterException("UndefinedException", "not a valid path");
-        }
+        return left + "." + name;
     }
 
     @Override
