@@ -27,11 +27,12 @@ import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
+import me.abje.lingua.util.TriFunction;
 
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -52,105 +53,91 @@ public class Intrinsics {
         this.env = env;
     }
 
+    @Bridge(anyLength = true)
+    public void print(Obj... args) {
+        System.out.println(Arrays.asList(args).stream().map(Object::toString).collect(Collectors.joining("")));
+    }
+
+    @Bridge(anyLength = true)
+    public void error(Obj... args) {
+        System.err.println(Arrays.asList(args).stream().map(Object::toString).collect(Collectors.joining("")));
+    }
+
+    @Bridge
+    public ClassObj classOf(Obj obj) {
+        return obj.getType();
+    }
+
+    @Bridge
+    public Obj eval(StringObj code, Interpreter interpreter) {
+        Parser parser = new Parser(new Morpher(new Lexer(new StringReader(code.getValue()), "<eval>")));
+        Expr expr;
+        Obj result = NullObj.get();
+        while ((expr = parser.next()) != null) {
+            result = interpreter.next(expr);
+        }
+        return result;
+    }
+
+    @Bridge
+    public NumberObj sqrt(NumberObj num) {
+        return NumberObj.of((float) Math.sqrt(num.getValue()));
+    }
+
+    @Bridge
+    public StringObj read() {
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.hasNextLine()) {
+            return new StringObj(scanner.nextLine());
+        } else {
+            return null;
+        }
+    }
+
+    @Bridge
+    public StringObj read(StringObj prompt) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(prompt);
+        if (scanner.hasNextLine()) {
+            return new StringObj(scanner.nextLine());
+        } else {
+            return null;
+        }
+    }
+
+    @Bridge
+    public ListObj dumpStack() {
+        return new ListObj(env.getOldStack().stream().map(frame -> {
+            if (frame.getFileName() == null || frame.getFileName().equals("<native>")) {
+                return new StringObj(frame.getName() + "(native)");
+            } else {
+                return new StringObj(frame.getName() + "(" + frame.getFileName() + ":" + frame.getLine() + ")");
+            }
+        }).collect(Collectors.toList()));
+    }
+
+    @Bridge("throw")
+    public void doThrow(Obj obj) {
+        throw new InterpreterException(obj);
+    }
+
+    @Bridge("native")
+    public ClassObj doNative(StringObj name) {
+        try {
+            Class<?> clazz = Class.forName(name.getValue());
+            //noinspection RedundantCast
+            return (ClassObj) clazz.getField("SYNTHETIC").get(null);
+        } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Register the intrinsics.
      */
     public void register() {
-        addFunction("print", (interpreter, args) -> {
-            System.out.println(args.stream().map(Object::toString).collect(Collectors.joining("")));
-            return NullObj.get();
-        });
-
-        addFunction("error", (interpreter, args) -> {
-            System.err.println(args.stream().map(Object::toString).collect(Collectors.joining("")));
-            return NullObj.get();
-        });
-
-        addFunction("classOf", (interpreter, args) -> {
-            if (args.size() == 1) {
-                return args.get(0).getType();
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for classOf", interpreter);
-            }
-        });
-
-        addFunction("eval", (interpreter, args) -> {
-            if (args.size() == 1) {
-                Parser parser = new Parser(new Morpher(new Lexer(new StringReader(args.get(0).toString()), "<eval>")));
-                Expr expr;
-                Obj result = NullObj.get();
-                while ((expr = parser.next()) != null) {
-                    result = interpreter.next(expr);
-                }
-                return result;
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for eval", interpreter);
-            }
-        });
-
-        addFunction("sqrt", (interpreter, args) -> {
-            if (args.size() == 1) {
-                if (args.get(0) instanceof NumberObj) {
-                    return NumberObj.of((float) Math.sqrt(((NumberObj) args.get(0)).getValue()));
-                } else {
-                    throw new InterpreterException("CallException", "wrong argument for sqrt", interpreter);
-                }
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for sqrt", interpreter);
-            }
-        });
-
-        addFunction("read", (interpreter, args) -> {
-            Scanner scanner = new Scanner(System.in);
-            if (args.size() == 0) {
-                if (scanner.hasNextLine()) {
-                    return new StringObj(scanner.nextLine());
-                } else {
-                    return NullObj.get();
-                }
-            } else if (args.size() == 1) {
-                System.out.print(args.get(0));
-                if (scanner.hasNextLine()) {
-                    return new StringObj(scanner.nextLine());
-                } else {
-                    return NullObj.get();
-                }
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for read", interpreter);
-            }
-        });
-
-        addFunction("dumpStack", (interpreter, args) ->
-                new ListObj(env.getOldStack().stream().map(frame -> {
-                    if (frame.getFileName() == null || frame.getFileName().equals("<native>")) {
-                        return new StringObj(frame.getName() + "(native)");
-                    } else {
-                        return new StringObj(frame.getName() + "(" + frame.getFileName() + ":" + frame.getLine() + ")");
-                    }
-                }).collect(Collectors.toList())));
-
-        addFunction("throw", (interpreter, args) -> {
-            if (args.size() == 1) {
-                throw new InterpreterException(args.get(0));
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for throw", interpreter);
-            }
-        });
-
-        addFunction("native", (interpreter, args) -> {
-            if (args.size() == 1) {
-                try {
-                    Class<?> clazz = Class.forName(args.get(0).toString());
-                    //noinspection RedundantCast
-                    return (ClassObj) clazz.getField("SYNTHETIC").get(null);
-                } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
-                    e.printStackTrace();
-                    return NullObj.get();
-                }
-            } else {
-                throw new InterpreterException("CallException", "wrong number of arguments for native", interpreter);
-            }
-        });
+        Obj.createMethodMap(Intrinsics.class, this).forEach((name, map) -> addFunction(name, Obj.createFunctionBridge(name, map)));
     }
 
     /**
@@ -159,11 +146,11 @@ public class Intrinsics {
      * @param name The function's name.
      * @param func The function's body.
      */
-    private void addFunction(String name, BiFunction<Interpreter, List<Obj>, Obj> func) {
-        env.getGlobals().define(name, new Obj(FunctionObj.SYNTHETIC) {
+    private void addFunction(String name, TriFunction<Interpreter, Obj, List<Obj>, Obj> func) {
+        env.getGlobals().define(name, new SyntheticFunctionObj(FunctionObj.SYNTHETIC) {
             @Override
             public Obj call(Interpreter interpreter, List<Obj> args) {
-                return func.apply(interpreter, args);
+                return func.apply(interpreter, getSelf(), args);
             }
         });
     }

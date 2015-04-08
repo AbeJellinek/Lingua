@@ -38,13 +38,10 @@ public class CallParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
         List<Expr> args = new ArrayList<>();
-        while (!parser.peek().is(Token.Type.CLOSE_PAREN)) {
+        while (!parser.match(Token.Type.CLOSE_PAREN)) {
             args.add(parser.next());
-            if (parser.peek().is(Token.Type.COMMA)) {
-                parser.read();
-            }
+            parser.match(Token.Type.COMMA);
         }
-        parser.read();
         return new CallExpr(token, left, args);
     }
 
