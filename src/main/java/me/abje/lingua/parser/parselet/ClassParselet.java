@@ -47,7 +47,7 @@ public class ClassParselet implements PrefixParselet {
         parser.expect(Token.Type.OPEN_BRACE);
         List<Field> fields = new ArrayList<>();
         List<FunctionExpr> functions = new ArrayList<>();
-        while (!parser.peek().is(Token.Type.CLOSE_BRACE)) {
+        while (!parser.match(Token.Type.CLOSE_BRACE)) {
             Expr expr = parser.next();
             if (expr instanceof FunctionExpr) {
                 functions.add((FunctionExpr) expr);
@@ -65,7 +65,6 @@ public class ClassParselet implements PrefixParselet {
             }
             parser.eatLines();
         }
-        parser.read();
         return new ClassExpr(token, name.getValue(), functions, fields, superClassName);
     }
 }

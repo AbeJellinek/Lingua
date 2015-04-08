@@ -195,10 +195,10 @@ public class Lexer {
                 case '@':
                     builder.setLength(0);
                     Token token = next();
-                    if (token.is(NAME)) {
+                    if (token != null && token.is(NAME)) {
                         return new Token(ANNOTATION, token.getValue(), token.getLine(), "<none>");
                     } else {
-                        throw new ParseException("invalid annotation", token);
+                        throw new ParseException("invalid annotation", fileName, line);
                     }
                 default:
                     if (Character.isWhitespace(read)) {

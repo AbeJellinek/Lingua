@@ -34,25 +34,23 @@ import me.abje.lingua.parser.expr.*;
 public class AssignmentParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
+        Expr value = parser.next(Precedence.ASSIGNMENT - 1);
+        if (value == null)
+            throw new ParseException("expected a value", token);
         if (left instanceof CallExpr) {
             CallExpr call = (CallExpr) left;
-
             if (call.getFunc() instanceof NameExpr) {
-                Expr value = parser.next(Precedence.ASSIGNMENT - 1);
                 return new FunctionExpr(token, ((NameExpr) call.getFunc()).getValue(), call.getArgs(), value);
             } else {
                 throw new ParseException("function name must actually be a name", call.getToken());
             }
         } else if (left instanceof IndexExpr) {
             IndexExpr index = (IndexExpr) left;
-            Expr value = parser.next(Precedence.ASSIGNMENT - 1);
             return new IndexSetExpr(token, index.getTarget(), index.getIndex(), value);
         } else if (left instanceof MemberAccessExpr) {
             MemberAccessExpr member = (MemberAccessExpr) left;
-            Expr value = parser.next(Precedence.ASSIGNMENT - 1);
             return new MemberSetExpr(token, member.getLeft(), member.getName(), value);
         } else {
-            Expr value = parser.next(Precedence.ASSIGNMENT);
             return new AssignmentExpr(token, left, value);
         }
     }

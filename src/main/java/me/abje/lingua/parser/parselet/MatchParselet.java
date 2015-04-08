@@ -38,7 +38,7 @@ public class MatchParselet implements InfixParselet {
         Map<Expr, Expr> clauses = new HashMap<>();
 
         parser.expect(Token.Type.OPEN_BRACE);
-        while (parser.peek() != null && !parser.peek().is(Token.Type.CLOSE_BRACE)) {
+        while (!parser.match(Token.Type.CLOSE_BRACE)) {
             Expr pattern = parser.next(Precedence.SUM);
             parser.eatLines();
             parser.expect(Token.Type.ARROW);
@@ -49,9 +49,6 @@ public class MatchParselet implements InfixParselet {
 
             parser.eatLines();
         }
-
-        if (parser.peek() != null)
-            parser.read();
 
         return new MatchExpr(token, left, clauses);
     }

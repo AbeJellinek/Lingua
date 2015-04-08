@@ -23,6 +23,7 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.OperatorExpr;
@@ -39,6 +40,8 @@ public class BinaryOperatorParselet implements InfixParselet {
 
     public Expr parse(Parser parser, Expr left, Token token) {
         Expr right = parser.next(precedence);
+        if (right == null)
+            throw new ParseException("expected a value", token);
         return new OperatorExpr(token, left, right);
     }
 

@@ -27,4 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Bridge {
+    String value() default "";
+
+    boolean anyLength() default false;
 }

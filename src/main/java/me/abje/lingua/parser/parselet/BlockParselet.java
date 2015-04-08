@@ -37,11 +37,10 @@ public class BlockParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
         List<Expr> exprs = new ArrayList<>();
-        while (!parser.peek().is(Token.Type.CLOSE_BRACE)) {
+        while (!parser.match(Token.Type.CLOSE_BRACE)) {
             exprs.add(parser.next());
             parser.eatLines();
         }
-        parser.read();
         return new BlockExpr(token, exprs);
     }
 }

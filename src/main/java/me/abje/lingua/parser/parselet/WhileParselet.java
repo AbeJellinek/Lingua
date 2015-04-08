@@ -23,6 +23,7 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.BlockExpr;
 import me.abje.lingua.parser.expr.Expr;
@@ -60,7 +61,7 @@ public class WhileParselet implements PrefixParselet {
         Expr body;
         if (doWhile) {
             List<Expr> exprs = new ArrayList<>();
-            while (parser.peek() != null && !parser.peek().is(Token.Type.WHILE)) {
+            while (!parser.match(Token.Type.WHILE)) {
                 exprs.add(parser.next());
             }
             parser.expect(Token.Type.WHILE);
@@ -70,6 +71,12 @@ public class WhileParselet implements PrefixParselet {
             condition = parser.next();
             body = parser.next();
         }
+
+        if (condition == null)
+            throw new ParseException("expected a condition", token);
+        if (body == null)
+            throw new ParseException("expected a body", token);
+
         return new WhileExpr(token, condition, body, doWhile);
     }
 }

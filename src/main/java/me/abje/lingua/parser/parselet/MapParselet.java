@@ -35,16 +35,15 @@ public class MapParselet implements PrefixParselet {
     @Override
     public Expr parse(Parser parser, Token token) {
         Map<Expr, Expr> items = new HashMap<>();
-        while (!parser.peek().is(Token.Type.CLOSE_BRACE)) {
+        while (!parser.match(Token.Type.CLOSE_BRACE)) {
             Expr key = parser.next(Precedence.PREFIX);
             parser.match(Token.Type.COLON);
             Expr value = parser.next();
             items.put(key, value);
-            if (parser.peek().is(Token.Type.COMMA)) {
+            if (parser.match(Token.Type.COMMA)) {
                 parser.read();
             }
         }
-        parser.read();
 
         return new MapExpr(token, items);
     }

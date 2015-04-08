@@ -23,6 +23,7 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
@@ -34,6 +35,9 @@ import me.abje.lingua.parser.expr.PrefixExpr;
 public class PrefixOperatorParselet implements PrefixParselet {
     public Expr parse(Parser parser, Token token) {
         Expr operand = parser.next(Precedence.PREFIX);
+        if (operand == null)
+            throw new ParseException("expected an operand", token);
+
         return new PrefixExpr(token, token.getType(), operand);
     }
 }

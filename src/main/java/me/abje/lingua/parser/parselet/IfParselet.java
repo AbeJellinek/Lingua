@@ -23,6 +23,7 @@
 package me.abje.lingua.parser.parselet;
 
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.IfExpr;
@@ -37,8 +38,11 @@ public class IfParselet implements PrefixParselet {
         Expr thenBranch = parser.next();
         parser.eatLines();
         Expr elseBranch = null;
-        if (parser.match(Token.Type.ELSE))
+        if (parser.match(Token.Type.ELSE)) {
             elseBranch = parser.next();
+            if (elseBranch == null)
+                throw new ParseException("expected an else branch", token);
+        }
         return new IfExpr(token, condition, thenBranch, elseBranch);
     }
 }
