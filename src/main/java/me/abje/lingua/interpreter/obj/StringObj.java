@@ -26,6 +26,7 @@ import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Bridge;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Lingua character string.
@@ -78,6 +79,11 @@ public class StringObj extends Obj {
     }
 
     @Bridge
+    public static StringObj init(Obj obj) {
+        return new StringObj(obj.toString());
+    }
+
+    @Bridge(anyLength = true)
     public static StringObj init(Obj... objs) {
         return new StringObj(joiner.join(objs));
     }
@@ -100,5 +106,25 @@ public class StringObj extends Obj {
     public CharObj charAt(NumberObj index) {
         // todo cache this
         return CharObj.of(value.charAt((int) index.getValue()));
+    }
+
+    @Bridge
+    public ListObj chars() {
+        char[] charArr = value.toCharArray();
+        List<Obj> charList = new ArrayList<>();
+        for (char c : charArr) {
+            charList.add(CharObj.of(c));
+        }
+        return new ListObj(charList);
+    }
+
+    @Bridge
+    public StringObj replace(StringObj from, StringObj to) {
+        return new StringObj(value.replace(from.getValue(), to.getValue()));
+    }
+
+    @Bridge
+    public NumberObj length() {
+        return NumberObj.of(value.length());
     }
 }

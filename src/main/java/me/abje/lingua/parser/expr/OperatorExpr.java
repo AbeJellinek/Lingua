@@ -24,10 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
-import me.abje.lingua.interpreter.obj.BooleanObj;
-import me.abje.lingua.interpreter.obj.NumberObj;
-import me.abje.lingua.interpreter.obj.Obj;
-import me.abje.lingua.interpreter.obj.StringObj;
+import me.abje.lingua.interpreter.obj.*;
 import me.abje.lingua.lexer.Token;
 
 /**
@@ -93,7 +90,7 @@ public class OperatorExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         try {
             switch (getToken().getType()) {
-                case PLUS:
+                case PLUS: {
                     Obj leftObj = interpreter.next(left);
                     Obj rightObj = interpreter.next(right);
                     if (leftObj instanceof NumberObj && rightObj instanceof NumberObj) {
@@ -101,6 +98,7 @@ public class OperatorExpr extends Expr {
                     } else {
                         return new StringObj(leftObj.toString() + rightObj.toString());
                     }
+                }
                 case MINUS:
                     return NumberObj.of(((NumberObj) next(left, interpreter)).getValue() -
                             ((NumberObj) next(right, interpreter)).getValue());
@@ -135,6 +133,13 @@ public class OperatorExpr extends Expr {
                     return BooleanObj.of(interpreter.next(left).isTruthy() || interpreter.next(right).isTruthy());
                 case IS:
                     return BooleanObj.of(interpreter.next(left).getType().isSubclassOf(interpreter.next(right)));
+                case ELVIS: {
+                    Obj leftObj = interpreter.next(left);
+                    if (leftObj != NullObj.get())
+                        return leftObj;
+                    else
+                        return interpreter.next(right);
+                }
                 default:
                     throw new InterpreterException("InvalidOperationException", "invalid operator", interpreter);
             }

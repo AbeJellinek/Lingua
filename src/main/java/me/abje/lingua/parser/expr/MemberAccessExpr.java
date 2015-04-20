@@ -23,6 +23,7 @@
 package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
@@ -41,20 +42,36 @@ public class MemberAccessExpr extends Expr {
     private String name;
 
     /**
+     * Whether this member access is a nullable access (returns null if left side is null).
+     */
+    private final boolean nullable;
+
+    /**
      * Creates a new member access expression.
      *
-     * @param left The left side of the expression.
-     * @param name The name of the member.
+     * @param left     The left side of the expression.
+     * @param name     The name of the member.
+     * @param nullable Whether this member access is a nullable access (returns null if left side is null).
      */
-    public MemberAccessExpr(Token token, Expr left, String name) {
+    public MemberAccessExpr(Token token, Expr left, String name, boolean nullable) {
         super(token);
         this.left = left;
         this.name = name;
+        this.nullable = nullable;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return interpreter.next(left).getMember(name);
+        if (nullable) {
+            Obj leftObj = interpreter.next(left);
+            if (leftObj != NullObj.get()) {
+                return leftObj.getMember(name);
+            } else {
+                return NullObj.get();
+            }
+        } else {
+            return interpreter.next(left).getMember(name);
+        }
     }
 
     /**
@@ -69,6 +86,13 @@ public class MemberAccessExpr extends Expr {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns whether this member access is a nullable access (returns null if left side is null).
+     */
+    public boolean isNullable() {
+        return nullable;
     }
 
     @Override

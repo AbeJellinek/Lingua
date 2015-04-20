@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.ListObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
@@ -67,13 +68,17 @@ public class ListExpr extends Expr {
     public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof ListObj) {
             ListObj list = (ListObj) obj;
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
                 Expr item = items.get(i);
                 if (item.getAnnotations().contains("rest")) {
-                    if (i == list.size() - 1) {
-
+                    if (i == items.size() - 1) {
+                        if (item.match(interpreter, frame, list.drop(i), alwaysDefineNew) == null) {
+                            return null;
+                        } else {
+                            return obj;
+                        }
                     } else {
-
+                        throw new InterpreterException("CallException", "weird @rest annotation");
                     }
                 }
                 if (item.match(interpreter, frame, list.get(i), alwaysDefineNew) == null) {

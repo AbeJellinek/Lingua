@@ -75,4 +75,19 @@ public class CharObj extends Obj {
     public static CharObj init(NumberObj n) {
         return new CharObj((char) n.getValue());
     }
+
+    @Bridge
+    public BooleanObj isDigit() {
+        return BooleanObj.of(Character.isDigit(value));
+    }
+
+    @Bridge
+    public BooleanObj isLetter() {
+        return BooleanObj.of(Character.isLetter(value));
+    }
+
+    @Bridge
+    public BooleanObj isWhitespace() {
+        return BooleanObj.of(Character.isWhitespace(value));
+    }
 }

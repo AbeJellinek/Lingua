@@ -165,8 +165,30 @@ public class ListObj extends Obj {
      */
     @Bridge
     public ListObj add(Obj obj) {
+        if (obj == this)
+            throw new InterpreterException("InvalidOperationException", "attempt to add collection to itself");
         items.add(obj);
         return this;
+    }
+
+    /**
+     * Adds an item to position n of this list.
+     *
+     * @param obj The item.
+     * @param n The position.
+     * @return This list.
+     */
+    @Bridge
+    public ListObj add(Obj obj, NumberObj n) {
+        if (obj == this)
+            throw new InterpreterException("InvalidOperationException", "attempt to add collection to itself");
+        items.add((int) n.getValue(), obj);
+        return this;
+    }
+
+    @Bridge
+    public Obj remove(NumberObj n) {
+        return items.remove((int) n.getValue());
     }
 
     @Bridge
@@ -177,6 +199,21 @@ public class ListObj extends Obj {
     @Bridge
     public StringObj join(Obj separator) {
         return new StringObj(Joiner.on(separator.toString()).join(items));
+    }
+
+    @Bridge
+    public Obj head() {
+        return items.get(0);
+    }
+
+    @Bridge
+    public ListObj tail() {
+        return new ListObj(items.subList(1, items.size()));
+    }
+
+    @Bridge
+    public ListObj drop(int n) {
+        return new ListObj(items.subList(n, items.size()));
     }
 
     /**

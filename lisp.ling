@@ -1,0 +1,67 @@
+standardEnv() = {
+    env = #{}
+    env["+"] = (x, y) -> x + y
+    env["-"] = (x, y) -> x + y
+    env["*"] = (x, y) -> x + y
+    env["/"] = (x, y) -> x + y
+    env["cons"] = (x, xs) -> xs.add(x, 0)
+    env["list"] = (@rest xs) -> xs.map(x -> evaluate(x, env))
+    env
+}
+
+nextObj(inputTokens) = {
+    token = inputTokens.remove(0)
+    if (token == "(") {
+        @var list = []
+        while (inputTokens[0] != ")")
+            list.add(nextObj(inputTokens))
+        inputTokens.remove(0)
+        list
+    } else if (token == ")") {
+        throw(Exception("unexpected )"))
+    } else {
+        try {
+            Number(token)
+        } catch e: ConversionException {
+                token
+        }
+    }
+}
+
+evaluate(obj, env) = {
+    if (obj is List && obj) {
+        obj.head() match {
+            "def" -> obj.tail() match {
+                [name, value] -> {
+                    env[name] = evaluate(value, env)
+                    []
+                }
+                _ -> error("invalid definition")
+            }
+            head -> evaluate(head, env).call(obj.tail().map(x -> evaluate(x, env)))
+        }
+    } else if (obj is String) {
+        env[obj]
+    } else obj
+}
+
+stringify(obj) = {
+    obj match {
+        list: List -> "(" + list.map(stringify).join(" ") + ")"
+        fun: Function -> "<function>"
+        x -> String(x)
+    }
+}
+
+env = standardEnv()
+continue = true
+while continue {
+    input = read()
+    if (input == null) {
+        continue = false
+    } else {
+        inputTokens = input.replace("(", " ( ").replace(")", " ) ").split(" ").filter(x -> x.length())
+        while inputTokens.size()
+            print(stringify(evaluate(nextObj(inputTokens), env)))
+    }
+}

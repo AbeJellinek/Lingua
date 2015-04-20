@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.InterpreterException;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class TupleObj extends Obj {
-    public static final ClassObj SYNTHETIC = ClassObj.builder("Tuple").build();
+    public static final ClassObj SYNTHETIC = bridgeClass(TupleObj.class);
     private static final Map<String, Integer> ACCESSORS = new HashMap<>();
 
     static {
@@ -60,6 +61,11 @@ public class TupleObj extends Obj {
 
     public int size() {
         return items.size();
+    }
+
+    @Bridge
+    public ListObj drop(int n) {
+        return new ListObj(items.subList(n, items.size()));
     }
 
     @Override

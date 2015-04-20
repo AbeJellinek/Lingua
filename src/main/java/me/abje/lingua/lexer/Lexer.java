@@ -59,7 +59,7 @@ public class Lexer {
      */
     public Lexer(Reader reader, String fileName) {
         this.fileName = fileName;
-        this.reader = new PushbackReader(reader, 1);
+        this.reader = new PushbackReader(reader, 8);
         this.builder = new StringBuilder();
     }
 
@@ -149,6 +149,8 @@ public class Lexer {
                 case '=':
                     if (isNext('='))
                         return make(EQEQ);
+                    else if (isNext('>'))
+                        return make(FAT_ARROW);
                     else
                         return make(EQ);
                 case '<':
@@ -200,6 +202,13 @@ public class Lexer {
                     } else {
                         throw new ParseException("invalid annotation", fileName, line);
                     }
+                case '?':
+                    if (isNext('.'))
+                        return make(INTERRODOT);
+                    else if (isNext(':'))
+                        return make(ELVIS);
+                    else
+                        return make(QUESTION_MARK);
                 default:
                     if (Character.isWhitespace(read)) {
                         return make(WHITESPACE);
@@ -329,6 +338,8 @@ public class Lexer {
         }
         builder.setLength(0);
         builder.append(c);
+        if (!isNext('\''))
+            throw new ParseException("unclosed char literal", fileName, line);
         return make(CHAR);
     }
 

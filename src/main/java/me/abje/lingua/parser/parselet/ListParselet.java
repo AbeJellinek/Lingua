@@ -39,9 +39,7 @@ public class ListParselet implements PrefixParselet {
         List<Expr> items = new ArrayList<>();
         while (!parser.match(Token.Type.CLOSE_BRACKET)) {
             items.add(parser.next());
-            if (parser.match(Token.Type.COMMA)) {
-                parser.read();
-            }
+            parser.match(Token.Type.COMMA);
         }
         return new ListExpr(token, items);
     }

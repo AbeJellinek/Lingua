@@ -29,13 +29,13 @@ import me.abje.lingua.parser.Precedence;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.MatchExpr;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 public class MatchParselet implements InfixParselet {
     @Override
     public Expr parse(Parser parser, Expr left, Token token) {
-        Map<Expr, Expr> clauses = new HashMap<>();
+        LinkedHashMap<Expr, Expr> clauses = new LinkedHashMap<>();
 
         parser.expect(Token.Type.OPEN_BRACE);
         while (!parser.match(Token.Type.CLOSE_BRACE)) {

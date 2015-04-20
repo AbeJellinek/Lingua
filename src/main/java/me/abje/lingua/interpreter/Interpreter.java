@@ -142,6 +142,8 @@ public class Interpreter {
                     log.error("Parse error:\n{}", e.getMessage());
                 } catch (InterpreterException e) {
                     handleInterpreterException(e, interpreter);
+                } catch (Exception e) {
+                    handleInterpreterException(new InterpreterException("Exception", e.getMessage()), interpreter);
                 }
 
                 try {

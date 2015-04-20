@@ -27,13 +27,14 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MatchExpr extends Expr {
     private Expr left;
-    private final Map<Expr, Expr> clauses;
+    private final LinkedHashMap<Expr, Expr> clauses;
 
-    public MatchExpr(Token token, Expr left, Map<Expr, Expr> clauses) {
+    public MatchExpr(Token token, Expr left, LinkedHashMap<Expr, Expr> clauses) {
         super(token);
         this.left = left;
         this.clauses = clauses;

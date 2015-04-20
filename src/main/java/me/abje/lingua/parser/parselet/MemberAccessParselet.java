@@ -37,7 +37,7 @@ public class MemberAccessParselet implements InfixParselet {
     public Expr parse(Parser parser, Expr left, Token token) {
         Token name = parser.read();
         if (name != null && name.is(Token.Type.NAME)) {
-            return new MemberAccessExpr(token, left, name.getValue());
+            return new MemberAccessExpr(token, left, name.getValue(), token.is(Token.Type.INTERRODOT));
         } else {
             throw new ParseException("member not a name", token);
         }

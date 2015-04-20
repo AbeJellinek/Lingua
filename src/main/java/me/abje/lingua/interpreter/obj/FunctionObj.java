@@ -22,10 +22,12 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.parser.expr.Expr;
+import me.abje.lingua.parser.expr.TupleExpr;
 
 import java.util.Deque;
 import java.util.List;
@@ -114,9 +116,6 @@ public class FunctionObj extends Obj {
 
     @Override
     public Obj call(Interpreter interpreter, List<Obj> args) {
-        if (args.size() != argNames.size())
-            throw new InterpreterException("CallException", "invalid number of arguments for function " + name, interpreter);
-
         Environment env = interpreter.getEnv();
         Deque<Environment.Frame> oldStack = env.getStack();
         env.setStack(captured);
@@ -126,9 +125,10 @@ public class FunctionObj extends Obj {
             env.pushFrame(name);
 
         Environment.Frame frame = env.getStack().peek();
-        for (int i = 0; i < args.size(); i++)
-            if (argNames.get(i).match(interpreter, frame, args.get(i), true) == null)
-                throw new InterpreterException("CallException", "invalid argument for function " + name, interpreter);
+        TupleExpr argNamesTuple = new TupleExpr(null, argNames);
+        TupleObj argsTuple = new TupleObj(args);
+        if (argNamesTuple.match(interpreter, frame, argsTuple, true) == null)
+            throw new InterpreterException("CallException", "invalid arguments for function " + name, interpreter);
 
         if (self != null)
             env.define("self", self);
@@ -140,6 +140,11 @@ public class FunctionObj extends Obj {
         env.setStack(oldStack);
 
         return obj;
+    }
+
+    @Bridge
+    public Obj call(Interpreter interpreter, ListObj args) {
+        return call(interpreter, args.all());
     }
 
     @Override

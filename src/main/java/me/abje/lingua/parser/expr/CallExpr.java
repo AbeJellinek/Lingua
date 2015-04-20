@@ -24,6 +24,7 @@ package me.abje.lingua.parser.expr;
 
 import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
@@ -59,7 +60,16 @@ public class CallExpr extends Expr {
     @Override
     public Obj evaluate(Interpreter interpreter) {
         List<Obj> argObjs = args.stream().map(interpreter::next).collect(Collectors.toList());
-        return interpreter.next(func).call(interpreter, argObjs);
+        if (func instanceof MemberAccessExpr && ((MemberAccessExpr) func).isNullable()) {
+            Obj funcObj = interpreter.next(func);
+            if (funcObj != NullObj.get()) {
+                return funcObj.call(interpreter, argObjs);
+            } else {
+                return NullObj.get();
+            }
+        } else {
+            return interpreter.next(func).call(interpreter, argObjs);
+        }
     }
 
     /**

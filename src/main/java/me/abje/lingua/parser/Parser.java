@@ -102,10 +102,12 @@ public class Parser {
         infix(ANDAND, Precedence.LOGICAL);
         infix(OROR, Precedence.LOGICAL);
         infix(IS, Precedence.EQUALITY);
+        infix(ELVIS, Precedence.LOGICAL);
         registerInfix(OPEN_PAREN, new CallParselet());
         registerInfix(EQ, new AssignmentParselet());
         registerInfix(OPEN_BRACKET, new IndexParselet());
         registerInfix(DOT, new MemberAccessParselet());
+        registerInfix(INTERRODOT, new MemberAccessParselet());
         registerInfix(ARROW, new MiniFunctionParselet());
         registerInfix(PLUS_EQ, new BinaryMutatorParselet(Token.Type.PLUS));
         registerInfix(MINUS_EQ, new BinaryMutatorParselet(Token.Type.MINUS));

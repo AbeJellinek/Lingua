@@ -25,6 +25,7 @@ package me.abje.lingua.parser.expr;
 import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
+import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.TupleObj;
 import me.abje.lingua.lexer.Token;
@@ -33,24 +34,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TupleExpr extends Expr {
-    private final List<Expr> exprs;
+    private final List<Expr> items;
 
-    public TupleExpr(Token token, List<Expr> exprs) {
+    public TupleExpr(Token token, List<Expr> items) {
         super(token);
-        this.exprs = exprs;
+        this.items = items;
     }
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return new TupleObj(exprs.stream().map(interpreter::next).collect(Collectors.toList()));
+        return new TupleObj(items.stream().map(interpreter::next).collect(Collectors.toList()));
     }
 
     @Override
     public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
         if (obj instanceof TupleObj) {
             TupleObj tuple = (TupleObj) obj;
-            for (int i = 0; i < tuple.size(); i++) {
-                if (exprs.get(i).match(interpreter, frame, tuple.get(i), alwaysDefineNew) == null) {
+            for (int i = 0; i < items.size(); i++) {
+                Expr item = items.get(i);
+                if (item.getAnnotations().contains("rest")) {
+                    if (i == items.size() - 1) {
+                        if (tuple.size() < i || item.match(interpreter, frame, tuple.drop(i), alwaysDefineNew) == null) {
+                            return null;
+                        } else {
+                            return obj;
+                        }
+                    } else {
+                        throw new InterpreterException("CallException", "weird @rest annotation");
+                    }
+                }
+                if (tuple.size() <= i || item.match(interpreter, frame, tuple.get(i), alwaysDefineNew) == null) {
                     return null;
                 }
             }
@@ -61,11 +74,11 @@ public class TupleExpr extends Expr {
     }
 
     public List<Expr> getItems() {
-        return exprs;
+        return items;
     }
 
     @Override
     public String toString() {
-        return "(" + Joiner.on(", ").join(exprs) + ")";
+        return "(" + Joiner.on(", ").join(items) + ")";
     }
 }

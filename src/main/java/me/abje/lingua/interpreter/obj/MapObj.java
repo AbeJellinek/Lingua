@@ -40,7 +40,7 @@ public class MapObj extends Obj {
     }
 
     public Obj get(Obj key) {
-        return items.get(key);
+        return items.containsKey(key) ? items.get(key) : NullObj.get();
     }
 
     @Override
