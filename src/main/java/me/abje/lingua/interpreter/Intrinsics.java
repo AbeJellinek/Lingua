@@ -126,7 +126,6 @@ public class Intrinsics {
     public ClassObj doNative(StringObj name) {
         try {
             Class<?> clazz = Class.forName(name.getValue());
-            //noinspection RedundantCast
             return (ClassObj) clazz.getField("SYNTHETIC").get(null);
         } catch (ClassNotFoundException | IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();

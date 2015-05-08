@@ -22,7 +22,8 @@
 
 package me.abje.lingua.parser.parselet;
 
-import me.abje.lingua.interpreter.obj.Field;
+import me.abje.lingua.interpreter.obj.DefaultObjField;
+import me.abje.lingua.interpreter.obj.ObjField;
 import me.abje.lingua.lexer.Token;
 import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
@@ -45,7 +46,7 @@ public class ClassParselet implements PrefixParselet {
         if (parser.match(Token.Type.COLON))
             superClassName = parser.read().getValue();
         parser.expect(Token.Type.OPEN_BRACE);
-        List<Field> fields = new ArrayList<>();
+        List<ObjField> fields = new ArrayList<>();
         List<FunctionExpr> functions = new ArrayList<>();
         while (!parser.match(Token.Type.CLOSE_BRACE)) {
             Expr expr = parser.next();
@@ -54,12 +55,12 @@ public class ClassParselet implements PrefixParselet {
             } else if (expr instanceof AssignmentExpr) {
                 AssignmentExpr assgn = (AssignmentExpr) expr;
                 if (assgn.getName() instanceof NameExpr) {
-                    fields.add(new Field(null, ((NameExpr) assgn.getName()).getValue(), assgn.getValue()));
+                    fields.add(new DefaultObjField(((NameExpr) assgn.getName()).getValue(), false, assgn.getValue()));
                 } else {
                     throw new ParseException("invalid class member (left side must be a name)", expr.getToken());
                 }
             } else if (expr instanceof NameExpr) {
-                fields.add(new Field(null, ((NameExpr) expr).getValue(), new NullExpr(token)));
+                fields.add(new DefaultObjField(((NameExpr) expr).getValue(), false, new NullExpr(token)));
             } else {
                 throw new ParseException("invalid class member", expr.getToken());
             }

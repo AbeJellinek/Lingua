@@ -161,7 +161,7 @@ public class Interpreter {
         Deque<Environment.Frame> stack = interpreter.getEnv().getStack();
         ArrayDeque<Environment.Frame> oldStack = new ArrayDeque<>(stack);
         interpreter.getEnv().setOldStack(oldStack);
-        e.getExceptionObj().getMember("printError").call(interpreter, Collections.emptyList());
+        e.getExceptionObj().getMember(interpreter, "printError").call(interpreter, Collections.emptyList());
         interpreter.getEnv().setOldStack(null);
         interpreter.getEnv().setStack(stack);
     }

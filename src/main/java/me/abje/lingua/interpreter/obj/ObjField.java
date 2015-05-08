@@ -22,45 +22,31 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import me.abje.lingua.parser.expr.Expr;
+import me.abje.lingua.interpreter.Interpreter;
 
 /**
  * Represents a field in a class.
  */
-public class Field {
-    /**
-     * The field's type. Currently unused.
-     */
-    private final ClassObj type;
-
+public abstract class ObjField {
     /**
      * The field's name.
      */
     private final String name;
 
     /**
-     * The field's default value, computed when an instance is created.
+     * Whether this field is static.
      */
-    private final Expr defaultValue;
+    private final boolean isStatic;
 
     /**
      * Creates a new field.
      *
-     * @param type         The field's type.
-     * @param name         The field's name.
-     * @param defaultValue The field's uncomputed default value.
+     * @param name     The field's name.
+     * @param isStatic Whether this field is static.
      */
-    public Field(ClassObj type, String name, Expr defaultValue) {
-        this.type = type;
+    public ObjField(String name, boolean isStatic) {
         this.name = name;
-        this.defaultValue = defaultValue;
-    }
-
-    /**
-     * Returns this field's type.
-     */
-    public ClassObj getType() {
-        return type;
+        this.isStatic = isStatic;
     }
 
     /**
@@ -70,29 +56,28 @@ public class Field {
         return name;
     }
 
-    /**
-     * Returns this field's default value.
-     */
-    public Expr getDefaultValue() {
-        return defaultValue;
-    }
+    public abstract void init(Interpreter interpreter, Obj self);
+
+    public abstract void set(Interpreter interpreter, Obj self, Obj newValue);
+
+    public abstract Obj get(Interpreter interpreter, Obj self);
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Field field = (Field) o;
+        ObjField field = (ObjField) o;
 
-        return defaultValue.equals(field.defaultValue) && name.equals(field.name) &&
-                !(type != null ? !type.equals(field.type) : field.type != null);
+        return name.equals(field.name);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + defaultValue.hashCode();
-        return result;
+        return name.hashCode();
+    }
+
+    public boolean isStatic() {
+        return isStatic;
     }
 }

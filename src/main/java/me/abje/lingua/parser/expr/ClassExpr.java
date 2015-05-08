@@ -52,7 +52,7 @@ public class ClassExpr extends Expr {
     /**
      * The class's fields.
      */
-    private final List<Field> fields;
+    private final List<ObjField> fields;
 
     /**
      * This class's superclass name.
@@ -67,7 +67,7 @@ public class ClassExpr extends Expr {
      * @param fields         The class's fields.
      * @param superClassName This class's superclass name.
      */
-    public ClassExpr(Token token, String name, List<FunctionExpr> functions, List<Field> fields, String superClassName) {
+    public ClassExpr(Token token, String name, List<FunctionExpr> functions, List<ObjField> fields, String superClassName) {
         super(token);
         this.name = name;
         this.functions = functions;
@@ -104,7 +104,7 @@ public class ClassExpr extends Expr {
                     }
 
                     if (superClass.getFunctionMap().containsKey(name) && !name.equals("init")) {
-                        return superClass.getMember(name).call(interpreter, args);
+                        return superClass.getMember(interpreter, name).call(interpreter, args);
                     } else {
                         throw new InterpreterException("CallException", "invalid arguments for function " + name);
                     }
@@ -133,7 +133,7 @@ public class ClassExpr extends Expr {
     /**
      * Returns this class's fields.
      */
-    public List<Field> getFields() {
+    public List<ObjField> getFields() {
         return fields;
     }
 

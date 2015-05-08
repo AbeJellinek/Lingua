@@ -22,17 +22,11 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.bridge.ObjectBridge;
-import me.abje.lingua.util.TriFunction;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,11 +107,12 @@ public class Obj {
     /**
      * Gets a member of this object by name.
      *
-     * @param name The member's name.
+     * @param interpreter The interpreter.
+     * @param name        The member's name.
      * @return The member, never null.
      * @throws me.abje.lingua.interpreter.InterpreterException If a member by that name could not be found.
      */
-    public Obj getMember(String name) {
+    public Obj getMember(Interpreter interpreter, String name) {
         if (type != null && type.getFunctionMap().containsKey(name)) {
             Obj function = type.getFunctionMap().get(name);
             if (function instanceof FunctionObj) {
@@ -131,21 +126,9 @@ public class Obj {
                 return function;
             }
         } else if (type != null && type.getFieldMap().containsKey(name)) {
-            return members.getOrDefault(name, NullObj.get());
-        } else if (superInst != null && superInst.members.containsKey(name)) {
-            return superInst.members.getOrDefault(name, NullObj.get());
-        } else if (superInst != null && superInst.type.getFunctionMap().containsKey(name)) {
-            Obj function = superInst.type.getFunctionMap().get(name);
-            if (function instanceof FunctionObj) {
-                return ((FunctionObj) function).withSelf(this).withSuper(superInst);
-            } else if (function instanceof SyntheticFunctionObj) {
-                SyntheticFunctionObj synthetic = (SyntheticFunctionObj) function;
-                synthetic.setSelf(this);
-                synthetic.setSuperInst(superInst);
-                return function;
-            } else {
-                return function;
-            }
+            return type.getFieldMap().get(name).get(interpreter, this);
+        } else if (superInst != null) {
+            return superInst.getMember(interpreter, name);
         } else {
             throw new InterpreterException("UndefinedException", "unknown field: " + name);
         }
@@ -154,13 +137,16 @@ public class Obj {
     /**
      * Sets a member of this object by name.
      *
-     * @param name  The member's name.
-     * @param value The new value of the member.
+     * @param interpreter The interpreter.
+     * @param name        The member's name.
+     * @param value       The new value of the member.
      * @throws me.abje.lingua.interpreter.InterpreterException If a member by that name could not be found.
      */
-    public void setMember(String name, Obj value) {
+    public void setMember(Interpreter interpreter, String name, Obj value) {
         if (type != null && type.getFieldMap().containsKey(name)) {
-            members.put(name, value);
+            type.getFieldMap().get(name).set(interpreter, this, value);
+        } else if (superInst != null) {
+            superInst.setMember(interpreter, name, value);
         } else {
             throw new InterpreterException("UndefinedException", "unknown field: " + name);
         }
@@ -170,7 +156,7 @@ public class Obj {
      * Gets this object's type.
      */
     public ClassObj getType() {
-        return type;
+        return type != null ? type : ClassObj.SYNTHETIC;
     }
 
     /**
@@ -209,6 +195,12 @@ public class Obj {
         ClassObj.Builder<C> builder = ClassObj.<C>builder(className);
         Map<String, Map<Integer, ObjectBridge.MethodMetadata>> methodMap = ObjectBridge.createMethodMap(clazz, null);
         methodMap.forEach((methodName, map) -> ObjectBridge.addFunction(builder, methodName, map));
+        Map<String, ObjField> fieldMap = ObjectBridge.createFieldMap(clazz, null);
+        builder.withFields(new ArrayList<>(fieldMap.values()));
         return builder.build();
+    }
+
+    public Map<String, Obj> getMembers() {
+        return members;
     }
 }

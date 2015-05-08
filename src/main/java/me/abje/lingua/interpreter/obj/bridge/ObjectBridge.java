@@ -22,13 +22,8 @@
 
 package me.abje.lingua.interpreter.obj.bridge;
 
-import me.abje.lingua.interpreter.Bridge;
-import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.InterpreterException;
-import me.abje.lingua.interpreter.obj.ClassObj;
-import me.abje.lingua.interpreter.obj.NullObj;
-import me.abje.lingua.interpreter.obj.NumberObj;
-import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.interpreter.*;
+import me.abje.lingua.interpreter.obj.*;
 import me.abje.lingua.util.TriFunction;
 
 import java.lang.invoke.MethodHandle;
@@ -93,6 +88,63 @@ public class ObjectBridge {
         return methodMap;
     }
 
+    public static <C> Map<String, ObjField> createFieldMap(Class<C> clazz, C instance) {
+        Map<String, ObjField> fieldMap = new HashMap<>();
+        for (Method method : clazz.getDeclaredMethods()) {
+            FieldBridge bridge = method.getAnnotation(FieldBridge.class);
+            if (bridge != null) {
+                try {
+                    String methodName = bridge.value().isEmpty() ? method.getName() : bridge.value();
+                    MethodHandle initialHandle = MethodHandles.lookup().unreflect(method);
+                    Class<?> returnType = initialHandle.type().returnType();
+                    if (returnType == byte.class || returnType == short.class ||
+                            returnType == int.class || returnType == float.class) {
+                        initialHandle = MethodHandles.filterReturnValue(initialHandle,
+                                convertToNumber.asType(MethodType.methodType(NumberObj.class, returnType)));
+                    }
+                    if (instance != null)
+                        initialHandle = initialHandle.bindTo(instance);
+                    Class<?>[] parameterArray = initialHandle.type().parameterArray();
+                    int interpreterIndex = -1;
+                    for (int i = 0; i < parameterArray.length; i++) {
+                        Class<?> type = parameterArray[i];
+                        if (type == Interpreter.class) {
+                            interpreterIndex = i;
+                        }
+                    }
+
+                    final MethodHandle finalHandle = initialHandle;
+                    final int index = interpreterIndex;
+                    fieldMap.put(methodName, new GetterObjField(methodName, method.isAnnotationPresent(Static.class),
+                            (interpreter, self) -> {
+                                MethodHandle handle = finalHandle;
+                                if (index != -1)
+                                    handle = MethodHandles.insertArguments(handle, index - 1, interpreter);
+                                if (self != null)
+                                    handle = handle.bindTo(self);
+                                try {
+                                    Object result = handle.invokeWithArguments();
+                                    if (result != null) {
+                                        if (result instanceof String) {
+                                            return new StringObj((String) result);
+                                        } else {
+                                            return (Obj) result;
+                                        }
+                                    } else {
+                                        return NullObj.get();
+                                    }
+                                } catch (Throwable throwable) {
+                                    throw new RuntimeException(throwable);
+                                }
+                            }, null));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return fieldMap;
+    }
+
     public static <C> void addFunction(ClassObj.Builder<C> builder, String methodName, Map<Integer, MethodMetadata> map) {
         builder.withFunction(methodName, createFunctionBridge(methodName, map));
     }
@@ -118,7 +170,6 @@ public class ObjectBridge {
                 try {
                     Object result = handle.invokeWithArguments(args);
                     if (result != null) {
-                        //noinspection RedundantCast
                         return (Obj) result;
                     } else {
                         return NullObj.get();

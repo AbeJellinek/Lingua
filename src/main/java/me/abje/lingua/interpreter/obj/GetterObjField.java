@@ -24,54 +24,47 @@ package me.abje.lingua.interpreter.obj;
 
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.util.TriFunction;
 
-/**
- * The Lingua "null" singleton. Has no fields, cannot be invoked, and is generally quite useless.
- */
-public class NullObj extends Obj {
-    public static final ClassObj SYNTHETIC = bridgeClass(NullObj.class);
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
-    /**
-     * The singleton instance.
-     */
-    private static final NullObj self = new NullObj();
+public class GetterObjField extends ObjField {
+    private final BiFunction<Interpreter, Obj, Obj> getter;
+    private final TriFunction<Interpreter, Obj, Obj, Obj> setter;
 
     /**
-     * Constructs a new Null. This constructor is for private use.
-     */
-    private NullObj() {
-        super(SYNTHETIC);
-    }
-
-    /**
-     * Returns the Null instance.
-     */
-    public static NullObj get() {
-        return self;
-    }
-
-    @Override
-    public Obj getMember(Interpreter interpreter, String name) {
-        throw new InterpreterException("NullReferenceException", "attempt to dereference null");
-    }
-
-    @Override
-    public void setMember(Interpreter interpreter, String name, Obj value) {
-        throw new InterpreterException("NullReferenceException", "attempt to dereference null");
-    }
-
-    @Override
-    public String toString() {
-        return "null";
-    }
-
-    /**
-     * Null is not truthy.
+     * Creates a new field.
      *
-     * @return False.
+     * @param methodName The field's name.
+     * @param isStatic   Whether this field is static.
+     * @param getter     The field's getter.
+     * @param setter     The field's setter.
      */
+    public GetterObjField(String methodName,
+                          boolean isStatic,
+                          BiFunction<Interpreter, Obj, Obj> getter,
+                          TriFunction<Interpreter, Obj, Obj, Obj> setter) {
+        super(methodName, isStatic);
+        this.getter = getter;
+        this.setter = setter;
+    }
+
     @Override
-    public boolean isTruthy() {
-        return false;
+    public void init(Interpreter interpreter, Obj self) {
+    }
+
+    @Override
+    public void set(Interpreter interpreter, Obj self, Obj newValue) {
+        if (setter == null) {
+            throw new InterpreterException("InvalidOperationException", "field not mutable: " + getName());
+        } else {
+            setter.apply(interpreter, self, newValue);
+        }
+    }
+
+    @Override
+    public Obj get(Interpreter interpreter, Obj self) {
+        return getter.apply(interpreter, self);
     }
 }

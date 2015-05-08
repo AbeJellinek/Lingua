@@ -23,6 +23,7 @@
 package me.abje.lingua.interpreter.obj;
 
 import me.abje.lingua.interpreter.Bridge;
+import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
 import java.util.HashMap;
@@ -74,29 +75,29 @@ public class TupleObj extends Obj {
     }
 
     @Override
-    public Obj getMember(String name) {
+    public Obj getMember(Interpreter interpreter, String name) {
         if (ACCESSORS.containsKey(name)) {
             int index = ACCESSORS.get(name);
             if (size() > index) {
                 return get(index);
             } else {
-                return super.getMember(name);
+                return super.getMember(interpreter, name);
             }
         }
-        return super.getMember(name);
+        return super.getMember(interpreter, name);
     }
 
     @Override
-    public void setMember(String name, Obj value) {
+    public void setMember(Interpreter interpreter, String name, Obj value) {
         if (ACCESSORS.containsKey(name)) {
             int index = ACCESSORS.get(name);
             if (size() >= index) {
                 throw new InterpreterException("InvalidOperationException", "tuples are immutable");
             } else {
-                super.setMember(name, value);
+                super.setMember(interpreter, name, value);
             }
         }
-        super.setMember(name, value);
+        super.setMember(interpreter, name, value);
     }
 
     @Override

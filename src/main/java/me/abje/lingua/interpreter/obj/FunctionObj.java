@@ -22,10 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import me.abje.lingua.interpreter.Bridge;
-import me.abje.lingua.interpreter.Environment;
-import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.*;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.TupleExpr;
 import me.abje.lingua.util.DefinitionType;
@@ -97,6 +94,7 @@ public class FunctionObj extends Obj {
     /**
      * Returns this function's name.
      */
+    @FieldBridge("name")
     public String getName() {
         return name;
     }

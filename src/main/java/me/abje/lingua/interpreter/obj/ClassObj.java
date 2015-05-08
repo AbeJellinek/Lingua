@@ -22,8 +22,10 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import me.abje.lingua.interpreter.FieldBridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.Static;
 import me.abje.lingua.util.TriFunction;
 
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
  * A Lingua class. Classes have names, functions, and fields.
  */
 public class ClassObj extends Obj {
+    public static final ClassObj SYNTHETIC = bridgeClass(ClassObj.class);
+
     /**
      * This class's name.
      */
@@ -49,15 +53,10 @@ public class ClassObj extends Obj {
     private final Map<String, Obj> functionMap;
 
     /**
-     * The fields provided by this class.
-     */
-    private final List<Field> fields;
-
-    /**
      * The fields provided by this class, in map form.
      * The keys are the names of the fields, and the values the fields themselves.
      */
-    private final Map<String, Field> fieldMap = new HashMap<>();
+    private final Map<String, ObjField> fieldMap = new HashMap<>();
 
     /**
      * Indicates whether this class is synthetic.
@@ -78,14 +77,13 @@ public class ClassObj extends Obj {
      * @param fields     The class's fields.
      * @param superClass This class's superclass.
      */
-    public ClassObj(String name, Map<String, Obj> functions, List<Field> fields, ClassObj superClass) {
+    public ClassObj(String name, Map<String, Obj> functions, List<ObjField> fields, ClassObj superClass) {
         super(null);
         this.name = name;
         this.functionMap = functions;
-        this.fields = fields;
         this.superClass = superClass;
 
-        for (Field fn : fields) {
+        for (ObjField fn : fields) {
             fieldMap.put(fn.getName(), fn);
         }
     }
@@ -98,8 +96,9 @@ public class ClassObj extends Obj {
      * @param fields     The class's fields.
      * @param superClass This class's superclass.
      */
-    public ClassObj(String name, List<FunctionObj> functions, List<Field> fields, ClassObj superClass) {
-        this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())), fields, superClass);
+    public ClassObj(String name, List<FunctionObj> functions, List<ObjField> fields, List<ObjField> staticFields, ClassObj superClass) {
+        this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())),
+                fields, superClass);
     }
 
     /**
@@ -109,7 +108,7 @@ public class ClassObj extends Obj {
      * @return The Builder.
      */
     public static <O> Builder<O> builder(String name) {
-        return new Builder<O>(name);
+        return new Builder<>(name);
     }
 
     /**
@@ -125,14 +124,21 @@ public class ClassObj extends Obj {
             return functionMap.get("init").call(interpreter, args);
         } else {
             UserObj superInstance = new UserObj(superClass);
+            {
+                Obj current = superInstance;
+                while (current.getType().superClass != null) {
+                    current.setSuperInst(new UserObj(current.getType().superClass));
+                    current = current.getSuperInst();
+                }
+            }
             UserObj instance = new UserObj(this);
             instance.setSuperInst(superInstance);
 
             interpreter.getEnv().pushFrame(name + ".<init>");
-            superClass.fieldMap.forEach((name, field) -> superInstance.setMember(name, interpreter.next(field.getDefaultValue())));
-            fieldMap.forEach((name, field) -> instance.setMember(name, interpreter.next(field.getDefaultValue())));
+            superClass.fieldMap.forEach((name, field) -> field.init(interpreter, superInstance));
+            fieldMap.forEach((name, field) -> field.init(interpreter, instance));
             if (functionMap.containsKey("init")) {
-                Obj init = instance.getMember("init");
+                Obj init = instance.getMember(interpreter, "init");
                 init.setSuperInst(superInstance);
                 if (init instanceof SyntheticFunctionObj) {
                     ((SyntheticFunctionObj) init).setSelf(instance);
@@ -147,10 +153,32 @@ public class ClassObj extends Obj {
         }
     }
 
+    @Override
+    public Obj getMember(Interpreter interpreter, String name) {
+        if (fieldMap.containsKey(name) && fieldMap.get(name).isStatic()) {
+            return fieldMap.get(name).get(interpreter, this);
+        } else if (superClass != null) {
+            return superClass.getMember(interpreter, name);
+        } else {
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
+        }
+    }
+
+    @Override
+    public void setMember(Interpreter interpreter, String name, Obj value) {
+        if (fieldMap.containsKey(name) && fieldMap.get(name).isStatic()) {
+            fieldMap.get(name).set(interpreter, this, value);
+        } else if (superClass != null) {
+            superClass.setMember(interpreter, name, value);
+        } else {
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
+        }
+    }
+
     /**
      * Returns this class's fields.
      */
-    public Map<String, Field> getFieldMap() {
+    public Map<String, ObjField> getFieldMap() {
         return fieldMap;
     }
 
@@ -194,7 +222,7 @@ public class ClassObj extends Obj {
         /**
          * The class's fields.
          */
-        private List<Field> fields = new ArrayList<>();
+        private List<ObjField> fields = new ArrayList<>();
 
         /**
          * Creates a new builder for a class with the given name.
@@ -244,7 +272,7 @@ public class ClassObj extends Obj {
          * @param fields The fields to add.
          * @return This builder, for chaining.
          */
-        public Builder<O> withFields(List<Field> fields) {
+        public Builder<O> withFields(List<ObjField> fields) {
             this.fields.addAll(fields);
             return this;
         }

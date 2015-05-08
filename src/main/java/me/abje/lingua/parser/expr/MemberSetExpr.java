@@ -63,7 +63,7 @@ public class MemberSetExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         Obj leftObj = interpreter.next(left);
         Obj valueObj = interpreter.next(value);
-        leftObj.setMember(name, valueObj);
+        leftObj.setMember(interpreter, name, valueObj);
         return valueObj;
     }
 
