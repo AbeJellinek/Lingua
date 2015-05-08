@@ -29,10 +29,7 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.Static;
 import me.abje.lingua.util.TriFunction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -99,7 +96,8 @@ public class ClassObj extends Obj {
             supers.add(current);
             current = current.superClass;
         }
-        this.superClasses = Lists.reverse(supers);
+        Collections.reverse(supers);
+        this.superClasses = supers;
     }
 
     /**

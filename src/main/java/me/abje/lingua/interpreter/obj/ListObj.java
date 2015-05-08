@@ -208,17 +208,17 @@ public class ListObj extends Obj {
 
     @Bridge
     public ListObj tail() {
-        return new ListObj(items.subList(1, items.size()));
+        return new ListObj(items.subList(Math.min(1, items.size()), items.size()));
     }
 
     @Bridge
     public ListObj drop(int n) {
-        return new ListObj(items.subList(n, items.size()));
+        return new ListObj(items.subList(Math.min(n, items.size()), items.size()));
     }
 
     @Bridge
     public ListObj dropRight(int n) {
-        return new ListObj(items.subList(0, items.size() - n));
+        return new ListObj(items.subList(0, items.size() - Math.min(n, items.size())));
     }
 
     /**
