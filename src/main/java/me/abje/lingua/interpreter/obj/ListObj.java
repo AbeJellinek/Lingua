@@ -216,6 +216,11 @@ public class ListObj extends Obj {
         return new ListObj(items.subList(n, items.size()));
     }
 
+    @Bridge
+    public ListObj dropRight(int n) {
+        return new ListObj(items.subList(0, items.size() - n));
+    }
+
     /**
      * Returns the size of this list.
      */

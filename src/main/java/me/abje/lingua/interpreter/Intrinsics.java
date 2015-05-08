@@ -108,7 +108,7 @@ public class Intrinsics {
 
     @Bridge
     public ListObj dumpStack() {
-        return new ListObj(env.getOldStack().stream().map(frame -> {
+        return new ListObj((env.getOldStack() != null ? env.getOldStack() : env.getStack()).stream().map(frame -> {
             if (frame.getFileName() == null || frame.getFileName().equals("<native>")) {
                 return new StringObj(frame.getName() + "(native)");
             } else {

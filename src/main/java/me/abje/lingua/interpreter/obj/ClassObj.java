@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import com.google.common.collect.Lists;
 import me.abje.lingua.interpreter.FieldBridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
@@ -59,6 +60,11 @@ public class ClassObj extends Obj {
     private final Map<String, ObjField> fieldMap = new HashMap<>();
 
     /**
+     * The superclasses of this class, from top to bottom.
+     */
+    private final List<ClassObj> superClasses;
+
+    /**
      * Indicates whether this class is synthetic.
      * A synthetic class is a class defined in the JVM, not Lingua.
      */
@@ -86,6 +92,14 @@ public class ClassObj extends Obj {
         for (ObjField fn : fields) {
             fieldMap.put(fn.getName(), fn);
         }
+
+        List<ClassObj> supers = new ArrayList<>();
+        ClassObj current = this;
+        while (current != null) {
+            supers.add(current);
+            current = current.superClass;
+        }
+        this.superClasses = Lists.reverse(supers);
     }
 
     /**
@@ -96,7 +110,7 @@ public class ClassObj extends Obj {
      * @param fields     The class's fields.
      * @param superClass This class's superclass.
      */
-    public ClassObj(String name, List<FunctionObj> functions, List<ObjField> fields, List<ObjField> staticFields, ClassObj superClass) {
+    public ClassObj(String name, List<FunctionObj> functions, List<ObjField> fields, ClassObj superClass) {
         this(name, functions.stream().collect(Collectors.toMap(FunctionObj::getName, Function.identity())),
                 fields, superClass);
     }
@@ -123,23 +137,16 @@ public class ClassObj extends Obj {
         if (synthetic) {
             return functionMap.get("init").call(interpreter, args);
         } else {
-            UserObj superInstance = new UserObj(superClass);
-            {
-                Obj current = superInstance;
-                while (current.getType().superClass != null) {
-                    current.setSuperInst(new UserObj(current.getType().superClass));
-                    current = current.getSuperInst();
-                }
-            }
             UserObj instance = new UserObj(this);
-            instance.setSuperInst(superInstance);
 
-            interpreter.getEnv().pushFrame(name + ".<init>");
-            superClass.fieldMap.forEach((name, field) -> field.init(interpreter, superInstance));
-            fieldMap.forEach((name, field) -> field.init(interpreter, instance));
+            for (ClassObj clazz : superClasses) {
+                interpreter.getEnv().pushFrame(clazz.name + ".<init>");
+                clazz.fieldMap.forEach((name, field) -> field.init(interpreter, instance));
+                interpreter.getEnv().popFrame();
+            }
+
             if (functionMap.containsKey("init")) {
                 Obj init = instance.getMember(interpreter, "init");
-                init.setSuperInst(superInstance);
                 if (init instanceof SyntheticFunctionObj) {
                     ((SyntheticFunctionObj) init).setSelf(instance);
                 } else if (init instanceof FunctionObj) {
@@ -147,7 +154,6 @@ public class ClassObj extends Obj {
                 }
                 init.call(interpreter, args);
             }
-            interpreter.getEnv().popFrame();
 
             return instance;
         }
@@ -194,6 +200,10 @@ public class ClassObj extends Obj {
         return name;
     }
 
+    public ClassObj getSuperClass() {
+        return superClass;
+    }
+
     public boolean isSubclassOf(Obj other) {
         ClassObj clazz = this;
         while (clazz != null) {
@@ -203,6 +213,37 @@ public class ClassObj extends Obj {
             clazz = clazz.superClass;
         }
         return false;
+    }
+
+    public Obj getObjMember(Interpreter interpreter, String name, Obj self) {
+        if (functionMap.containsKey(name)) {
+            Obj function = functionMap.get(name);
+            if (function instanceof FunctionObj) {
+                return ((FunctionObj) function).withSelf(self);
+            } else if (function instanceof SyntheticFunctionObj) {
+                SyntheticFunctionObj synthetic = (SyntheticFunctionObj) function;
+                synthetic.setSelf(self);
+                return function;
+            } else {
+                return function;
+            }
+        } else if (fieldMap.containsKey(name)) {
+            return fieldMap.get(name).get(interpreter, self);
+        } else if (superClass != null) {
+            return superClass.getObjMember(interpreter, name, self);
+        } else {
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
+        }
+    }
+
+    public void setObjMember(Interpreter interpreter, String name, Obj self, Obj value) {
+        if (fieldMap.containsKey(name)) {
+            fieldMap.get(name).set(interpreter, self, value);
+        } else if (superClass != null) {
+            superClass.setObjMember(interpreter, name, self, value);
+        } else {
+            throw new InterpreterException("UndefinedException", "unknown field: " + name);
+        }
     }
 
     /**

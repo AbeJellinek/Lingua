@@ -17,13 +17,16 @@ var Tuple    =  native("me.abje.lingua.interpreter.obj.TupleObj")
 
 class Exception {
     message
+    stack
 
-    init(message) =
+    init(message) = {
         self.message = message
+        self.stack = dumpStack().drop(2)
+    }
 
     printError() = {
         error(classOf(self) + ": " + self.message)
-        dumpStack().map(x -> "  at " + x).forEach(error)
+        self.stack.map(x -> "  at " + x).forEach(error)
     }
 }
 

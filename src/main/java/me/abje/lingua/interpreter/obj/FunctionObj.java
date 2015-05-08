@@ -67,28 +67,25 @@ public class FunctionObj extends Obj {
      * @param captured The function's captured frames.
      */
     public FunctionObj(String name, List<Expr> argNames, Expr body, Deque<Environment.Frame> captured) {
-        this(name, argNames, body, null, null, captured);
+        this(name, argNames, body, null, captured);
     }
 
     /**
      * Creates a new function.
      *
-     * @param name      The function's name.
-     * @param argNames  The function's formal argument list.
-     * @param body      The function's body expression.
-     * @param self      The function's "self" implicit argument.
-     * @param superInst The function's "super" implicit argument.
-     * @param captured  The function's captured frames.
+     * @param name     The function's name.
+     * @param argNames The function's formal argument list.
+     * @param body     The function's body expression.
+     * @param self     The function's "self" implicit argument.
+     * @param captured The function's captured frames.
      */
-    public FunctionObj(String name, List<Expr> argNames, Expr body, Obj self, Obj superInst, Deque<Environment.Frame> captured) {
+    public FunctionObj(String name, List<Expr> argNames, Expr body, Obj self, Deque<Environment.Frame> captured) {
         super(SYNTHETIC);
         this.name = name;
         this.argNames = argNames;
         this.body = body;
         this.self = self;
         this.captured = captured;
-
-        setSuperInst(superInst);
     }
 
     /**
@@ -129,10 +126,21 @@ public class FunctionObj extends Obj {
         if (argNamesTuple.match(interpreter, frame, argsTuple, DefinitionType.ALWAYS_NEW) == null)
             throw new InterpreterException("CallException", "invalid arguments for function " + name, interpreter);
 
-        if (self != null)
+        if (self != null) {
             env.define("self", self);
-        if (getSuperInst() != null)
-            env.define("super", getSuperInst());
+            env.define("super", new Obj(self.getType().getSuperClass()) {
+                @Override
+                public Obj getMember(Interpreter interpreter, String name) {
+                    return self.getType().getSuperClass().getObjMember(interpreter, name, self);
+                }
+
+                @Override
+                public void setMember(Interpreter interpreter, String name, Obj value) {
+                    self.getType().getSuperClass().setObjMember(interpreter, name, self, value);
+                }
+            });
+        }
+
         Obj obj = interpreter.next(body);
 
         captured.pop();
@@ -175,16 +183,7 @@ public class FunctionObj extends Obj {
      * @param self The new value of <code>self</code>.
      */
     public FunctionObj withSelf(Obj self) {
-        return new FunctionObj(name, argNames, body, self, getSuperInst(), captured);
-    }
-
-    /**
-     * Returns a copy of this function with an updated {@link #superInst}.
-     *
-     * @param superInst The new value of <code>super</code>.
-     */
-    public FunctionObj withSuper(Obj superInst) {
-        return new FunctionObj(name, argNames, body, self, superInst, captured);
+        return new FunctionObj(name, argNames, body, self, captured);
     }
 
     public boolean isApplicable(Interpreter interpreter, List<Obj> args) {

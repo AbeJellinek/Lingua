@@ -46,11 +46,6 @@ public class Obj {
      */
     private Map<String, Obj> members = new HashMap<>();
 
-    /**
-     * This object's super instance.
-     */
-    private Obj superInst;
-
     public static final ClassObj SYNTHETIC = bridgeClass(Obj.class);
 
     /**
@@ -113,25 +108,9 @@ public class Obj {
      * @throws me.abje.lingua.interpreter.InterpreterException If a member by that name could not be found.
      */
     public Obj getMember(Interpreter interpreter, String name) {
-        if (type != null && type.getFunctionMap().containsKey(name)) {
-            Obj function = type.getFunctionMap().get(name);
-            if (function instanceof FunctionObj) {
-                return ((FunctionObj) function).withSelf(this).withSuper(superInst);
-            } else if (function instanceof SyntheticFunctionObj) {
-                SyntheticFunctionObj synthetic = (SyntheticFunctionObj) function;
-                synthetic.setSelf(this);
-                synthetic.setSuperInst(superInst);
-                return function;
-            } else {
-                return function;
-            }
-        } else if (type != null && type.getFieldMap().containsKey(name)) {
-            return type.getFieldMap().get(name).get(interpreter, this);
-        } else if (superInst != null) {
-            return superInst.getMember(interpreter, name);
-        } else {
+        if (type == null)
             throw new InterpreterException("UndefinedException", "unknown field: " + name);
-        }
+        return type.getObjMember(interpreter, name, this);
     }
 
     /**
@@ -143,13 +122,9 @@ public class Obj {
      * @throws me.abje.lingua.interpreter.InterpreterException If a member by that name could not be found.
      */
     public void setMember(Interpreter interpreter, String name, Obj value) {
-        if (type != null && type.getFieldMap().containsKey(name)) {
-            type.getFieldMap().get(name).set(interpreter, this, value);
-        } else if (superInst != null) {
-            superInst.setMember(interpreter, name, value);
-        } else {
+        if (type == null)
             throw new InterpreterException("UndefinedException", "unknown field: " + name);
-        }
+        type.setObjMember(interpreter, name, this, value);
     }
 
     /**
@@ -166,14 +141,6 @@ public class Obj {
      */
     protected void setType(ClassObj type) {
         this.type = type;
-    }
-
-    public void setSuperInst(Obj superInst) {
-        this.superInst = superInst;
-    }
-
-    public Obj getSuperInst() {
-        return superInst;
     }
 
     public static <C extends Obj> ClassObj bridgeClass(Class<C> clazz) {

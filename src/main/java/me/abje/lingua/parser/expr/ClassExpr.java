@@ -96,7 +96,7 @@ public class ClassExpr extends Expr {
                         interpreter.getEnv().pushFrame("<" + function.getName() + ":args>");
                         if (function.isApplicable(interpreter, args)) {
                             interpreter.getEnv().popFrame();
-                            result = function.withSelf(getSelf()).withSuper(getSuperInst()).call(interpreter, args);
+                            result = function.withSelf(getSelf()).call(interpreter, args);
                             return result;
                         } else {
                             interpreter.getEnv().popFrame();

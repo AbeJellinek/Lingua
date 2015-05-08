@@ -37,17 +37,22 @@ import java.util.Map;
 
 public class ObjectBridge {
     private static final MethodHandle convertToNumber;
+    private static final MethodHandle convertFromNumber;
 
     static {
         MethodHandle toNumberObj = null;
+        MethodHandle fromNumberObj = null;
         try {
             toNumberObj = MethodHandles.lookup().unreflect(
                     ObjectBridge.class.getDeclaredMethod("toNumberObj", float.class));
+            fromNumberObj = MethodHandles.lookup().unreflect(
+                    ObjectBridge.class.getDeclaredMethod("fromNumberObj", NumberObj.class));
         } catch (IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
 
         convertToNumber = toNumberObj;
+        convertFromNumber = fromNumberObj;
     }
 
     public static <C> Map<String, Map<Integer, MethodMetadata>> createMethodMap(Class<C> clazz, C instance) {
@@ -74,6 +79,8 @@ public class ObjectBridge {
                         Class<?> type = parameterArray[i];
                         if (type == Interpreter.class) {
                             interpreterIndex = i;
+                        } else if (type == int.class) {
+                            initialHandle = MethodHandles.filterArguments(initialHandle, i, convertFromNumber);
                         }
                     }
                     Map<Integer, MethodMetadata> map = methodMap.computeIfAbsent(methodName, s -> new HashMap<>());
@@ -100,7 +107,7 @@ public class ObjectBridge {
                     if (returnType == byte.class || returnType == short.class ||
                             returnType == int.class || returnType == float.class) {
                         initialHandle = MethodHandles.filterReturnValue(initialHandle,
-                                convertToNumber.asType(MethodType.methodType(NumberObj.class, returnType)));
+                                convertToNumber.asType(MethodType.methodType(returnType, NumberObj.class)));
                     }
                     if (instance != null)
                         initialHandle = initialHandle.bindTo(instance);
@@ -110,6 +117,8 @@ public class ObjectBridge {
                         Class<?> type = parameterArray[i];
                         if (type == Interpreter.class) {
                             interpreterIndex = i;
+                        } else if (type == int.class) {
+                            initialHandle = MethodHandles.filterArguments(initialHandle, i, convertFromNumber);
                         }
                     }
 
@@ -189,6 +198,11 @@ public class ObjectBridge {
     @SuppressWarnings("unused")
     public static NumberObj toNumberObj(float f) {
         return NumberObj.of(f);
+    }
+
+    @SuppressWarnings("unused")
+    public static int fromNumberObj(NumberObj num) {
+        return (int) num.getValue();
     }
 
     public static class MethodMetadata {
