@@ -23,6 +23,7 @@
 package me.abje.lingua.interpreter;
 
 import me.abje.lingua.interpreter.obj.Obj;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -65,15 +66,22 @@ public class Environment {
     }
 
     /**
-     * Updates a variable in the top frame.
+     * Updates a variable.
      *
      * @param name  The variable's name.
      * @param value The variable's new value.
+     * @param type  The definition's type.
      * @return The variable's new value.
      * @throws me.abje.lingua.interpreter.InterpreterException If a variable with that name doesn't exist in the top frame.
      */
-    public Obj update(String name, Obj value) {
-        return stack.peek().update(name, value);
+    public Obj update(String name, Obj value, DefinitionType type) {
+        if (type == DefinitionType.NEVER_NEW) {
+            return stack.peek().update(name, value);
+        } else if (type == DefinitionType.ALWAYS_NEW) {
+            return define(name, value);
+        } else {
+            return put(name, value);
+        }
     }
 
     /**
@@ -120,15 +128,14 @@ public class Environment {
      * @param name  The variable's name.
      * @param value The variable's value.
      */
-    public void put(String name, Obj value) {
+    public Obj put(String name, Obj value) {
         for (Frame frame : stack) {
             if (frame.has(name)) {
-                frame.update(name, value);
-                return;
+                return frame.update(name, value);
             }
         }
 
-        stack.peek().define(name, value);
+        return stack.peek().define(name, value);
     }
 
     /**

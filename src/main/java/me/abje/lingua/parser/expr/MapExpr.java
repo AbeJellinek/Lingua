@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.MapObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,11 +48,11 @@ public class MapExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
         if (obj instanceof MapObj) {
             MapObj map = (MapObj) obj;
             for (Map.Entry<Expr, Expr> entry : items.entrySet()) {
-                if (entry.getValue().match(interpreter, frame, map.get(interpreter.next(entry.getKey())), alwaysDefineNew) == null) {
+                if (entry.getValue().match(interpreter, frame, map.get(interpreter.next(entry.getKey())), type) == null) {
                     return null;
                 }
             }

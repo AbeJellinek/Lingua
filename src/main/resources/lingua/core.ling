@@ -1,16 +1,16 @@
 // ==== Intrinsics pt. 1 ==== //
 // ======= Primitives ======= //
 
-Obj      =  native("me.abje.lingua.interpreter.obj.Obj")
-Boolean  =  native("me.abje.lingua.interpreter.obj.BooleanObj")
-Char     =  native("me.abje.lingua.interpreter.obj.CharObj")
-Class    =  native("me.abje.lingua.interpreter.obj.ClassObj")
-Function =  native("me.abje.lingua.interpreter.obj.FunctionObj")
-List     =  native("me.abje.lingua.interpreter.obj.ListObj")
-Map      =  native("me.abje.lingua.interpreter.obj.MapObj")
-Number   =  native("me.abje.lingua.interpreter.obj.NumberObj")
-String   =  native("me.abje.lingua.interpreter.obj.StringObj")
-Tuple    =  native("me.abje.lingua.interpreter.obj.TupleObj")
+var Obj      =  native("me.abje.lingua.interpreter.obj.Obj")
+var Boolean  =  native("me.abje.lingua.interpreter.obj.BooleanObj")
+var Char     =  native("me.abje.lingua.interpreter.obj.CharObj")
+var Class    =  native("me.abje.lingua.interpreter.obj.ClassObj")
+var Function =  native("me.abje.lingua.interpreter.obj.FunctionObj")
+var List     =  native("me.abje.lingua.interpreter.obj.ListObj")
+var Map      =  native("me.abje.lingua.interpreter.obj.MapObj")
+var Number   =  native("me.abje.lingua.interpreter.obj.NumberObj")
+var String   =  native("me.abje.lingua.interpreter.obj.StringObj")
+var Tuple    =  native("me.abje.lingua.interpreter.obj.TupleObj")
 
 // ==== Intrinsics pt. 2 ==== //
 // ======= Exceptions ======= //

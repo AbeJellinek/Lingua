@@ -29,6 +29,7 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.interpreter.obj.TupleObj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,14 +48,14 @@ public class TupleExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
         if (obj instanceof TupleObj) {
             TupleObj tuple = (TupleObj) obj;
             for (int i = 0; i < items.size(); i++) {
                 Expr item = items.get(i);
                 if (item.getAnnotations().contains("rest")) {
                     if (i == items.size() - 1) {
-                        if (tuple.size() < i || item.match(interpreter, frame, tuple.drop(i), alwaysDefineNew) == null) {
+                        if (tuple.size() < i || item.match(interpreter, frame, tuple.drop(i), type) == null) {
                             return null;
                         } else {
                             return obj;
@@ -63,7 +64,7 @@ public class TupleExpr extends Expr {
                         throw new InterpreterException("CallException", "weird @rest annotation");
                     }
                 }
-                if (tuple.size() <= i || item.match(interpreter, frame, tuple.get(i), alwaysDefineNew) == null) {
+                if (tuple.size() <= i || item.match(interpreter, frame, tuple.get(i), type) == null) {
                     return null;
                 }
             }

@@ -25,6 +25,7 @@ package me.abje.lingua.interpreter.obj;
 import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
+import me.abje.lingua.interpreter.obj.bridge.ObjectBridge;
 import me.abje.lingua.util.TriFunction;
 
 import java.lang.invoke.MethodHandle;
@@ -55,20 +56,6 @@ public class Obj {
      * This object's super instance.
      */
     private Obj superInst;
-
-    private static final MethodHandle convertToNumber;
-
-    static {
-        MethodHandle toNumberObj = null;
-        try {
-            toNumberObj = MethodHandles.lookup().unreflect(
-                    Obj.class.getDeclaredMethod("toNumberObj", float.class));
-        } catch (IllegalAccessException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        convertToNumber = toNumberObj;
-    }
 
     public static final ClassObj SYNTHETIC = bridgeClass(Obj.class);
 
@@ -220,138 +207,8 @@ public class Obj {
             className = originalName;
 
         ClassObj.Builder<C> builder = ClassObj.<C>builder(className);
-        Map<String, Map<Integer, MethodMetadata>> methodMap = createMethodMap(clazz, null);
-        methodMap.forEach((methodName, map) -> addFunction(builder, methodName, map));
+        Map<String, Map<Integer, ObjectBridge.MethodMetadata>> methodMap = ObjectBridge.createMethodMap(clazz, null);
+        methodMap.forEach((methodName, map) -> ObjectBridge.addFunction(builder, methodName, map));
         return builder.build();
-    }
-
-    public static <C> Map<String, Map<Integer, MethodMetadata>> createMethodMap(Class<C> clazz, C instance) {
-        Map<String, Map<Integer, MethodMetadata>> methodMap = new HashMap<>();
-        for (Method method : clazz.getDeclaredMethods()) {
-            Bridge bridge = method.getAnnotation(Bridge.class);
-            if (bridge != null) {
-                try {
-                    String methodName = bridge.value().isEmpty() ? method.getName() : bridge.value();
-                    MethodHandle initialHandle = MethodHandles.lookup().unreflect(method);
-                    Class<?> returnType = initialHandle.type().returnType();
-                    if (returnType == byte.class || returnType == short.class ||
-                            returnType == int.class || returnType == float.class) {
-                        initialHandle = MethodHandles.filterReturnValue(initialHandle,
-                                convertToNumber.asType(MethodType.methodType(NumberObj.class, returnType)));
-                    }
-                    if (instance != null)
-                        initialHandle = initialHandle.bindTo(instance);
-                    Class<?>[] parameterArray = initialHandle.type().parameterArray();
-                    if (parameterArray.length > 0 && parameterArray[parameterArray.length - 1] == Obj[].class)
-                        initialHandle = initialHandle.asVarargsCollector(Obj[].class);
-                    int interpreterIndex = -1;
-                    for (int i = 0; i < parameterArray.length; i++) {
-                        Class<?> type = parameterArray[i];
-                        if (type == Interpreter.class) {
-                            interpreterIndex = i;
-                        }
-                    }
-                    Map<Integer, MethodMetadata> map = methodMap.computeIfAbsent(methodName, s -> new HashMap<>());
-                    map.put(parameterArray.length - (interpreterIndex != -1 ? 1 : 0) -
-                                    (instance == null && !Modifier.isStatic(method.getModifiers()) ? 1 : 0),
-                            new MethodMetadata(initialHandle, interpreterIndex, bridge.anyLength()));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return methodMap;
-    }
-
-    private static <C> void addFunction(ClassObj.Builder<C> builder, String methodName, Map<Integer, MethodMetadata> map) {
-        builder.withFunction(methodName, createFunctionBridge(methodName, map));
-    }
-
-    public static <C> TriFunction<Interpreter, C, List<Obj>, Obj> createFunctionBridge(String methodName, Map<Integer, MethodMetadata> map) {
-        return (interpreter, self, args) -> {
-            boolean hasThisSize = map.containsKey(args.size());
-            if (hasThisSize || (map.containsKey(1) && map.get(1).isAnyLength())) {
-                MethodMetadata meta = hasThisSize ? map.get(args.size()) : map.get(1);
-                MethodHandle handle = meta.getHandle();
-                int interpreterIndex = meta.getInterpreterIndex();
-                if (self != null)
-                    handle = handle.bindTo(self);
-                if (interpreterIndex != -1)
-                    handle = MethodHandles.insertArguments(handle, interpreterIndex - 1, interpreter);
-                if (!meta.anyLength)
-                    for (int i = 0; i < args.size(); i++) {
-                        if (!handle.type().parameterType(i).isAssignableFrom(args.get(i).getClass())) {
-                            throw new InterpreterException("CallException", "invalid argument for function " + methodName);
-                        }
-                    }
-
-                try {
-                    Object result = handle.invokeWithArguments(args);
-                    if (result != null) {
-                        //noinspection RedundantCast
-                        return (Obj) result;
-                    } else {
-                        return NullObj.get();
-                    }
-                } catch (InterpreterException e) {
-                    throw e;
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                    return NullObj.get();
-                }
-            } else {
-                throw new InterpreterException("CallException", "invalid number of arguments for function " + methodName);
-            }
-        };
-    }
-
-    @SuppressWarnings("unused")
-    public static NumberObj toNumberObj(float f) {
-        return NumberObj.of(f);
-    }
-
-    public static class MethodMetadata {
-        private MethodHandle handle;
-        private int interpreterIndex;
-        private boolean anyLength;
-
-        private MethodMetadata(MethodHandle handle, int interpreterIndex, boolean anyLength) {
-            this.handle = handle;
-            this.interpreterIndex = interpreterIndex;
-            this.anyLength = anyLength;
-        }
-
-        public MethodHandle getHandle() {
-            return handle;
-        }
-
-        public void setHandle(MethodHandle handle) {
-            this.handle = handle;
-        }
-
-        public int getInterpreterIndex() {
-            return interpreterIndex;
-        }
-
-        public void setInterpreterIndex(int interpreterIndex) {
-            this.interpreterIndex = interpreterIndex;
-        }
-
-        public boolean isAnyLength() {
-            return anyLength;
-        }
-
-        public void setAnyLength(boolean anyLength) {
-            this.anyLength = anyLength;
-        }
-
-        @Override
-        public String toString() {
-            return "MethodMetadata{" +
-                    "handle=" + handle +
-                    ", interpreterIndex=" + interpreterIndex +
-                    ", anyLength=" + anyLength +
-                    '}';
-        }
     }
 }

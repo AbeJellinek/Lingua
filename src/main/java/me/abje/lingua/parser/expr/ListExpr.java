@@ -28,6 +28,7 @@ import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.ListObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,14 +66,14 @@ public class ListExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
         if (obj instanceof ListObj) {
             ListObj list = (ListObj) obj;
             for (int i = 0; i < items.size(); i++) {
                 Expr item = items.get(i);
                 if (item.getAnnotations().contains("rest")) {
                     if (i == items.size() - 1) {
-                        if (item.match(interpreter, frame, list.drop(i), alwaysDefineNew) == null) {
+                        if (item.match(interpreter, frame, list.drop(i), type) == null) {
                             return null;
                         } else {
                             return obj;
@@ -81,7 +82,7 @@ public class ListExpr extends Expr {
                         throw new InterpreterException("CallException", "weird @rest annotation");
                     }
                 }
-                if (item.match(interpreter, frame, list.get(i), alwaysDefineNew) == null) {
+                if (item.match(interpreter, frame, list.get(i), type) == null) {
                     return null;
                 }
             }

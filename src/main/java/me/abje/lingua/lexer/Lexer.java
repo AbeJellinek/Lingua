@@ -400,6 +400,8 @@ public class Lexer {
                 return make(CATCH);
             case "match":
                 return make(MATCH);
+            case "var":
+                return make(VAR);
             default:
                 return make(NAME);
         }

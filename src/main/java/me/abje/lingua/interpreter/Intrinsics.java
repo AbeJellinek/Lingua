@@ -23,6 +23,7 @@
 package me.abje.lingua.interpreter;
 
 import me.abje.lingua.interpreter.obj.*;
+import me.abje.lingua.interpreter.obj.bridge.ObjectBridge;
 import me.abje.lingua.lexer.Lexer;
 import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.Parser;
@@ -137,7 +138,8 @@ public class Intrinsics {
      * Register the intrinsics.
      */
     public void register() {
-        Obj.createMethodMap(Intrinsics.class, this).forEach((name, map) -> addFunction(name, Obj.createFunctionBridge(name, map)));
+        ObjectBridge.createMethodMap(Intrinsics.class, this).
+                forEach((name, map) -> addFunction(name, ObjectBridge.createFunctionBridge(name, map)));
     }
 
     /**

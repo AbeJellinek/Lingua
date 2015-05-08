@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.BooleanObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 /**
  * A boolean literal expression.
@@ -60,7 +61,7 @@ public class BooleanExpr extends Expr {
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
         if (obj instanceof BooleanObj && ((BooleanObj) obj).getValue() == value)
             return obj;
         else

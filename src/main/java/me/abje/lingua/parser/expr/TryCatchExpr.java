@@ -27,6 +27,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.Deque;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class TryCatchExpr extends Expr {
                 interpreter.getEnv().setOldStack(stack);
                 interpreter.getEnv().pushFrame("<catch>");
                 Obj result = null;
-                if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj(), true) != null) {
+                if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), e.getExceptionObj(), DefinitionType.ALWAYS_NEW) != null) {
                     result = clause.getValue().evaluate(interpreter);
                 }
                 interpreter.getEnv().popFrame();

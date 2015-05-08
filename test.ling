@@ -10,16 +10,16 @@ class Triangle {
     }
 
     area() = {
-        p = self.perimeter() / 2
+        var p = self.perimeter() / 2
         sqrt(p(p - self.side1)(p - self.side2)(p - self.side3)) // This is the formula for the area of a triangle.
     }
 
     perimeter() = self.side1 + self.side2 + self.side3
 }
 
-lenString = read("Side lengths (comma-separated): ")
+var lenString = read("Side lengths (comma-separated): ")
 if (lenString != null) {
-    lengths = lenString.split(",").map(x -> Number(x.trim()))
+    var lengths = lenString.split(",").map(x -> Number(x.trim()))
 
     if (lengths.size() != 3) {
         error("Invalid number of sides.")

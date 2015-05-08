@@ -26,6 +26,7 @@ import me.abje.lingua.interpreter.Environment;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 /**
  * A variable assignment expression.
@@ -55,16 +56,14 @@ public class AssignmentExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        name.getAnnotations().clear();
-        name.getAnnotations().addAll(getAnnotations());
-
         Obj valueObj = interpreter.next(value);
-        return name.match(interpreter, interpreter.getEnv().getStack().peek(), valueObj, false);
+        return name.match(interpreter, interpreter.getEnv().getStack().peek(), valueObj,
+                getAnnotations().contains("var") ? DefinitionType.ALWAYS_NEW : DefinitionType.NEVER_NEW);
     }
 
     @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, boolean alwaysDefineNew) {
-        Obj rightMatch = value.match(interpreter, frame, obj, alwaysDefineNew);
+    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
+        Obj rightMatch = value.match(interpreter, frame, obj, type);
         if (rightMatch != null) {
             evaluate(interpreter);
             return rightMatch;

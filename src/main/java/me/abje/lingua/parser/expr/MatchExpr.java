@@ -26,6 +26,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class MatchExpr extends Expr {
         for (Map.Entry<Expr, Expr> clause : clauses.entrySet()) {
             interpreter.getEnv().pushFrame("<case>");
             Obj result = null;
-            if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), left.evaluate(interpreter), true) != null) {
+            if (clause.getKey().match(interpreter, interpreter.getEnv().getStack().peek(), left.evaluate(interpreter), DefinitionType.ALWAYS_NEW) != null) {
                 result = clause.getValue().evaluate(interpreter);
             }
             interpreter.getEnv().popFrame();

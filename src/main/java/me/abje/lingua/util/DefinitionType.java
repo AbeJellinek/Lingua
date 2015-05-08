@@ -20,47 +20,10 @@
  * THE SOFTWARE.
  */
 
-package me.abje.lingua.parser.expr;
+package me.abje.lingua.util;
 
-import me.abje.lingua.interpreter.Environment;
-import me.abje.lingua.interpreter.Interpreter;
-import me.abje.lingua.interpreter.obj.NullObj;
-import me.abje.lingua.interpreter.obj.Obj;
-import me.abje.lingua.lexer.Token;
-import me.abje.lingua.util.DefinitionType;
-
-/**
- * A null literal expression.
- */
-public class NullExpr extends Expr {
-    public NullExpr(Token token) {
-        super(token);
-    }
-
-    @Override
-    public Obj evaluate(Interpreter interpreter) {
-        return NullObj.get();
-    }
-
-    @Override
-    public Obj match(Interpreter interpreter, Environment.Frame frame, Obj obj, DefinitionType type) {
-        if (obj instanceof NullObj)
-            return obj;
-        else
-            return null;
-    }
-
-    public boolean equals(Object o) {
-        return o instanceof NullExpr;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-
-    @Override
-    public String toString() {
-        return "null";
-    }
+public enum DefinitionType {
+    ALWAYS_NEW,
+    NEVER_NEW,
+    AUTO
 }

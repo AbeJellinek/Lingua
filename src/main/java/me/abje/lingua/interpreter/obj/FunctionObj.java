@@ -28,6 +28,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.parser.expr.TupleExpr;
+import me.abje.lingua.util.DefinitionType;
 
 import java.util.Deque;
 import java.util.List;
@@ -127,7 +128,7 @@ public class FunctionObj extends Obj {
         Environment.Frame frame = env.getStack().peek();
         TupleExpr argNamesTuple = new TupleExpr(null, argNames);
         TupleObj argsTuple = new TupleObj(args);
-        if (argNamesTuple.match(interpreter, frame, argsTuple, true) == null)
+        if (argNamesTuple.match(interpreter, frame, argsTuple, DefinitionType.ALWAYS_NEW) == null)
             throw new InterpreterException("CallException", "invalid arguments for function " + name, interpreter);
 
         if (self != null)
@@ -194,7 +195,7 @@ public class FunctionObj extends Obj {
 
         Environment.Frame frame = interpreter.getEnv().getStack().peek();
         for (int i = 0; i < args.size(); i++)
-            if (argNames.get(i).match(interpreter, frame, args.get(i), true) == null)
+            if (argNames.get(i).match(interpreter, frame, args.get(i), DefinitionType.ALWAYS_NEW) == null)
                 return false;
 
         return true;

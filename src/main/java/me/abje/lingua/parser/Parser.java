@@ -87,6 +87,7 @@ public class Parser {
         registerPrefix(TRY, new TryCatchParselet());
         registerPrefix(OPEN_MAP_BRACE, new MapParselet());
         registerPrefix(CHAR, new CharParselet());
+        registerPrefix(VAR, new VarParselet());
         prefix(PLUS, MINUS, TILDE, BANG);
         infix(PLUS, Precedence.SUM);
         infix(MINUS, Precedence.SUM);
