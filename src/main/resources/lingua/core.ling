@@ -17,7 +17,7 @@ var Tuple    =  native("me.abje.lingua.interpreter.obj.TupleObj")
 
 class Exception {
     message
-    stack = dumpStack().drop(1)
+    stack = dumpStack()
 
     init(message) = {
         self.message = message

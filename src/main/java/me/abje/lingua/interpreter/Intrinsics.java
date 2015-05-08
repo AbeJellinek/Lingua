@@ -31,9 +31,7 @@ import me.abje.lingua.parser.expr.Expr;
 import me.abje.lingua.util.TriFunction;
 
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -108,7 +106,15 @@ public class Intrinsics {
 
     @Bridge
     public ListObj dumpStack() {
-        return new ListObj((env.getOldStack() != null ? env.getOldStack() : env.getStack()).stream().map(frame -> {
+        Deque<Environment.Frame> stack;
+        if (env.getOldStack() != null) {
+            stack = env.getOldStack();
+        } else {
+            stack = new ArrayDeque<>(env.getStack());
+            stack.pop();
+        }
+
+        return new ListObj(stack.stream().map(frame -> {
             if (frame.getFileName() == null || frame.getFileName().equals("<native>")) {
                 return new StringObj(frame.getName() + "(native)");
             } else {
