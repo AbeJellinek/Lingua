@@ -123,10 +123,25 @@ public class Token {
      * An enum of the possible token types.
      */
     public enum Type {
-        LINE, LINE_CONTINUATION, WHITESPACE, NAME, NUMBER, DOT, PLUS, MINUS, TILDE, OPEN_PAREN, CLOSE_PAREN, TIMES,
-        DIVIDE, POW, COMMA, EQ, OPEN_BRACE, CLOSE_BRACE, ARROW, LT, LTE, GT, GTE, TRUE, FALSE, EQEQ, NEQ, ANDAND, AND,
-        OROR, OR, STRING, IF, ELSE, WHILE, DO, NULL, OPEN_BRACKET, CLOSE_BRACKET, CLASS, ANNOTATION, PLUS_EQ, MINUS_EQ,
-        TIMES_EQ, DIVIDE_EQ, PLUSPLUS, MINUSMINUS, IS, IMPORT, COLON, TRY, CATCH, MATCH, OPEN_MAP_BRACE, HASH,
-        OPEN_SET_BRACE, CHAR, TRIPLE_DOT, DOUBLE_DOT, BANG, INTERRODOT, QUESTION_MARK, FAT_ARROW, VAR, ELVIS
+        LINE("end of line"), LINE_CONTINUATION("line continuation"), WHITESPACE("whitespace"), NAME("name"),
+        NUMBER("number"), DOT("dot"), PLUS("+"), MINUS("-"), TILDE("~"), OPEN_PAREN("("), CLOSE_PAREN(")"), TIMES("*"),
+        DIVIDE("/"), POW("^"), COMMA(","), EQ("="), OPEN_BRACE("{"), CLOSE_BRACE("}"), ARROW("->"), LT("<"), LTE("<="),
+        GT(">"), GTE(">="), TRUE("boolean literal (true)"), FALSE("boolean literal (false)"), EQEQ("=="), NEQ("!="),
+        ANDAND("&&"), AND("&"), OROR("||"), OR("|"), STRING("string literal"), IF("if"), ELSE("else"), WHILE("while"),
+        DO("do"), NULL("null literal"), OPEN_BRACKET("["), CLOSE_BRACKET(")"), CLASS("class"), ANNOTATION("annotation"),
+        PLUS_EQ("+="), MINUS_EQ("-="), TIMES_EQ("*="), DIVIDE_EQ("/="), PLUSPLUS("++"), MINUSMINUS("--"), IS("is"),
+        IMPORT("import"), COLON("colon"), TRY("try"), CATCH("catch"), MATCH("match"), OPEN_MAP_BRACE("#{"), HASH("#"),
+        OPEN_SET_BRACE("#["), CHAR("character literal"), TRIPLE_DOT("..."), DOUBLE_DOT(".."), BANG("!"),
+        INTERRODOT("?."), QUESTION_MARK("?"), FAT_ARROW("=>"), VAR("var"), ELVIS("?:");
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

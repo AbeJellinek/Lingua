@@ -137,7 +137,7 @@ public class Parser {
         PrefixParselet prefix = prefixParselets.get(token.getType());
 
         if (prefix == null)
-            throw new ParseException("unexpected " + token.getType(), token);
+            throw new ParseException("unexpected " + token.getType().getName(), token);
 
         Expr left = prefix.parse(this, token);
 
