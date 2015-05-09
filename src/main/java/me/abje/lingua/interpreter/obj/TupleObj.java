@@ -46,7 +46,15 @@ public class TupleObj extends Obj {
         ACCESSORS.put("seventh", 6);
         ACCESSORS.put("eighth", 7);
         ACCESSORS.put("ninth", 8);
-        ACCESSORS.put("tenth", 9);
+        ACCESSORS.put("_1", 0);
+        ACCESSORS.put("_2", 1);
+        ACCESSORS.put("_3", 2);
+        ACCESSORS.put("_4", 3);
+        ACCESSORS.put("_5", 4);
+        ACCESSORS.put("_6", 5);
+        ACCESSORS.put("_7", 6);
+        ACCESSORS.put("_8", 7);
+        ACCESSORS.put("_9", 8);
     }
 
     private final List<Obj> items;

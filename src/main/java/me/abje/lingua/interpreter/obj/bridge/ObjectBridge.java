@@ -36,23 +36,21 @@ import java.util.List;
 import java.util.Map;
 
 public class ObjectBridge {
-    private static final MethodHandle convertToNumber;
-    private static final MethodHandle convertFromNumber;
+    private static MethodHandle convertToNumber;
+    private static MethodHandle convertFromNumber;
 
     static {
-        MethodHandle toNumberObj = null;
-        MethodHandle fromNumberObj = null;
         try {
-            toNumberObj = MethodHandles.lookup().unreflect(
-                    ObjectBridge.class.getDeclaredMethod("toNumberObj", float.class));
-            fromNumberObj = MethodHandles.lookup().unreflect(
-                    ObjectBridge.class.getDeclaredMethod("fromNumberObj", NumberObj.class));
+            convertToNumber = handle("toNumberObj", float.class);
+            convertFromNumber = handle("fromNumberObj", NumberObj.class);
         } catch (IllegalAccessException | NoSuchMethodException e) {
             e.printStackTrace();
         }
+    }
 
-        convertToNumber = toNumberObj;
-        convertFromNumber = fromNumberObj;
+    private static MethodHandle handle(String name, Class... parameterTypes)
+            throws NoSuchMethodException, IllegalAccessException {
+        return MethodHandles.lookup().unreflect(ObjectBridge.class.getDeclaredMethod(name, parameterTypes));
     }
 
     public static <C> Map<String, Map<Integer, MethodMetadata>> createMethodMap(Class<C> clazz, C instance) {
