@@ -22,6 +22,7 @@
 
 package me.abje.lingua.interpreter.obj;
 
+import com.google.common.collect.ImmutableMap;
 import me.abje.lingua.interpreter.Bridge;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
@@ -34,28 +35,26 @@ import java.util.stream.Collectors;
 
 public class TupleObj extends Obj {
     public static final ClassObj SYNTHETIC = bridgeClass(TupleObj.class);
-    private static final Map<String, Integer> ACCESSORS = new HashMap<>();
-
-    static {
-        ACCESSORS.put("first", 0);
-        ACCESSORS.put("second", 1);
-        ACCESSORS.put("third", 2);
-        ACCESSORS.put("fourth", 3);
-        ACCESSORS.put("fifth", 4);
-        ACCESSORS.put("sixth", 5);
-        ACCESSORS.put("seventh", 6);
-        ACCESSORS.put("eighth", 7);
-        ACCESSORS.put("ninth", 8);
-        ACCESSORS.put("_1", 0);
-        ACCESSORS.put("_2", 1);
-        ACCESSORS.put("_3", 2);
-        ACCESSORS.put("_4", 3);
-        ACCESSORS.put("_5", 4);
-        ACCESSORS.put("_6", 5);
-        ACCESSORS.put("_7", 6);
-        ACCESSORS.put("_8", 7);
-        ACCESSORS.put("_9", 8);
-    }
+    private static final ImmutableMap<String, Integer> ACCESSORS = ImmutableMap.<String, Integer>builder().
+            put("first", 0).
+            put("second", 1).
+            put("third", 2).
+            put("fourth", 3).
+            put("fifth", 4).
+            put("sixth", 5).
+            put("seventh", 6).
+            put("eighth", 7).
+            put("ninth", 8).
+            put("_1", 0).
+            put("_2", 1).
+            put("_3", 2).
+            put("_4", 3).
+            put("_5", 4).
+            put("_6", 5).
+            put("_7", 6).
+            put("_8", 7).
+            put("_9", 8).
+            build();
 
     private final List<Obj> items;
 
