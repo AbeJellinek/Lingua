@@ -59,6 +59,7 @@ public class Interpreter {
     private Environment env = new Environment();
     private List<String> imported = new ArrayList<>();
 
+    @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException {
         OptionParser optParser = new OptionParser() {
             {
@@ -77,7 +78,8 @@ public class Interpreter {
         List<?> files = options.nonOptionArguments();
         Interpreter interpreter = new Interpreter();
 
-        new Intrinsics(interpreter.env).register();
+        new Intrinsics(interpreter.env).register(files.isEmpty() ? Collections.emptyList() :
+                (List<String>) files.subList(1, files.size()));
         if (!options.has("no-core"))
             interpreter.addImport("lingua.core");
         if (options.has("clear"))
@@ -85,8 +87,7 @@ public class Interpreter {
 
         if (!files.isEmpty()) {
             try {
-                for (Object file : files)
-                    interpreter.addImport((String) file);
+                interpreter.addImport((String) files.get(0));
             } catch (ParseException e) {
                 log.error("Parse error:\n{}", e.getMessage());
             } catch (InterpreterException e) {

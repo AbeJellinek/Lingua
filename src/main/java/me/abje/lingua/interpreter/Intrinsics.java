@@ -142,9 +142,10 @@ public class Intrinsics {
     /**
      * Register the intrinsics.
      */
-    public void register() {
+    public void register(List<String> args) {
         ObjectBridge.createMethodMap(Intrinsics.class, this).
                 forEach((name, map) -> addFunction(name, ObjectBridge.createFunctionBridge(name, map)));
+        env.define("__args__", new ListObj(args.stream().map(StringObj::new).collect(Collectors.toList())));
     }
 
     /**

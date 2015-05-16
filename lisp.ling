@@ -1,5 +1,5 @@
 standardEnv() = {
-    env = #{}
+    var env = #{}
     env["+"] = (x, y) -> x + y
     env["-"] = (x, y) -> x + y
     env["*"] = (x, y) -> x + y
@@ -10,11 +10,13 @@ standardEnv() = {
 }
 
 nextObj(inputTokens) = {
-    token = inputTokens.remove(0)
+    var token = inputTokens.remove(0)
     if (token == "(") {
-        @var list = []
-        while (inputTokens[0] != ")")
-            list.add(nextObj(inputTokens))
+        var list = []
+        while (inputTokens[0] != ")") {
+            var next = nextObj(inputTokens)
+            list.add(next)
+        }
         inputTokens.remove(0)
         list
     } else if (token == ")") {
@@ -23,7 +25,7 @@ nextObj(inputTokens) = {
         try {
             Number(token)
         } catch e: ConversionException {
-                token
+            token
         }
     }
 }
@@ -53,14 +55,14 @@ stringify(obj) = {
     }
 }
 
-env = standardEnv()
-continue = true
+var env = standardEnv()
+var continue = true
 while continue {
-    input = read()
+    var input = read()
     if (input == null) {
         continue = false
     } else {
-        inputTokens = input.replace("(", " ( ").replace(")", " ) ").split(" ").filter(x -> x.length())
+        var inputTokens = input.replace("(", " ( ").replace(")", " ) ").split(" ").filter(x -> x.length())
         while inputTokens.size()
             print(stringify(evaluate(nextObj(inputTokens), env)))
     }

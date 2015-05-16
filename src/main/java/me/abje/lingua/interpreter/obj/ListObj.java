@@ -28,6 +28,7 @@ import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.interpreter.InterpreterException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -219,6 +220,20 @@ public class ListObj extends Obj {
     @Bridge
     public ListObj dropRight(int n) {
         return new ListObj(items.subList(0, items.size() - Math.min(n, items.size())));
+    }
+
+    @Bridge
+    public Obj foldLeft(Obj function, Obj start, Interpreter interpreter) {
+        if (items.isEmpty())
+            return start;
+        return tail().foldLeft(function, function.call(interpreter, Arrays.asList(start, head())), interpreter);
+    }
+
+    @Bridge
+    public Obj foldRight(Obj function, Obj start, Interpreter interpreter) {
+        if (items.isEmpty())
+            return start;
+        return function.call(interpreter, Arrays.asList(head(), tail().foldRight(function, start, interpreter)));
     }
 
     /**
