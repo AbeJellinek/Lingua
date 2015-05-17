@@ -327,7 +327,7 @@ public class Parser {
      */
     public boolean match(Token.Type type) {
         if (peek() == null) {
-            throw new ParseException("unexpected end of file", "", 1);
+            return false;
         } if (peek().is(type)) {
             read();
             return true;
