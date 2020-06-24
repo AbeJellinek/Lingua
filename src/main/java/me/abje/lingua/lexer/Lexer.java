@@ -37,12 +37,12 @@ public class Lexer {
     /**
      * The reader that code is read from.
      */
-    private PushbackReader reader;
+    private final PushbackReader reader;
 
     /**
      * The temporary buffer that holds characters as they are read.
      */
-    private StringBuilder builder;
+    private final StringBuilder builder;
 
     /**
      * The current line, as of the start of the current token.
@@ -264,28 +264,13 @@ public class Lexer {
             char c = read();
             if (escape) {
                 switch (c) {
-                    case '\'':
-                    case '"':
-                    case '\\':
-                        stringBuilder.append(c);
-                        break;
-                    case 'n':
-                        stringBuilder.append('\n');
-                        break;
-                    case 'r':
-                        stringBuilder.append('\r');
-                        break;
-                    case 'f':
-                        stringBuilder.append('\f');
-                        break;
-                    case 't':
-                        stringBuilder.append('\t');
-                        break;
-                    case '0':
-                        stringBuilder.append('\0');
-                        break;
-                    default:
-                        throw new ParseException("invalid escape code in literal", fileName, line);
+                    case '\'', '"', '\\' -> stringBuilder.append(c);
+                    case 'n' -> stringBuilder.append('\n');
+                    case 'r' -> stringBuilder.append('\r');
+                    case 'f' -> stringBuilder.append('\f');
+                    case 't' -> stringBuilder.append('\t');
+                    case '0' -> stringBuilder.append('\0');
+                    default -> throw new ParseException("invalid escape code in literal", fileName, line);
                 }
                 escape = false;
             } else {
@@ -373,38 +358,23 @@ public class Lexer {
      * @return The Token.
      */
     private Token makeName() {
-        switch (builder.toString()) {
-            case "true":
-                return make(TRUE);
-            case "false":
-                return make(FALSE);
-            case "if":
-                return make(IF);
-            case "else":
-                return make(ELSE);
-            case "while":
-                return make(WHILE);
-            case "do":
-                return make(DO);
-            case "null":
-                return make(NULL);
-            case "class":
-                return make(CLASS);
-            case "is":
-                return make(IS);
-            case "import":
-                return make(IMPORT);
-            case "try":
-                return make(TRY);
-            case "catch":
-                return make(CATCH);
-            case "match":
-                return make(MATCH);
-            case "var":
-                return make(VAR);
-            default:
-                return make(NAME);
-        }
+        return switch (builder.toString()) {
+            case "true" -> make(TRUE);
+            case "false" -> make(FALSE);
+            case "if" -> make(IF);
+            case "else" -> make(ELSE);
+            case "while" -> make(WHILE);
+            case "do" -> make(DO);
+            case "null" -> make(NULL);
+            case "class" -> make(CLASS);
+            case "is" -> make(IS);
+            case "import" -> make(IMPORT);
+            case "try" -> make(TRY);
+            case "catch" -> make(CATCH);
+            case "match" -> make(MATCH);
+            case "var" -> make(VAR);
+            default -> make(NAME);
+        };
     }
 
     /**

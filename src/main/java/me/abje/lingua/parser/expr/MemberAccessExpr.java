@@ -34,12 +34,12 @@ public class MemberAccessExpr extends Expr {
     /**
      * The left side of the expression -- the object which contains the member to be accessed.
      */
-    private Expr left;
+    private final Expr left;
 
     /**
      * The name of the member.
      */
-    private String name;
+    private final String name;
 
     /**
      * Whether this member access is a nullable access (returns null if left side is null).

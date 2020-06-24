@@ -27,6 +27,8 @@ import me.abje.lingua.interpreter.obj.NullObj;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.lexer.Token;
 
+import java.util.Objects;
+
 /**
  * An if[-else] expression.
  */
@@ -101,8 +103,7 @@ public class IfExpr extends Expr {
 
         IfExpr ifExpr = (IfExpr) o;
 
-        return condition.equals(ifExpr.condition) && !(elseBranch != null ? !elseBranch.equals(ifExpr.elseBranch) :
-                ifExpr.elseBranch != null) && thenBranch.equals(ifExpr.thenBranch);
+        return condition.equals(ifExpr.condition) && Objects.equals(elseBranch, ifExpr.elseBranch) && thenBranch.equals(ifExpr.thenBranch);
     }
 
     @Override

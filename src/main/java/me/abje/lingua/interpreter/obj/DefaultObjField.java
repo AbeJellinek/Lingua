@@ -25,6 +25,8 @@ package me.abje.lingua.interpreter.obj;
 import me.abje.lingua.interpreter.Interpreter;
 import me.abje.lingua.parser.expr.Expr;
 
+import java.util.Objects;
+
 public class DefaultObjField extends ObjField {
     /**
      * The field's default value, computed when an instance is created.
@@ -73,7 +75,7 @@ public class DefaultObjField extends ObjField {
 
         DefaultObjField that = (DefaultObjField) o;
 
-        return !(defaultValue != null ? !defaultValue.equals(that.defaultValue) : that.defaultValue != null);
+        return Objects.equals(defaultValue, that.defaultValue);
     }
 
     @Override

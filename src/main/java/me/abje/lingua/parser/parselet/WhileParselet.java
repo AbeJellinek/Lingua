@@ -44,7 +44,7 @@ public class WhileParselet implements PrefixParselet {
      *     } while (abc)
      * </pre>
      */
-    private boolean doWhile;
+    private final boolean doWhile;
 
     /**
      * Creates a new while loop expression parselet.

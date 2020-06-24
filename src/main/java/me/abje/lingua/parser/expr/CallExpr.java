@@ -38,12 +38,12 @@ public class CallExpr extends Expr {
     /**
      * The left side of the expression (the function to be called).
      */
-    private Expr func;
+    private final Expr func;
 
     /**
      * The arguments provided to the function.
      */
-    private List<Expr> args;
+    private final List<Expr> args;
 
     /**
      * Creates a new call expression.

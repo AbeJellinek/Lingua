@@ -48,7 +48,7 @@ public class ObjectBridge {
         }
     }
 
-    private static MethodHandle handle(String name, Class... parameterTypes)
+    private static MethodHandle handle(String name, Class<?>... parameterTypes)
             throws NoSuchMethodException, IllegalAccessException {
         return MethodHandles.lookup().unreflect(ObjectBridge.class.getDeclaredMethod(name, parameterTypes));
     }

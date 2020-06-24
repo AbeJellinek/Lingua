@@ -42,7 +42,7 @@ public class ListObj extends Obj {
     /**
      * This list's items. Must be mutable for mutator methods to work.
      */
-    private List<Obj> items;
+    private final List<Obj> items;
 
     /**
      * Creates a new list with the given items.

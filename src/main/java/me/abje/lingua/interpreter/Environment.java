@@ -25,6 +25,7 @@ package me.abje.lingua.interpreter;
 import me.abje.lingua.interpreter.obj.Obj;
 import me.abje.lingua.util.DefinitionType;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class Environment {
      * This Environment's global frame. Holds variables accessible from anywhere.
      * If you pollute the global scope, you're a bad person.
      */
-    private Frame globals = new Frame("<main>");
+    private final Frame globals = new Frame("<main>");
 
     /**
      * The stack that holds this Environment's frames.
@@ -62,7 +63,7 @@ public class Environment {
      * @throws me.abje.lingua.interpreter.InterpreterException If a variable with that name already exists in the top frame.
      */
     public Obj define(String name, Obj value) {
-        return stack.peek().define(name, value);
+        return peekFrame().define(name, value);
     }
 
     /**
@@ -76,7 +77,7 @@ public class Environment {
      */
     public Obj update(String name, Obj value, DefinitionType type) {
         if (type == DefinitionType.NEVER_NEW) {
-            return stack.peek().update(name, value);
+            return peekFrame().update(name, value);
         } else if (type == DefinitionType.ALWAYS_NEW) {
             return define(name, value);
         } else {
@@ -135,7 +136,7 @@ public class Environment {
             }
         }
 
-        return stack.peek().define(name, value);
+        return peekFrame().define(name, value);
     }
 
     /**
@@ -150,11 +151,22 @@ public class Environment {
     }
 
     /**
+     * Peeks the top frame.
+     * @return The top frame, never null (globals always exists).
+     */
+    public Frame peekFrame() {
+        Frame top = stack.peek();
+        if (top == null)
+            return globals;
+        return top;
+    }
+
+    /**
      * Pushes a new frame onto the top of the stack.
      */
     public void pushFrame(String name) {
         Frame frame = new Frame(name);
-        Frame top = stack.peek();
+        Frame top = peekFrame();
         frame.fileName = top.fileName;
         frame.line = top.line;
         stack.push(frame);
@@ -199,12 +211,12 @@ public class Environment {
         /**
          * This Frame's name.
          */
-        private String name;
+        private final String name;
 
         /**
          * This Frame's local variables.
          */
-        private Map<String, Obj> locals = new HashMap<>();
+        private final Map<String, Obj> locals = new HashMap<>();
 
         /**
          * This Frame's current line.

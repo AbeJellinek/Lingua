@@ -40,9 +40,9 @@ public abstract class Expr {
     /**
      * The annotations present on this expression.
      */
-    private List<String> annotations = new ArrayList<>();
+    private final List<String> annotations = new ArrayList<>();
 
-    private Token token;
+    private final Token token;
 
     public Expr(Token token) {
         this.token = token;

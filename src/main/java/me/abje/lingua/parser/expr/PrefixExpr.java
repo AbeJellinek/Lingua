@@ -36,12 +36,12 @@ public class PrefixExpr extends Expr {
     /**
      * The type of the operator.
      */
-    private Token.Type type;
+    private final Token.Type type;
 
     /**
      * The right-side expression operated on by this operator.
      */
-    private Expr operand;
+    private final Expr operand;
 
     /**
      * Creates a new prefix operator expression.

@@ -31,22 +31,22 @@ public class Token {
     /**
      * This token's type.
      */
-    private Type type;
+    private final Type type;
 
     /**
      * This token's value.
      */
-    private String value;
+    private final String value;
 
     /**
      * This token's line number.
      */
-    private int line;
+    private final int line;
 
     /**
      * This token's file name.
      */
-    private String file;
+    private final String file;
 
     /**
      * Creates a new token with the given parameters.

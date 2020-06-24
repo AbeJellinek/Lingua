@@ -36,7 +36,7 @@ public class BooleanExpr extends Expr {
     /**
      * This boolean's value.
      */
-    private boolean value;
+    private final boolean value;
 
     /**
      * Creates a new boolean literal.

@@ -35,12 +35,12 @@ public class AssignmentExpr extends Expr {
     /**
      * The name of the variable.
      */
-    private Expr name;
+    private final Expr name;
 
     /**
      * The expression of the value to be assigned to this variable.
      */
-    private Expr value;
+    private final Expr value;
 
     /**
      * Creates a new assignment expression.

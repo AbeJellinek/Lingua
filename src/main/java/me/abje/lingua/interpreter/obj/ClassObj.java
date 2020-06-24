@@ -70,7 +70,7 @@ public class ClassObj extends Obj {
     /**
      * This class's superclass.
      */
-    private ClassObj superClass;
+    private final ClassObj superClass;
 
     /**
      * Creates a new class.
@@ -251,17 +251,17 @@ public class ClassObj extends Obj {
         /**
          * The class's name.
          */
-        private String name;
+        private final String name;
 
         /**
          * The class's functions.
          */
-        private Map<String, Obj> functions = new HashMap<>();
+        private final Map<String, Obj> functions = new HashMap<>();
 
         /**
          * The class's fields.
          */
-        private List<ObjField> fields = new ArrayList<>();
+        private final List<ObjField> fields = new ArrayList<>();
 
         /**
          * Creates a new builder for a class with the given name.

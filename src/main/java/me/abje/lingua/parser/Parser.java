@@ -39,17 +39,17 @@ public class Parser {
     /**
      * The map of token types to prefix parselets.
      */
-    private Map<Token.Type, PrefixParselet> prefixParselets = new HashMap<>();
+    private final Map<Token.Type, PrefixParselet> prefixParselets = new HashMap<>();
 
     /**
      * The map of token types to infix parselets.
      */
-    private Map<Token.Type, InfixParselet> infixParselets = new HashMap<>();
+    private final Map<Token.Type, InfixParselet> infixParselets = new HashMap<>();
 
     /**
      * The lexer that provides input to the parser.
      */
-    private Morpher lexer;
+    private final Morpher lexer;
 
     /**
      * The token that was previously peeked, if any.

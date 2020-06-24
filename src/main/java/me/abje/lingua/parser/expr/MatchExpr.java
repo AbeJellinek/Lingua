@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MatchExpr extends Expr {
-    private Expr left;
+    private final Expr left;
     private final LinkedHashMap<Expr, Expr> clauses;
 
     public MatchExpr(Token token, Expr left, LinkedHashMap<Expr, Expr> clauses) {

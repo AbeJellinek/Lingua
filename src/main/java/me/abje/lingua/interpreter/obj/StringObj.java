@@ -22,7 +22,6 @@
 
 package me.abje.lingua.interpreter.obj;
 
-import com.google.common.base.Joiner;
 import me.abje.lingua.interpreter.Bridge;
 
 import java.util.ArrayList;
@@ -34,12 +33,10 @@ import java.util.List;
 public class StringObj extends Obj {
     public static final ClassObj SYNTHETIC = bridgeClass(StringObj.class);
 
-    private static Joiner joiner = Joiner.on("");
-
     /**
      * This String's internal value.
      */
-    private String value;
+    private final String value;
 
     /**
      * Creates a new String with the given value.
@@ -85,7 +82,7 @@ public class StringObj extends Obj {
 
     @Bridge(anyLength = true)
     public static StringObj init(Obj... objs) {
-        return new StringObj(joiner.join(objs));
+        return new StringObj(String.join("", (CharSequence[]) objs));
     }
 
     @Bridge

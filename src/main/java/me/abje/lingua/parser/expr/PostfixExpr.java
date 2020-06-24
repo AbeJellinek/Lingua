@@ -75,21 +75,20 @@ public class PostfixExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        switch (type) {
-            case BANG:
-                NumberObj operand = (NumberObj) interpreter.next(expr);
-                int current = (int) operand.getValue();
-                int result = 1;
-                if (current == 0) {
-                    return NumberObj.of(1);
-                } else while (current > 0) {
-                    result *= current;
-                    current -= 1;
-                }
-                return NumberObj.of(result);
-            default:
-                throw new InterpreterException("InvalidOperationException", "invalid postfix operator", interpreter);
+        if (type == Token.Type.BANG) {
+            NumberObj operand = (NumberObj) interpreter.next(expr);
+            int current = (int) operand.getValue();
+            int result = 1;
+            if (current == 0) {
+                return NumberObj.of(1);
+            } else while (current > 0) {
+                result *= current;
+                current -= 1;
+            }
+            return NumberObj.of(result);
         }
+
+        throw new InterpreterException("InvalidOperationException", "invalid postfix operator", interpreter);
     }
 
     @Override

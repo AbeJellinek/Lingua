@@ -44,7 +44,7 @@ public class Obj {
      * This object's members.
      * Keys are names of members, and values are the members' values.
      */
-    private Map<String, Obj> members = new HashMap<>();
+    private final Map<String, Obj> members = new HashMap<>();
 
     public static final ClassObj SYNTHETIC = bridgeClass(Obj.class);
 

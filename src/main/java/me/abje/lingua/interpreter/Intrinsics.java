@@ -41,7 +41,7 @@ public class Intrinsics {
     /**
      * The environment to register in.
      */
-    private Environment env;
+    private final Environment env;
 
     /**
      * Creates a new Intrinsics.
@@ -54,12 +54,12 @@ public class Intrinsics {
 
     @Bridge(anyLength = true)
     public void print(Obj... args) {
-        System.out.println(Arrays.asList(args).stream().map(Object::toString).collect(Collectors.joining("")));
+        System.out.println(Arrays.stream(args).map(Object::toString).collect(Collectors.joining("")));
     }
 
     @Bridge(anyLength = true)
     public void error(Obj... args) {
-        System.err.println(Arrays.asList(args).stream().map(Object::toString).collect(Collectors.joining("")));
+        System.err.println(Arrays.stream(args).map(Object::toString).collect(Collectors.joining("")));
     }
 
     @Bridge

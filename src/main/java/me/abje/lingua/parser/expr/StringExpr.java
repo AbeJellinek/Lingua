@@ -36,7 +36,7 @@ public class StringExpr extends Expr {
     /**
      * The internal value of this string.
      */
-    private String value;
+    private final String value;
 
     /**
      * Creates a new string literal expression.

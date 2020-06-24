@@ -35,7 +35,7 @@ public class NameExpr extends Expr {
     /**
      * The string value of this name.
      */
-    private String value;
+    private final String value;
 
     /**
      * Creates a new name expression.

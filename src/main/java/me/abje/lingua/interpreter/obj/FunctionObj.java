@@ -39,24 +39,24 @@ public class FunctionObj extends Obj {
     /**
      * This function's name.
      */
-    private String name;
+    private final String name;
 
     /**
      * This function's formal argument list.
      */
-    private List<Expr> argNames;
+    private final List<Expr> argNames;
 
     /**
      * This function's body expression.
      */
-    private Expr body;
+    private final Expr body;
 
     /**
      * The "self" implicit argument passed to this function.
      */
-    private Obj self;
+    private final Obj self;
 
-    private Deque<Environment.Frame> captured;
+    private final Deque<Environment.Frame> captured;
 
     /**
      * Creates a new function.

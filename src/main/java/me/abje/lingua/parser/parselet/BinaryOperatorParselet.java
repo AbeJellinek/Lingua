@@ -32,7 +32,7 @@ import me.abje.lingua.parser.expr.OperatorExpr;
  * Parses a binary operator expression, such as <code>x + y</code>.
  */
 public class BinaryOperatorParselet implements InfixParselet {
-    private int precedence;
+    private final int precedence;
 
     public BinaryOperatorParselet(int precedence) {
         this.precedence = precedence;

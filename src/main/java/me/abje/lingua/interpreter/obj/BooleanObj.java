@@ -34,7 +34,7 @@ public class BooleanObj extends Obj {
     /**
      * The value of this object.
      */
-    private boolean value;
+    private final boolean value;
 
     /**
      * Creates a new boolean object with the given value.

@@ -33,17 +33,17 @@ public class IndexSetExpr extends Expr {
     /**
      * This expression's target.
      */
-    private Expr target;
+    private final Expr target;
 
     /**
      * This expression's index.
      */
-    private Expr index;
+    private final Expr index;
 
     /**
      * This expression's value.
      */
-    private Expr value;
+    private final Expr value;
 
     /**
      * Creates a new index set expression.

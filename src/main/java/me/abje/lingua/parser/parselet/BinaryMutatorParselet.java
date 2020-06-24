@@ -35,7 +35,7 @@ public class BinaryMutatorParselet implements InfixParselet {
     /**
      * The token type of the operation.
      */
-    private Token.Type type;
+    private final Token.Type type;
 
     /**
      * Creates a new binary mutator parselet.

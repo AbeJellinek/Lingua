@@ -39,17 +39,17 @@ public class FunctionExpr extends Expr {
     /**
      * This function's name.
      */
-    private String name;
+    private final String name;
 
     /**
      * This function's formal argument list.
      */
-    private List<Expr> argNames;
+    private final List<Expr> argNames;
 
     /**
      * This function's body.
      */
-    private Expr body;
+    private final Expr body;
 
     /**
      * Creates a new function declaration expression.

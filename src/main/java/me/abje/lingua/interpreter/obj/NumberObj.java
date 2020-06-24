@@ -44,7 +44,7 @@ public class NumberObj extends Obj {
     /**
      * This Number's value.
      */
-    private float value;
+    private final float value;
 
     /**
      * Creates a new Number with the given value.

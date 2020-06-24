@@ -40,7 +40,7 @@ public class ListExpr extends Expr {
     /**
      * This list's items.
      */
-    private List<Expr> items;
+    private final List<Expr> items;
 
     /**
      * Creates a new list expression.

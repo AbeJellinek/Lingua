@@ -22,7 +22,6 @@
 
 package me.abje.lingua.interpreter;
 
-import jline.console.ConsoleReader;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import me.abje.lingua.interpreter.obj.Obj;
@@ -31,7 +30,13 @@ import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.*;
-import org.fusesource.jansi.Ansi;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
+import org.jline.utils.InfoCmp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,11 +48,18 @@ import java.util.*;
  */
 public class Interpreter {
     public static Logger log = LoggerFactory.getLogger(Interpreter.class);
-    private static ConsoleReader console;
+    private static final Terminal terminal;
+    private static final LineReader in;
+    private static final PrintWriter out;
 
     static {
         try {
-            console = new ConsoleReader();
+            terminal = TerminalBuilder.terminal();
+            in = LineReaderBuilder.builder()
+                    .terminal(terminal)
+                    .option(LineReader.Option.INSERT_BRACKET, true)
+                    .build();
+            out = terminal.writer();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,8 +68,8 @@ public class Interpreter {
     /**
      * The environment used for interpretation.
      */
-    private Environment env = new Environment();
-    private List<String> imported = new ArrayList<>();
+    private final Environment env = new Environment();
+    private final List<String> imported = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws IOException {
@@ -83,7 +95,7 @@ public class Interpreter {
         if (!options.has("no-core"))
             interpreter.addImport("lingua.core");
         if (options.has("clear"))
-            console.clearScreen();
+            terminal.puts(InfoCmp.Capability.clear_screen);
 
         if (!files.isEmpty()) {
             try {
@@ -94,31 +106,34 @@ public class Interpreter {
                 handleInterpreterException(e, interpreter);
             }
         } else {
-            console.println("Welcome to Lingua REPL version 1.0 (Java " +
+            out.println("Welcome to Lingua REPL version 1.0 (Java " +
                     System.getProperty("java.version") + ").");
-            console.println("Type in expressions to evaluate them.");
-            console.println();
+            out.println("Type in expressions to evaluate them.");
+            out.println();
 
             int num = 0;
             while (true) {
                 try {
-                    Ansi ansi = new Ansi();
-                    ansi.fg(Ansi.Color.GREEN);
-                    ansi.a("lingua> ");
-                    ansi.reset();
-                    String line = console.readLine(ansi.toString());
-                    if (line == null || line.equals(":exit") || line.equals(":quit"))
+                    String prompt = new AttributedStringBuilder()
+                            .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.GREEN))
+                            .append("lingua> ")
+                            .style(AttributedStyle.DEFAULT)
+                            .toAnsi();
+                    StringBuilder line = new StringBuilder(in.readLine(prompt));
+                    if (line.toString().equals(":exit") || line.toString().equals(":quit"))
                         break;
 
-                    while (line.trim().endsWith("\\")) {
-                        ansi = new Ansi();
-                        ansi.fg(Ansi.Color.YELLOW);
-                        ansi.a(" | ");
-                        ansi.reset();
-                        line += console.readLine(ansi.toString());
+                    while (line.toString().trim().endsWith("\\")) {
+                        String continuationPrompt = new AttributedStringBuilder()
+                                .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW))
+                                .append(" | ")
+                                .style(AttributedStyle.DEFAULT)
+                                .toAnsi();
+
+                        line.append(in.readLine(continuationPrompt));
                     }
 
-                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(line), "<user>")));
+                    Parser parser = new Parser(new Morpher(new Lexer(new StringReader(line.toString()), "<user>")));
                     List<Expr> exprs = new ArrayList<>();
                     Expr expr;
                     while ((expr = parser.next()) != null) {
@@ -129,14 +144,14 @@ public class Interpreter {
                         Obj value = interpreter.next(x);
                         if (x instanceof AssignmentExpr || x instanceof FunctionExpr ||
                                 x instanceof IndexSetExpr || x instanceof MemberSetExpr) {
-                            console.println(x.toString());
+                            out.println(x.toString());
                         } else {
                             do {
                                 num++;
                             } while (interpreter.env.has("res" + num));
                             String varName = "res" + num;
                             interpreter.env.define(varName, value);
-                            console.println(varName + " = " + value);
+                            out.println(varName + " = " + value);
                         }
                     }
                 } catch (ParseException e) {
@@ -147,11 +162,13 @@ public class Interpreter {
                     handleInterpreterException(new InterpreterException("Exception", e.getMessage()), interpreter);
                 }
 
+/*
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+*/
             }
         }
     }

@@ -37,7 +37,7 @@ public class NumberExpr extends Expr {
     /**
      * The float value of this number.
      */
-    private float value;
+    private final float value;
 
     /**
      * Creates a new number literal expression.

@@ -33,12 +33,12 @@ public class IndexExpr extends Expr {
     /**
      * This expression's target.
      */
-    private Expr target;
+    private final Expr target;
 
     /**
      * This expression's index.
      */
-    private Expr index;
+    private final Expr index;
 
     /**
      * Creates a new index expression.

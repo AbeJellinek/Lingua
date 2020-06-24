@@ -65,12 +65,12 @@ public class FileObj extends Obj {
 
     @Bridge
     public StringObj nameWithoutExtension() {
-        return new StringObj(file.getName().replaceFirst("\\.[^\\.]*$", ""));
+        return new StringObj(file.getName().replaceFirst("\\.[^.]*$", ""));
     }
 
     @Bridge
     public StringObj extension() {
-        return new StringObj(file.getName().replaceFirst(".*\\.([^\\.]*)$", "$1"));
+        return new StringObj(file.getName().replaceFirst(".*\\.([^.]*)$", "$1"));
     }
 
     @Bridge
@@ -92,7 +92,7 @@ public class FileObj extends Obj {
     public Obj children() {
         File[] list = file.listFiles();
         if (list != null) {
-            return new ListObj(Arrays.asList(list).stream().map(FileObj::new).collect(Collectors.toList()));
+            return new ListObj(Arrays.stream(list).map(FileObj::new).collect(Collectors.toList()));
         } else {
             return NullObj.get();
         }
