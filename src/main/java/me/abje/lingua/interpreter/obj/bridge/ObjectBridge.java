@@ -138,7 +138,7 @@ public class ObjectBridge {
                                             return (Obj) result;
                                         }
                                     } else {
-                                        return NullObj.get();
+                                        return NullObj.NULL;
                                     }
                                 } catch (Throwable throwable) {
                                     throw new RuntimeException(throwable);
@@ -179,13 +179,13 @@ public class ObjectBridge {
                     if (result != null) {
                         return (Obj) result;
                     } else {
-                        return NullObj.get();
+                        return NullObj.NULL;
                     }
                 } catch (InterpreterException e) {
                     throw e;
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
-                    return NullObj.get();
+                    return NullObj.NULL;
                 }
             } else {
                 throw new InterpreterException("CallException", "invalid number of arguments for function " + methodName);

@@ -135,7 +135,7 @@ public class OperatorExpr extends Expr {
                     return BooleanObj.of(interpreter.next(left).getType().isSubclassOf(interpreter.next(right)));
                 case ELVIS: {
                     Obj leftObj = interpreter.next(left);
-                    if (leftObj != NullObj.get())
+                    if (leftObj != NullObj.NULL)
                         return leftObj;
                     else
                         return interpreter.next(right);

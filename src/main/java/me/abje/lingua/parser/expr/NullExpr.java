@@ -39,7 +39,7 @@ public class NullExpr extends Expr {
 
     @Override
     public Obj evaluate(Interpreter interpreter) {
-        return NullObj.get();
+        return NullObj.NULL;
     }
 
     @Override

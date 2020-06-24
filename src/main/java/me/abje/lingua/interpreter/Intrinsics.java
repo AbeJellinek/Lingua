@@ -71,7 +71,7 @@ public class Intrinsics {
     public Obj eval(StringObj code, Interpreter interpreter) {
         Parser parser = new Parser(new Morpher(new Lexer(new StringReader(code.getValue()), "<eval>")));
         Expr expr;
-        Obj result = NullObj.get();
+        Obj result = NullObj.NULL;
         while ((expr = parser.next()) != null) {
             result = interpreter.next(expr);
         }

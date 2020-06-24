@@ -40,7 +40,7 @@ public class MapObj extends Obj {
     }
 
     public Obj get(Obj key) {
-        return items.containsKey(key) ? items.get(key) : NullObj.get();
+        return items.getOrDefault(key, NullObj.NULL);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MapObj extends Obj {
             function.call(interpreter, Arrays.asList(entry.getKey(), entry.getValue()));
         }
 
-        return NullObj.get();
+        return NullObj.NULL;
     }
 
     @Override

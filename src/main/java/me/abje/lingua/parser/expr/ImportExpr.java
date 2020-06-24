@@ -40,10 +40,10 @@ public class ImportExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         if (name instanceof NameExpr) {
             interpreter.addImport(((NameExpr) name).getValue());
-            return NullObj.get();
+            return NullObj.NULL;
         } else if (name instanceof MemberAccessExpr) {
             interpreter.addImport(((MemberAccessExpr) name).getPath());
-            return NullObj.get();
+            return NullObj.NULL;
         } else {
             throw new InterpreterException("UndefinedException", "invalid import path", interpreter);
         }

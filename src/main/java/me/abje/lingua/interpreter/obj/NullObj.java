@@ -34,20 +34,13 @@ public class NullObj extends Obj {
     /**
      * The singleton instance.
      */
-    private static final NullObj self = new NullObj();
+    public static final NullObj NULL = new NullObj();
 
     /**
      * Constructs a new Null. This constructor is for private use.
      */
     private NullObj() {
         super(SYNTHETIC);
-    }
-
-    /**
-     * Returns the Null instance.
-     */
-    public static NullObj get() {
-        return self;
     }
 
     @Override

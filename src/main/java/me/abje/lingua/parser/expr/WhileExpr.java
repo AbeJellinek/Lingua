@@ -71,7 +71,7 @@ public class WhileExpr extends Expr {
                 interpreter.next(body);
             }
         }
-        return NullObj.get();
+        return NullObj.NULL;
     }
 
     /**

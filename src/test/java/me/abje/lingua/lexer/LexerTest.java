@@ -32,7 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LexerTest {
     @Test
-    public void testNext() throws Exception {
+    public void testNext() {
         Lexer lexer = new Lexer(new StringReader("abc*+ xyz/*test comment*/@annotation true false ->>"), "<test>");
 
         Token t = lexer.next();
@@ -86,5 +86,37 @@ public class LexerTest {
         t = lexer.next();
         assertThat(t.getType(), is(GT));
         assertThat(t.getValue(), is(">"));
+    }
+
+    @Test
+    public void testEndings() {
+        Lexer lexer = new Lexer(new StringReader("abc\r\ndef\n\nghi\n"), "<test>");
+
+        Token t = lexer.next();
+        assertThat(t.getType(), is(NAME));
+        assertThat(t.getValue(), is("abc"));
+        assertThat(t.getLine(), is(1));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(LINE));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(NAME));
+        assertThat(t.getValue(), is("def"));
+        assertThat(t.getLine(), is(2));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(LINE));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(LINE));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(NAME));
+        assertThat(t.getValue(), is("ghi"));
+        assertThat(t.getLine(), is(4));
+
+        t = lexer.next();
+        assertThat(t.getType(), is(LINE));
     }
 }

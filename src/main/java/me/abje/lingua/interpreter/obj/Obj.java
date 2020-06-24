@@ -159,7 +159,7 @@ public class Obj {
         else
             className = originalName;
 
-        ClassObj.Builder<C> builder = ClassObj.<C>builder(className);
+        ClassObj.Builder<C> builder = ClassObj.builder(className);
         Map<String, Map<Integer, ObjectBridge.MethodMetadata>> methodMap = ObjectBridge.createMethodMap(clazz, null);
         methodMap.forEach((methodName, map) -> ObjectBridge.addFunction(builder, methodName, map));
         Map<String, ObjField> fieldMap = ObjectBridge.createFieldMap(clazz, null);

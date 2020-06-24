@@ -142,7 +142,7 @@ public class ListObj extends Obj {
         for (Obj obj : items) {
             function.call(interpreter, Collections.singletonList(obj));
         }
-        return NullObj.get();
+        return NullObj.NULL;
     }
 
     /**

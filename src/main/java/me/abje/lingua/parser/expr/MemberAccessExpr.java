@@ -64,10 +64,10 @@ public class MemberAccessExpr extends Expr {
     public Obj evaluate(Interpreter interpreter) {
         if (nullable) {
             Obj leftObj = interpreter.next(left);
-            if (leftObj != NullObj.get()) {
+            if (leftObj != NullObj.NULL) {
                 return leftObj.getMember(interpreter, name);
             } else {
-                return NullObj.get();
+                return NullObj.NULL;
             }
         } else {
             return interpreter.next(left).getMember(interpreter, name);

@@ -64,7 +64,7 @@ public class DefaultObjField extends ObjField {
 
     @Override
     public Obj get(Interpreter interpreter, Obj self) {
-        return self.getMembers().getOrDefault(getName(), NullObj.get());
+        return self.getMembers().getOrDefault(getName(), NullObj.NULL);
     }
 
     @Override

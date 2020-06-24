@@ -58,7 +58,7 @@ public class ByteOutputObj extends Obj {
         } catch (IOException e) {
             throw new InterpreterException("IOException", e.getMessage());
         }
-        return NullObj.get();
+        return NullObj.NULL;
     }
 
     @Bridge
@@ -74,7 +74,7 @@ public class ByteOutputObj extends Obj {
     public Obj flush() {
         try {
             out.flush();
-            return NullObj.get();
+            return NullObj.NULL;
         } catch (IOException e) {
             throw new InterpreterException("IOException", e.getMessage());
         }
@@ -84,7 +84,7 @@ public class ByteOutputObj extends Obj {
     public Obj close() {
         try {
             out.close();
-            return NullObj.get();
+            return NullObj.NULL;
         } catch (IOException e) {
             throw new InterpreterException("IOException", e.getMessage());
         }

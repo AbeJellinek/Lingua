@@ -94,7 +94,7 @@ public class FileObj extends Obj {
         if (list != null) {
             return new ListObj(Arrays.stream(list).map(FileObj::new).collect(Collectors.toList()));
         } else {
-            return NullObj.get();
+            return NullObj.NULL;
         }
     }
 

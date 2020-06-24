@@ -62,10 +62,10 @@ public class CallExpr extends Expr {
         List<Obj> argObjs = args.stream().map(interpreter::next).collect(Collectors.toList());
         if (func instanceof MemberAccessExpr && ((MemberAccessExpr) func).isNullable()) {
             Obj funcObj = interpreter.next(func);
-            if (funcObj != NullObj.get()) {
+            if (funcObj != NullObj.NULL) {
                 return funcObj.call(interpreter, argObjs);
             } else {
-                return NullObj.get();
+                return NullObj.NULL;
             }
         } else {
             return interpreter.next(func).call(interpreter, argObjs);

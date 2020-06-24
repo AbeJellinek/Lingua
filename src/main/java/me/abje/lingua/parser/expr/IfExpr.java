@@ -91,7 +91,7 @@ public class IfExpr extends Expr {
             if (elseBranch != null) {
                 return interpreter.next(elseBranch);
             } else {
-                return NullObj.get();
+                return NullObj.NULL;
             }
         }
     }
