@@ -120,7 +120,7 @@ public class FunctionObj extends Obj {
         else
             env.pushFrame(name);
 
-        Environment.Frame frame = env.getStack().peek();
+        Environment.Frame frame = env.peekFrame();
         TupleExpr argNamesTuple = new TupleExpr(null, argNames);
         TupleObj argsTuple = new TupleObj(args);
         if (argNamesTuple.match(interpreter, frame, argsTuple, DefinitionType.ALWAYS_NEW) == null)

@@ -25,7 +25,9 @@ package me.abje.lingua.interpreter.obj;
 import me.abje.lingua.interpreter.Bridge;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A Lingua character string.
@@ -82,7 +84,7 @@ public class StringObj extends Obj {
 
     @Bridge(anyLength = true)
     public static StringObj init(Obj... objs) {
-        return new StringObj(String.join("", (CharSequence[]) objs));
+        return new StringObj(Arrays.stream(objs).map(Obj::toString).collect(Collectors.joining()));
     }
 
     @Bridge
