@@ -159,7 +159,12 @@ public class Interpreter {
                 } catch (InterpreterException e) {
                     handleInterpreterException(e, interpreter);
                 } catch (Exception e) {
-                    handleInterpreterException(new InterpreterException("Exception", e.getMessage()), interpreter);
+                    if (e.getMessage() != null) {
+                        handleInterpreterException(new InterpreterException("Exception", e.getMessage()), interpreter);
+                    } else {
+                        // Likely a Ctrl-C or Ctrl-D, so exit with a successful status.
+                        System.exit(0);
+                    }
                 }
 
 /*
