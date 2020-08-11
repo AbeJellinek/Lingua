@@ -108,6 +108,16 @@ public class ListObj extends Obj {
     }
 
     /**
+     * Returns the length of this list.
+     *
+     * @return The length of this list.
+     */
+    @Bridge
+    public NumberObj length() {
+        return NumberObj.of(this.items.size());
+    }
+
+    /**
      * Maps this list by applying the given function to each item.
      * Returns a new list, and does not mutate the original.
      *
