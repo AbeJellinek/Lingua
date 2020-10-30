@@ -30,8 +30,10 @@ import me.abje.lingua.lexer.Morpher;
 import me.abje.lingua.parser.ParseException;
 import me.abje.lingua.parser.Parser;
 import me.abje.lingua.parser.expr.*;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedStringBuilder;
@@ -54,7 +56,10 @@ public class Interpreter {
 
     static {
         try {
-            terminal = TerminalBuilder.terminal();
+            terminal = TerminalBuilder.builder()
+                    .nativeSignals(true)
+                    .signalHandler(Terminal.SignalHandler.SIG_IGN)
+                    .build();
             in = LineReaderBuilder.builder()
                     .terminal(terminal)
                     .option(LineReader.Option.INSERT_BRACKET, true)
@@ -158,6 +163,8 @@ public class Interpreter {
                     log.error("Parse error:\n{}", e.getMessage());
                 } catch (InterpreterException e) {
                     handleInterpreterException(e, interpreter);
+                } catch (UserInterruptException | EndOfFileException e) {
+                    break;
                 } catch (Exception e) {
                     handleInterpreterException(new InterpreterException("Exception", e.getMessage()), interpreter);
                 }

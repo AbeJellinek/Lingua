@@ -62,7 +62,8 @@ public class OperatorExpr extends Expr {
      * @param right The right expression.
      */
     public OperatorExpr(Token.Type token, Expr left, Expr right) {
-        super(new Token(token, "", 1, "<none>"));
+        // FIXME: `token.getName()` may not work for everything
+        super(new Token(token, token.getName(), 1, "<none>"));
         this.left = left;
         this.right = right;
     }
